@@ -4,7 +4,7 @@ CREATE DATABASE Advising_Team_27;
 
 USE Advising_Team_27;
 
---------------------------- 2.1 ---------------------------------
+--------------------------- 2.1 ----------------------------------------
 
 GO
 
@@ -238,6 +238,16 @@ GO
 
 EXEC clearAllTables;
 
+--------------------------- 2.2 I ----------------------------------------
+
+GO
+
+CREATE VIEW Advisors_Graduation_Plan AS
+SELECT gp.*, a.advisor_name
+FROM Graduation_Plan gp, Advisor a
+WHERE gp.advisor_id = a.advisor_id;
+
+GO
 
 --------------------------- dummy data ---------------------------------
 
@@ -249,7 +259,7 @@ INSERT INTO Advisor (advisor_id, advisor_name, email, office, pASs) VALUES
 ('A005', 'Emily Davis', 'emily@example.com', 'Office5', 'password5'),
 ('A006', 'Michael Lee', 'michael@example.com', 'Office6', 'password6');
 
-INSERT INTO Course (course_id, name, major, is_offered, credit_hours, semester)
+INSERT INTO Course (course_id, course_name, major, is_offered, credit_hours, semester)
 VALUES 
     ('CSCI101', 'Introduction to Computer Science', 'Computer Science', 1, 3, 1),
     ('MATH202', 'Calculus II', 'Mathematics', 0, 4, 2),
@@ -265,8 +275,8 @@ VALUES ('CSC101', 'CSC201'),
 
 INSERT INTO Student (student_id, f_name, l_name, gpa, faculty, email, major, pass, financial_status, semester, acquired_hours, assigned_hours, advisor_id)
 VALUES 
-('S001', 'John', 'Doe', 3.75, 'Science', 'johndoe@example.com', 'Biology', 'pASsword123', 1, 2, 12, 12, 'A001'),
-('S002', 'Jane', 'Smith', 3.95, 'Arts', 'janesmith@example.com', 'History', 'pASs123', 0, 2, 15, 12, 'A002'),
+('S001', 'John', 'Doe', 3.75, 'Science', 'johndoe@example.com', 'Biology', 'password123', 1, 2, 12, 12, 'A001'),
+('S002', 'Jane', 'Smith', 3.95, 'Arts', 'janesmith@example.com', 'History', 'pass123', 0, 2, 15, 12, 'A002'),
 ('S003', 'Robert', 'Johnson', 3.25, 'Engineering', 'robertjohnson@example.com', 'Computer Science', 'test123', 1, 3, 18, 12, 'A002'),
 ('S004', 'Emily', 'Davis', 3.85, 'Business', 'emilydavis@example.com', 'Finance', 'dummy123', 0, 3, 20, 12, 'A001');
 
