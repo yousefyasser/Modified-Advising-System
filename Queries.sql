@@ -241,6 +241,27 @@ GO
 
 EXEC clearAllTables;
 
+--------------------------- 2.2 A ----------------------------------------
+GO
+
+CREATE VIEW view_Students
+AS
+SELECT *
+FROM Student
+
+GO
+
+--------------------------- 2.2 B ----------------------------------------
+GO
+
+CREATE VIEW view_Course_prerequisites
+AS
+SELECT cr.*, pr.prerequisite_course_id
+FROM Course cr LEFT OUTER JOIN preqCourse_course pr
+ON cr.course_id = pr.course_id
+
+GO
+
 --------------------------- 2.2 C ----------------------------------------
 GO
 
@@ -250,6 +271,7 @@ FROM Instructor_course ic, Instructor i
 WHERE ic.instructor_id = i.instructor_id
 
 GO
+
 --------------------------- 2.2 D ----------------------------------------
 GO
 
@@ -257,6 +279,28 @@ CREATE VIEW Student_Payment AS
 SELECT * 
 FROM Payment p, Student s
 WHERE p.student_id = s.student_id
+
+GO
+
+--------------------------- 2.2 E ----------------------------------------
+GO
+
+CREATE VIEW Courses_Slots_Instructor 
+AS
+SELECT cr.course_id, cr.course_name, sl.*
+FROM Course cr LEFT OUTER JOIN Slot sl
+ON cr.course_id = sl.course_id 
+
+GO
+
+--------------------------- 2.2 F ----------------------------------------
+GO
+
+CREATE VIEW Courses_MakeupExams
+AS
+SELECT cr.course_name, cr.semester, mx.*
+FROM Course cr LEFT OUTER JOIN MakeUp_Exam mx
+ON cr.course_id = mx.exam_id
 
 GO
 
