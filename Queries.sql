@@ -164,7 +164,7 @@ AS
 		payment_amount INT NOT NULL,
 		payment_deadline date NOT NULL,
 		n_installments INT NOT NULL,
-		payment_status BIT CHECK (payment_status IN ('notPaid', 'Paid')) DEFAULT 'notPaid',
+		payment_status VARCHAR(40) NOT NULL CHECK (payment_status IN ('notPaid', 'Paid')) DEFAULT 'notPaid',
 		fund_percentage DECIMAL(3,2) NOT NULL,
 		student_id VARCHAR(40) NOT NULL FOREIGN KEY REFERENCES Student ON DELETE CASCADE,
 		semester_code VARCHAR(40) NOT NULL FOREIGN KEY REFERENCES Semester ON DELETE CASCADE,
@@ -241,6 +241,22 @@ GO
 
 EXEC clearAllTables;
 
+--------------------------- 2.2 C ----------------------------------------
+Go 
+CREATE VIEW Instructors_AssignedCourses AS
+SELECT *
+FROM Instructor_course ic, Instructor i
+WHERE ic.instructor_id= i.instructor_id
+
+Go
+--------------------------- 2.2 D ----------------------------------------
+GO
+CREATE VIEW Student_Payment AS 
+SELECT * 
+FROM Payment p, Student s
+WHERE p.student_id=s.student_id
+
+Go
 --------------------------- 2.2 I ----------------------------------------
 
 GO
