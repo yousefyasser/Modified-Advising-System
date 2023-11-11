@@ -242,21 +242,46 @@ GO
 EXEC clearAllTables;
 
 --------------------------- 2.2 C ----------------------------------------
-Go 
+GO
+
 CREATE VIEW Instructors_AssignedCourses AS
 SELECT *
 FROM Instructor_course ic, Instructor i
-WHERE ic.instructor_id= i.instructor_id
+WHERE ic.instructor_id = i.instructor_id
 
-Go
+GO
 --------------------------- 2.2 D ----------------------------------------
 GO
+
 CREATE VIEW Student_Payment AS 
 SELECT * 
 FROM Payment p, Student s
-WHERE p.student_id=s.student_id
+WHERE p.student_id = s.student_id
 
-Go
+GO
+
+--------------------------- 2.2 G ----------------------------------------
+
+GO
+
+CREATE VIEW Students_Courses_transcript AS
+SELECT s.student_id, st.f_name, st.l_name, s.course_id, co.course_name, s.exam_type, s.grade, co.semester, ins.instructor_name
+FROM Student_Instructor_Course_Take s, Student st, Course co, Instructor ins
+WHERE s.student_id = st.student_id AND s.course_id = co.course_id AND s.instructor_id = ins.instructor_id
+
+GO
+
+--------------------------- 2.2 H ----------------------------------------
+
+GO
+
+CREATE VIEW Semster_offered_Courses AS
+SELECT cs.course_id, co.course_name, cs.semester_code
+FROM Course_Semester cs, Courses co
+WHERE cs.course_id = co.course_id
+
+GO
+
 --------------------------- 2.2 I ----------------------------------------
 
 GO
