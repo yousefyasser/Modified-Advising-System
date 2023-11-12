@@ -305,7 +305,6 @@ ON cr.course_id = mx.exam_id
 GO
 
 --------------------------- 2.2 G ----------------------------------------
-
 GO
 
 CREATE VIEW Students_Courses_transcript AS
@@ -316,18 +315,16 @@ WHERE s.student_id = st.student_id AND s.course_id = co.course_id AND s.instruct
 GO
 
 --------------------------- 2.2 H ----------------------------------------
-
 GO
 
 CREATE VIEW Semster_offered_Courses AS
 SELECT cs.course_id, co.course_name, cs.semester_code
-FROM Course_Semester cs, Courses co
+FROM Course_Semester cs, Course co
 WHERE cs.course_id = co.course_id
 
 GO
 
 --------------------------- 2.2 I ----------------------------------------
-
 GO
 
 CREATE VIEW Advisors_Graduation_Plan AS
