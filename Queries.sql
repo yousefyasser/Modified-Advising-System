@@ -348,16 +348,42 @@ CREATE PROCEDURE Procedures_AdminLinkInstructor
     @slot_id INT
 
 AS
-    INSERT INTO Instructor_Course (instructor_id, course_id)
-    SELECT @instructor_id, @course_id
-    FROM Courses_Slots_Instructor
-    WHERE course_id = @course_id
-      AND slot_id = @slot_id
-      AND instructor_name = (SELECT instructor_name FROM Instructor WHERE instructor_id = @instructor_id);
+
+INSERT INTO Courses_Slots_Instructor 
+(instructor_name, course_name, slot_id, slot_day, slot_time, slot_location, course_id, instructor_id)
+SELECT
+    (SELECT instructor_name FROM Instructor WHERE instructor_id = @instructor_id),
+    (SELECT course_name FROM Course WHERE course_id = @course_id),
+    @slot_id,
+    s.slot_day,
+    s.slot_time,
+    s.slot_location,
+    @course_id,
+	@instructor_id
+FROM
+    Slot s
+WHERE
+    s.slot_id = @slot_id;
 
 GO
 
 EXEC Procedures_AdminLinkInstructor
+
+GO
+
+--------------------------- 2.3 I ----------------------------------------
+GO
+
+CREATE PROCEDURE Procedures_AdminLinkStudent
+    @instructor_id INT,
+    @student_id INT,
+    @course_id INT,
+    @semester_code VARCHAR(40)
+
+AS
+
+    INSERT INTO Student_Instructor_Course_Take (instructor_id, student_id, course_id, semester_code, grade)
+    VALUES (@instructor_id, @student_id, @course_id, @semester_code, NULL);
 
 GO
 
