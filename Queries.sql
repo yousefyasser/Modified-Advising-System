@@ -312,7 +312,33 @@ CREATE VIEW Advisors_Graduation_Plan AS
 SELECT gp.*, a.advisor_name
 FROM Graduation_Plan gp, Advisor a
 WHERE gp.advisor_id = a.advisor_id;
+GO
 
+--------------------------- 2.3 D ----------------------------------------
+CREATE PROCEDURE Procedures_AdminListAdvisors
+
+AS    
+    Select *
+    From Advisors;
+
+GO
+
+EXEC Procedures_AdminListAdvisors
+
+GO
+--------------------------- 2.3 E ----------------------------------------
+CREATE PROCEDURE AdminListStudentsWithAdvisors
+
+AS    
+    Select *
+    From Student s, Advisor a
+    where s.advisor_id=a.advisor_id
+
+GO
+
+EXEC AdminListStudentsWithAdvisors
+
+GO
 --------------------------- 2.3 H ----------------------------------------
 GO
 
@@ -330,3 +356,29 @@ GO
 EXEC Procedures_AdminLinkInstructor
 
 GO
+
+--------------------------- 2.3 O ----------------------------------------
+CREATE VIEW all_Pending_Requests 
+
+AS
+	SELECT r.*, s.f_name, s.l_name, a.advisor_name 
+	FROM Request r INNER JOIN Student s on s.student_id=r.student_id INNER JOIN Advisor a on a.advisor_id = r.advisor_id
+	where req_status='pending'
+Go
+
+--------------------------- 2.3 X ----------------------------------------
+
+CREATE PROCEDURE Procedures_AdvisorViewAssignedStudents
+@advisor_id int,
+@major varchar(40)
+AS    
+    Select sct.student_id, sct.f_name, sct.l_name, s.major, sct.course_name
+    From Students_Courses_transcript sct, Student s 
+    where sct.student_id=s.student_id AND s.major=@major AND s.advisor_id=@advisor_id
+
+GO
+
+EXEC Procedures_AdvisorViewAssignedStudents
+
+GO
+
