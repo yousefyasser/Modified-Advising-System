@@ -155,7 +155,7 @@ AS
 	CREATE TABLE Exam_Student(
 		exam_id INT NOT NULL FOREIGN KEY REFERENCES MakeUp_Exam ON DELETE CASCADE,
 		student_id INT NOT NULL FOREIGN KEY REFERENCES Student ON DELETE CASCADE,
-		course_id INT NOT NULL FOREIGN KEY REFERENCES Course ON DELETE CASCADE,
+		course_id INT NOT NULL FOREIGN KEY REFERENCES Course,
 		CONSTRAINT Exam_Student_id PRIMARY KEY (exam_id, student_id)
 	);
 
@@ -247,71 +247,55 @@ CREATE VIEW view_Students
 AS
 SELECT *
 FROM Student
-
-GO
+WHERE Student.financial_status = 1
 
 --------------------------- 2.2 B ----------------------------------------
 GO
 
-CREATE VIEW view_Course_prerequisites
-AS
+CREATE VIEW view_Course_prerequisites AS
 SELECT cr.*, pr.prerequisite_course_id
 FROM Course cr LEFT OUTER JOIN preqCourse_course pr
 ON cr.course_id = pr.course_id
-
-GO
 
 --------------------------- 2.2 C ----------------------------------------
 GO
 
 CREATE VIEW Instructors_AssignedCourses AS
-SELECT *
+SELECT ic.course_id, i.*
 FROM Instructor_course ic, Instructor i
 WHERE ic.instructor_id = i.instructor_id
-
-GO
 
 --------------------------- 2.2 D ----------------------------------------
 GO
 
 CREATE VIEW Student_Payment AS 
-SELECT * 
+SELECT s.*, p.fund_percentage, p.n_installments, p.payment_amount, p.payment_deadline, p.payment_id, p.payment_status, p.s_date, p.semester_code
 FROM Payment p, Student s
 WHERE p.student_id = s.student_id
-
-GO
 
 --------------------------- 2.2 E ----------------------------------------
 GO
 
-CREATE VIEW Courses_Slots_Instructor 
-AS
-SELECT cr.course_id, cr.course_name, sl.*
-FROM Course cr LEFT OUTER JOIN Slot sl
-ON cr.course_id = sl.course_id 
-
-GO
+CREATE VIEW Courses_Slots_Instructor  AS
+SELECT i.instructor_name, cr.course_name, sl.*
+FROM Course cr, Slot sl, Instructor i
+WHERE cr.course_id = sl.course_id AND sl.instructor_id = i.instructor_id
 
 --------------------------- 2.2 F ----------------------------------------
 GO
 
-CREATE VIEW Courses_MakeupExams
-AS
+CREATE VIEW Courses_MakeupExams AS
 SELECT cr.course_name, cr.semester, mx.*
-FROM Course cr LEFT OUTER JOIN MakeUp_Exam mx
-ON cr.course_id = mx.exam_id
-
-GO
+FROM Course cr, MakeUp_Exam mx 
+WHERE cr.course_id = mx.exam_id
 
 --------------------------- 2.2 G ----------------------------------------
 GO
 
 CREATE VIEW Students_Courses_transcript AS
-SELECT s.student_id, st.f_name, st.l_name, s.course_id, co.course_name, s.exam_type, s.grade, co.semester, ins.instructor_name
+SELECT s.student_id, st.f_name, st.l_name, s.course_id, co.course_name, s.exam_type, s.grade, s.semester_code, ins.instructor_name
 FROM Student_Instructor_Course_Take s, Student st, Course co, Instructor ins
 WHERE s.student_id = st.student_id AND s.course_id = co.course_id AND s.instructor_id = ins.instructor_id
-
-GO
 
 --------------------------- 2.2 H ----------------------------------------
 GO
@@ -321,8 +305,6 @@ SELECT cs.course_id, co.course_name, cs.semester_code
 FROM Course_Semester cs, Course co
 WHERE cs.course_id = co.course_id
 
-GO
-
 --------------------------- 2.2 I ----------------------------------------
 GO
 
@@ -330,8 +312,6 @@ CREATE VIEW Advisors_Graduation_Plan AS
 SELECT gp.*, a.advisor_name
 FROM Graduation_Plan gp, Advisor a
 WHERE gp.advisor_id = a.advisor_id;
-
-GO
 
 --------------------------- 2.3 H ----------------------------------------
 GO
@@ -350,55 +330,3 @@ GO
 EXEC Procedures_AdminLinkInstructor
 
 GO
-
---------------------------- dummy data ---------------------------------
-
-INSERT INTO Advisor (advisor_id, advisor_name, email, office, pASs) VALUES
-('A001', 'John Smith', 'john@example.com', 'Office1', 'password1'),
-('A002', 'Sarah Adams', 'sarah@example.com', 'Office2', 'password2'),
-('A003', 'Lisa Johnson', 'lisa@example.com', 'Office3', 'password3'),
-('A004', 'James Brown', 'james@example.com', 'Office4', 'password4'),
-('A005', 'Emily Davis', 'emily@example.com', 'Office5', 'password5'),
-('A006', 'Michael Lee', 'michael@example.com', 'Office6', 'password6');
-
-INSERT INTO Course (course_id, course_name, major, is_offered, credit_hours, semester)
-VALUES 
-    ('CSCI101', 'Introduction to Computer Science', 'Computer Science', 1, 3, 1),
-    ('MATH202', 'Calculus II', 'Mathematics', 0, 4, 2),
-    ('ENG101', 'English Composition', 'English', 1, 3, 1),
-    ('CHEM201', 'Organic Chemistry', 'Chemistry', 1, 4, 3),
-    ('PHYS101', 'Physics I', 'Physics', 1, 4, 1);
-
-INSERT INTO preqCourse_course (prerequisite_course_id, course_id)
-VALUES ('CSC101', 'CSC201'),
-       ('MATH101', 'MATH201'),
-       ('PHY101', 'PHY201'),
-       ('CHEM101', 'CHEM201');
-
-INSERT INTO Student (student_id, f_name, l_name, gpa, faculty, email, major, pass, financial_status, semester, acquired_hours, assigned_hours, advisor_id)
-VALUES 
-('S001', 'John', 'Doe', 3.75, 'Science', 'johndoe@example.com', 'Biology', 'password123', 1, 2, 12, 12, 'A001'),
-('S002', 'Jane', 'Smith', 3.95, 'Arts', 'janesmith@example.com', 'History', 'pass123', 0, 2, 15, 12, 'A002'),
-('S003', 'Robert', 'Johnson', 3.25, 'Engineering', 'robertjohnson@example.com', 'Computer Science', 'test123', 1, 3, 18, 12, 'A002'),
-('S004', 'Emily', 'Davis', 3.85, 'Business', 'emilydavis@example.com', 'Finance', 'dummy123', 0, 3, 20, 12, 'A001');
-
-INSERT INTO Student_phone (student_id, phone_number)
-VALUES ('S001', '1234567890'),
-       ('S002', '9876543210'),
-       ('S003', '5555555555'),
-       ('S004', '9999999999');
-
-INSERT INTO Instructor (instructor_id, instructor_name, email, faculty, office) VALUES
-('I001', 'John Smith', 'john.smith@example.com', 'Computer Science', 'Building A, Office 101'),
-('I002', 'Emily Johnson', 'emily.johnson@example.com', 'Mathematics', 'Building B, Office 202'),
-('I003', 'Michael Davis', 'michael.davis@example.com', 'English Literature', 'Building C, Office 303'),
-('I004', 'Sarah Wilson', 'sarah.wilson@example.com', 'Physics', 'Building D, Office 404'),
-('I005', 'David Brown', 'david.brown@example.com', 'Chemistry', 'Building E, Office 505');
-
-INSERT INTO Instructor_Course (course_id, instructor_id)
-VALUES 
-  ('C001', 'I001'),
-  ('C002', 'I001'),
-  ('C003', 'I002'),
-  ('C004', 'I003'),
-  ('C005', 'I002');
