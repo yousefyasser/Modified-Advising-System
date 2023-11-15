@@ -4,14 +4,14 @@ CREATE DATABASE Advising_Team_27;
 
 USE Advising_Team_27;
 
---------------------------- 2.1 ----------------------------------------
-
 GO
+
+--------------------------- 2.1 ----------------------------------------
 
 CREATE PROCEDURE CreateAllTables
 AS
 	CREATE TABLE Advisor(
-		advisor_id INT PRIMARY KEY,
+		advisor_id INT PRIMARY KEY IDENTITY,
 		advisor_name VARCHAR(40) NOT NULL,
 		email VARCHAR(40) NOT NULL,
 		office VARCHAR(40) NOT NULL,
@@ -19,19 +19,19 @@ AS
 	);
 
 	CREATE TABLE Student(
-		student_id INT PRIMARY KEY, 
+		student_id INT PRIMARY KEY IDENTITY, 
 		f_name VARCHAR(40) NOT NULL, 
 		l_name VARCHAR(40) NOT NULL,
-		gpa DECIMAL(3, 2) NOT NULL,
+		gpa DECIMAL(3, 2),
 		faculty VARCHAR(40) NOT NULL,
 		email VARCHAR(40) NOT NULL,
 		major VARCHAR(40) NOT NULL,
 		pass VARCHAR(40) NOT NULL,
-		financial_status BIT CHECK (financial_status IN (0, 1)) NOT NULL /* 0 MEANS BLOCKED, 1 MEANS UNBLOCKED */,
+		financial_status BIT CHECK (financial_status IN (0, 1)) /* 0 MEANS BLOCKED, 1 MEANS UNBLOCKED */,
 		semester INT NOT NULL,
-		acquired_hours INT NOT NULL,
-		assigned_hours INT NOT NULL,
-		advisor_id INT NOT NULL,
+		acquired_hours INT,
+		assigned_hours INT,
+		advisor_id INT,
 		FOREIGN KEY (advisor_id) REFERENCES Advisor ON DELETE CASCADE
 	);
 
@@ -43,7 +43,7 @@ AS
 	);
 
 	CREATE TABLE Course(
-		course_id INT PRIMARY KEY,
+		course_id INT PRIMARY KEY IDENTITY,
 		course_name VARCHAR(40) NOT NULL,
 		major VARCHAR(40) NOT NULL,
 		is_offered BIT NOT NULL,
@@ -60,7 +60,7 @@ AS
 	);
 
 	CREATE TABLE Instructor(
-		instructor_id INT PRIMARY KEY,
+		instructor_id INT PRIMARY KEY IDENTITY,
 		instructor_name VARCHAR(40) NOT NULL, 
 		email VARCHAR(40) NOT NULL,
 		faculty VARCHAR(40) NOT NULL,
@@ -103,7 +103,7 @@ AS
 	);
 
 	CREATE TABLE Slot(
-		slot_id INT PRIMARY KEY,
+		slot_id INT PRIMARY KEY IDENTITY,
 		slot_day VARCHAR(40) NOT NULL,
 		slot_time VARCHAR(40) NOT NULL,
 		slot_location VARCHAR(40) NOT NULL,
@@ -135,7 +135,7 @@ AS
 	);
 
 	CREATE TABLE Request(
-		request_id INT PRIMARY KEY,
+		request_id INT PRIMARY KEY IDENTITY,
 		req_type VARCHAR(40) NOT NULL,
 		comment VARCHAR(40) NOT NULL,
 		req_status VARCHAR(40) NOT NULL CHECK (req_status IN ('pending', 'accepted', 'rejected')) DEFAULT 'pending',
@@ -146,8 +146,8 @@ AS
 	);
 
 	CREATE TABLE MakeUp_Exam(
-		exam_id INT PRIMARY KEY,
-		mk_exam_date date NOT NULL,
+		exam_id INT PRIMARY KEY IDENTITY,
+		mk_exam_date datetime NOT NULL,
 		mk_exam_type VARCHAR(40) NOT NULL,
 		course_id INT NOT NULL FOREIGN KEY REFERENCES Course ON DELETE CASCADE,
 	);
@@ -160,7 +160,7 @@ AS
 	);
 
 	CREATE TABLE Payment(
-		payment_id INT PRIMARY KEY,
+		payment_id INT PRIMARY KEY IDENTITY,
 		payment_amount INT NOT NULL,
 		payment_deadline datetime NOT NULL,
 		n_installments INT NOT NULL,
@@ -240,78 +240,99 @@ GO
 
 EXEC clearAllTables;
 
---------------------------- 2.2 A ----------------------------------------
 GO
 
+--------------------------- 2.2 A ----------------------------------------
 CREATE VIEW view_Students
 AS
 SELECT *
 FROM Student
 WHERE Student.financial_status = 1
 
---------------------------- 2.2 B ----------------------------------------
 GO
 
+--------------------------- 2.2 B ----------------------------------------
 CREATE VIEW view_Course_prerequisites AS
 SELECT cr.*, pr.prerequisite_course_id
 FROM Course cr LEFT OUTER JOIN preqCourse_course pr
 ON cr.course_id = pr.course_id
 
---------------------------- 2.2 C ----------------------------------------
 GO
 
+--------------------------- 2.2 C ----------------------------------------
 CREATE VIEW Instructors_AssignedCourses AS
 SELECT ic.course_id, i.*
 FROM Instructor_course ic, Instructor i
 WHERE ic.instructor_id = i.instructor_id
 
---------------------------- 2.2 D ----------------------------------------
 GO
 
+--------------------------- 2.2 D ----------------------------------------
 CREATE VIEW Student_Payment AS 
 SELECT s.*, p.fund_percentage, p.n_installments, p.payment_amount, p.payment_deadline, p.payment_id, p.payment_status, p.s_date, p.semester_code
 FROM Payment p, Student s
 WHERE p.student_id = s.student_id
 
---------------------------- 2.2 E ----------------------------------------
 GO
 
+--------------------------- 2.2 E ----------------------------------------
 CREATE VIEW Courses_Slots_Instructor  AS
 SELECT i.instructor_name, cr.course_name, sl.*
 FROM Course cr, Slot sl, Instructor i
 WHERE cr.course_id = sl.course_id AND sl.instructor_id = i.instructor_id
 
---------------------------- 2.2 F ----------------------------------------
 GO
 
+--------------------------- 2.2 F ----------------------------------------
 CREATE VIEW Courses_MakeupExams AS
 SELECT cr.course_name, cr.semester, mx.*
 FROM Course cr, MakeUp_Exam mx 
 WHERE cr.course_id = mx.exam_id
 
---------------------------- 2.2 G ----------------------------------------
 GO
 
+--------------------------- 2.2 G ----------------------------------------
 CREATE VIEW Students_Courses_transcript AS
 SELECT s.student_id, st.f_name, st.l_name, s.course_id, co.course_name, s.exam_type, s.grade, s.semester_code, ins.instructor_name
 FROM Student_Instructor_Course_Take s, Student st, Course co, Instructor ins
 WHERE s.student_id = st.student_id AND s.course_id = co.course_id AND s.instructor_id = ins.instructor_id
 
---------------------------- 2.2 H ----------------------------------------
 GO
 
+--------------------------- 2.2 H ----------------------------------------
 CREATE VIEW Semster_offered_Courses AS
 SELECT cs.course_id, co.course_name, cs.semester_code
 FROM Course_Semester cs, Course co
 WHERE cs.course_id = co.course_id
 
---------------------------- 2.2 I ----------------------------------------
 GO
 
+--------------------------- 2.2 I ----------------------------------------
 CREATE VIEW Advisors_Graduation_Plan AS
 SELECT gp.*, a.advisor_name
 FROM Graduation_Plan gp, Advisor a
 WHERE gp.advisor_id = a.advisor_id;
+
+GO
+
+--------------------------- 2.3 A ----------------------------------------
+CREATE PROCEDURE Procedures_StudentRegistration
+	@first_name VARCHAR(40),
+	@last_name VARCHAR(40),
+	@password VARCHAR(40),
+	@faculty VARCHAR(40),
+	@email VARCHAR(40),
+	@major VARCHAR(40),
+	@semester INT,
+	@student_id INT OUTPUT
+AS
+
+	INSERT INTO Student (f_name, l_name, pass, faculty, email, major, semester)
+	VALUES (@first_name, @last_name, @password, @faculty, @email, @major, @semester)
+
+	SELECT @student_id = student_id
+	FROM Student
+	WHERE f_name = @first_name AND l_name = @last_name AND pass = @password AND faculty = @faculty AND email = @email AND major = @major AND semester = @semester
 GO
 
 --------------------------- 2.3 D ----------------------------------------
@@ -339,9 +360,8 @@ GO
 EXEC AdminListStudentsWithAdvisors
 
 GO
---------------------------- 2.3 H ----------------------------------------
-GO
 
+--------------------------- 2.3 H ----------------------------------------
 CREATE PROCEDURE Procedures_AdminLinkInstructor
     @instructor_id INT,
     @course_id INT,
@@ -367,13 +387,11 @@ WHERE
 
 GO
 
-EXEC Procedures_AdminLinkInstructor
+EXEC Procedures_AdminLinkInstructor 1234, 123, 12
 
 GO
 
 --------------------------- 2.3 I ----------------------------------------
-GO
-
 CREATE PROCEDURE Procedures_AdminLinkStudent
     @instructor_id INT,
     @student_id INT,
@@ -387,6 +405,26 @@ AS
 
 GO
 
+--------------------------- 2.3 J ----------------------------------------
+CREATE PROCEDURE Procedures_AdminLinkStudentToAdvisor
+	@student_id INT,
+	@advisor_id INT
+AS
+	UPDATE Student
+	SET advisor_id = @advisor_id
+	WHERE student_id = @student_id
+GO
+
+--------------------------- 2.3 K ----------------------------------------
+CREATE PROCEDURE Procedures_AdminAddExam
+	@type VARCHAR(40),
+	@date datetime,
+	@course_id INT
+AS
+	INSERT INTO MakeUp_Exam (mk_exam_date, mk_exam_type, course_id)
+	VALUES (@date, @type, @course_id)
+GO
+
 --------------------------- 2.3 O ----------------------------------------
 CREATE VIEW all_Pending_Requests 
 
@@ -394,21 +432,48 @@ AS
 	SELECT r.*, s.f_name, s.l_name, a.advisor_name 
 	FROM Request r INNER JOIN Student s on s.student_id=r.student_id INNER JOIN Advisor a on a.advisor_id = r.advisor_id
 	WHERE req_status='pending'
-Go
+GO
+
+--------------------------- 2.3 T ----------------------------------------
+CREATE PROCEDURE Procedures_AdvisorUpdateGP
+	@expected_grad_semster VARCHAR(40),
+	@studentID INT 
+AS
+	UPDATE Graduation_Plan
+	SET expected_grad_semester = @expected_grad_semster
+	WHERE student_id = @studentID
+GO
+
+--------------------------- 2.3 U ----------------------------------------
+CREATE PROCEDURE Procedures_AdvisorDeleteFromGP
+	@student_id INT,
+	@semester_code VARCHAR(40),
+	@course_id INT
+AS
+	DECLARE @plan_id INT
+
+	SELECT @plan_id = plan_id
+	FROM Graduation_Plan
+	WHERE student_id = @student_id AND semester_code = @semester_code
+
+	DELETE FROM GradPlan_Course
+	WHERE plan_id = @plan_id AND semester_code = @semester_code AND course_id = @course_id
+
+GO
 
 --------------------------- 2.3 X ----------------------------------------
 
 CREATE PROCEDURE Procedures_AdvisorViewAssignedStudents
-@advisor_id int,
-@major varchar(40)
+	@advisor_id INT,
+	@major VARCHAR(40)
 AS    
     Select sct.student_id, sct.f_name, sct.l_name, s.major, sct.course_name
     From Students_Courses_transcript sct, Student s 
-    where sct.student_id=s.student_id AND s.major=@major AND s.advisor_id=@advisor_id
+    where sct.student_id = s.student_id AND s.major = @major AND s.advisor_id = @advisor_id
 
 GO
 
-EXEC Procedures_AdvisorViewAssignedStudents
+EXEC Procedures_AdvisorViewAssignedStudents 1234, 'CSEN'
 
 GO
 
