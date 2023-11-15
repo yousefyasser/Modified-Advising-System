@@ -319,7 +319,7 @@ CREATE PROCEDURE Procedures_AdminListAdvisors
 
 AS    
     Select *
-    From Advisors;
+    From Advisor;
 
 GO
 
@@ -343,13 +343,17 @@ GO
 GO
 
 CREATE PROCEDURE Procedures_AdminLinkInstructor
-     @p_InstructorId INT,
-     @p_CourseId INT,
-     @p_SlotId INT
+    @instructor_id INT,
+    @course_id INT,
+    @slot_id INT
 
-AS    
-    INSERT INTO Instructor_Course (instructor_id, course_id, slot_id)
-    VALUES (p_InstructorId, p_CourseId, p_SlotId);
+AS
+    INSERT INTO Instructor_Course (instructor_id, course_id)
+    SELECT @instructor_id, @course_id
+    FROM Courses_Slots_Instructor
+    WHERE course_id = @course_id
+      AND slot_id = @slot_id
+      AND instructor_name = (SELECT instructor_name FROM Instructor WHERE instructor_id = @instructor_id);
 
 GO
 
@@ -363,7 +367,7 @@ CREATE VIEW all_Pending_Requests
 AS
 	SELECT r.*, s.f_name, s.l_name, a.advisor_name 
 	FROM Request r INNER JOIN Student s on s.student_id=r.student_id INNER JOIN Advisor a on a.advisor_id = r.advisor_id
-	where req_status='pending'
+	WHERE req_status='pending'
 Go
 
 --------------------------- 2.3 X ----------------------------------------
