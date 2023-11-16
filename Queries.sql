@@ -79,7 +79,7 @@ AS
 		student_id INT NOT NULL,
 		course_id  INT NOT NULL,
 		instructor_id INT NOT NULL,
-		semester_code VARCHAR(40) NOT NULL,
+		semester_code VARCHAR(40),
 		exam_type VARCHAR(40)  CHECK (exam_type IN ('Normal', 'First_makeup', 'Second_makeup')) DEFAULT 'Normal',
 		grade VARCHAR(40),
 		CONSTRAINT Student_Instructor_Course_Take_id PRIMARY KEY (student_id, course_id, instructor_id),
@@ -104,9 +104,9 @@ AS
 
 	CREATE TABLE Slot(
 		slot_id INT PRIMARY KEY IDENTITY,
-		slot_day VARCHAR(40) NOT NULL,
-		slot_time VARCHAR(40) NOT NULL,
-		slot_location VARCHAR(40) NOT NULL,
+		slot_day VARCHAR(40),
+		slot_time VARCHAR(40),
+		slot_location VARCHAR(40),
 		course_id INT NOT NULL,
 		instructor_id INT NOT NULL,
 		FOREIGN KEY (course_id) REFERENCES Course ON DELETE CASCADE,
@@ -114,7 +114,7 @@ AS
 	);
 
 	CREATE TABLE Graduation_Plan(
-		plan_id INT NOT NULL,
+		plan_id INT,
 		semester_code VARCHAR(40) NOT NULL,
 		semester_credit_hours INT NOT NULL,
 		expected_grad_semester VARCHAR(40) NOT NULL,
@@ -138,10 +138,10 @@ AS
 		request_id INT PRIMARY KEY IDENTITY,
 		req_type VARCHAR(40) NOT NULL,
 		comment VARCHAR(40) NOT NULL,
-		req_status VARCHAR(40) NOT NULL CHECK (req_status IN ('pending', 'accepted', 'rejected')) DEFAULT 'pending',
-		credit_hours INT NOT NULL,
+		req_status VARCHAR(40) CHECK (req_status IN ('pending', 'accepted', 'rejected')) DEFAULT 'pending',
+		credit_hours INT,
 		student_id INT NOT NULL FOREIGN KEY REFERENCES Student ON DELETE CASCADE,
-		advisor_id INT NOT NULL FOREIGN KEY REFERENCES Advisor,
+		advisor_id INT FOREIGN KEY REFERENCES Advisor,
 		course_id INT NOT NULL FOREIGN KEY REFERENCES Course ON DELETE CASCADE,
 	);
 
@@ -327,8 +327,8 @@ CREATE PROCEDURE Procedures_StudentRegistration
 	@student_id INT OUTPUT
 AS
 
-	INSERT INTO Student (f_name, l_name, pass, faculty, email, major, semester)
-	VALUES (@first_name, @last_name, @password, @faculty, @email, @major, @semester)
+	INSERT INTO Student (f_name, l_name, faculty, email, major, pass, semester)
+	VALUES (@first_name, @last_name, @faculty, @email, @major, @password, @semester)
 
 	SELECT @student_id = student_id
 	FROM Student
@@ -369,21 +369,8 @@ CREATE PROCEDURE Procedures_AdminLinkInstructor
 
 AS
 
-INSERT INTO Courses_Slots_Instructor 
-(instructor_name, course_name, slot_id, slot_day, slot_time, slot_location, course_id, instructor_id)
-SELECT
-    (SELECT instructor_name FROM Instructor WHERE instructor_id = @instructor_id),
-    (SELECT course_name FROM Course WHERE course_id = @course_id),
-    @slot_id,
-    s.slot_day,
-    s.slot_time,
-    s.slot_location,
-    @course_id,
-	@instructor_id
-FROM
-    Slot s
-WHERE
-    s.slot_id = @slot_id;
+INSERT INTO Slot (slot_id, course_id, instructor_id)
+VALUES (@slot_id, @course_id, @instructor_id )
 
 GO
 
@@ -400,8 +387,8 @@ CREATE PROCEDURE Procedures_AdminLinkStudent
 
 AS
 
-    INSERT INTO Student_Instructor_Course_Take (instructor_id, student_id, course_id, semester_code, grade)
-    VALUES (@instructor_id, @student_id, @course_id, @semester_code, NULL);
+    INSERT INTO Student_Instructor_Course_Take (instructor_id, student_id, course_id, semester_code)
+    VALUES (@instructor_id, @student_id, @course_id, @semester_code);
 
 GO
 
@@ -425,6 +412,29 @@ AS
 	VALUES (@date, @type, @course_id)
 GO
 
+--------------------------- 2.3 N ----------------------------------------
+CREATE PROCEDURE Procedure_AdminUpdateStudentStatus
+	@student_id INT
+AS 
+IF EXISTS (SELECT * 
+			FROM Student s 
+			INNER JOIN Payment p on s.student_id = @student_id AND s.student_id = p.student_id 
+			INNER JOIN Installment i on p.payment_id = i.payment_id
+			AND i.inst_status = 'notPaid' AND i.deadline < CURRENT_TIMESTAMP)
+BEGIN
+	Update Student
+	Set Student.financial_status= 0
+	Where student_id= @student_id
+END
+ELSE
+BEGIN 
+	UPDATE Student
+	SET Student.financial_status = 1
+	WHERE student_id= @student_id
+END
+
+GO
+
 --------------------------- 2.3 O ----------------------------------------
 CREATE VIEW all_Pending_Requests 
 
@@ -432,6 +442,39 @@ AS
 	SELECT r.*, s.f_name, s.l_name, a.advisor_name 
 	FROM Request r INNER JOIN Student s on s.student_id=r.student_id INNER JOIN Advisor a on a.advisor_id = r.advisor_id
 	WHERE req_status='pending'
+GO
+
+--------------------------- 2.3 R ----------------------------------------
+CREATE PROCEDURE Procedures_AdvisorCreateGP
+    @semester_code VARCHAR(40),
+    @expected_graduation_date DATE,
+    @sem_credit_hours INT,
+    @student_id INT,
+    @advisor_id INT
+
+AS
+
+    INSERT INTO Graduation_Plan (semester_code, semester_credit_hours, expected_graduation_date, advisor_id, student_id)
+    VALUES (@semester_code, @sem_credit_hours, @expected_graduation_date, @advisor_id, @student_id);
+
+GO
+--------------------------- 2.3 S ----------------------------------------
+CREATE PROCEDURE Procedures_AdvisorAddCourseGP
+@student_id INT,
+@semester_code VARCHAR(40),
+@course_name VARCHAR(40)
+
+AS
+
+	INSERT INTO GradPlan_Course(plan_id, semester_code, course_id)
+	VALUES
+	
+	(
+	(SELECT plan_id FROM Graduation_Plan WHERE student_id = @student_id AND semester_code = @semester_code),
+	@semester_code,
+	(SELECT course_id FROM Course WHERE course_name = @course_name)
+	)
+
 GO
 
 --------------------------- 2.3 T ----------------------------------------
@@ -462,7 +505,6 @@ AS
 GO
 
 --------------------------- 2.3 X ----------------------------------------
-
 CREATE PROCEDURE Procedures_AdvisorViewAssignedStudents
 	@advisor_id INT,
 	@major VARCHAR(40)
@@ -477,3 +519,49 @@ EXEC Procedures_AdvisorViewAssignedStudents 1234, 'CSEN'
 
 GO
 
+--------------------------- 2.3 DD ----------------------------------------
+CREATE PROCEDURE Procedures_StudentSendingCourseRequest
+	@type VARCHAR(40),
+	@comment VARCHAR(40),
+	@student_id INT,
+	@course_id INT
+AS
+	INSERT INTO Request (req_type, comment, student_id, course_id)
+	VALUES (@type, @comment, @student_id, @course_id)
+GO
+
+--------------------------- 2.3 EE ----------------------------------------
+CREATE PROCEDURE Procedures_StudentSendingCHRequest
+	@type VARCHAR(40),
+	@comment VARCHAR(40),
+	@credit_hours INT,
+	@student_id INT
+AS
+	INSERT INTO Request (req_type, comment, student_id, credit_hours)
+	VALUES (@type, @comment, @student_id, @credit_hours)
+GO
+
+--------------------------- 2.3 NN ----------------------------------------
+CREATE PROCEDURE Procedures_ViewMS
+	@student_id INT
+AS
+	(SELECT c.*
+	FROM Graduation_plan gp, GradPlan_Course gpc, Course c
+	WHERE gp.plan_id = gpc.plan_id AND gpc.course_id = c.course_id AND gp.student_id = @student_id)
+
+	EXCEPT
+
+	(SELECT c.*
+	FROM Student_Instructor_Course_Take s, Course c
+	WHERE s.course_id = c.course_id AND s.student_id = @student_id)
+GO
+
+--------------------------- 2.3 OO ----------------------------------------
+CREATE PROCEDURE Procedures_ChooseInstructor
+	@student_id INT,
+	@instructor_id INT,
+	@course_id INT
+AS
+	INSERT INTO Student_Instructor_Course_Take (student_id, instructor_id, course_id)
+	VALUES (@student_id, @instructor_id, @course_id)
+GO
