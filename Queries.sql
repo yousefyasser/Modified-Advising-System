@@ -683,7 +683,7 @@ CREATE PROC Procedures_StudentRegisterFirstMakeup
 GO
 
 --------------------------- 2.3 KK ----------------------------------------
-CREATE PROC Procedures_StudentRegisterFirstMakeup
+CREATE PROC Procedures_StudentRegisterSecondMakeup
 	@student_id INT,
 	@course_id INT,
 	@current_semester VARCHAR(40)
@@ -704,7 +704,7 @@ CREATE PROC Procedures_StudentRegisterFirstMakeup
 
 		SELECT @exam_id = exam_id
 		FROM MakeUp_Exam mkx, Semester s
-		WHERE	mk_exam_type		=	'First_makeup' 
+		WHERE	mk_exam_type		=	'Second_makeup' 
 		AND		course_id			=	@course_id
 		AND		mk_exam_date	between	@sem1.s_date AND @sem2.end_date
 
