@@ -661,15 +661,22 @@ CREATE PROC Procedures_StudentRegisterFirstMakeup
 
 	AS
 		DECLARE @exam_id INT
+		DECLARE @crs_sem VARCHAR(40)
 		DECLARE @year INT
 		DECLARE @sem1 VARCHAR(40)
 		DECLARE @sem2 VARCHAR(40)
 
-		SELECT	@year	=	CAST (SUBSTRING (@current_semester, 2, 2) AS INT)
-		SELECT	@sem1	=	CASE RIGHT(@current_semester, 2)
+		SELECT	@crs_sem = semester_code
+		FROM	Student_Instructor_Course_Take
+		WHERE	student_id = @student_id
+		AND		course_id = @course_id
+
+		SELECT	@year	=	CAST (SUBSTRING (@crs_sem, 2, 2) AS INT)
+
+		SELECT	@sem1	=	CASE RIGHT(@crs_sem, 2)
 								WHEN 'R1' THEN 'W' + CAST (@year AS VARCHAR)
 								WHEN 'R2' THEN 'S' + CAST ((@year + 1) AS VARCHAR)
-								ELSE @current_semester
+								ELSE @crs_sem
 							END
 		SELECT	@sem2 = IIF(LEFT(@sem1, 1) = 'W', 'S', 'W') + CAST ((@year + 1) AS VARCHAR)
 
@@ -681,6 +688,7 @@ CREATE PROC Procedures_StudentRegisterFirstMakeup
 
 		INSERT INTO Exam_Student
 		VALUES (@exam_id, @student_id, @course_id)
+
 	
 GO
 
@@ -692,15 +700,22 @@ CREATE PROC Procedures_StudentRegisterSecondMakeup
 
 	AS
 		DECLARE @exam_id INT
+		DECLARE @crs_sem VARCHAR(40)
 		DECLARE @year INT
 		DECLARE @sem1 VARCHAR(40)
 		DECLARE @sem2 VARCHAR(40)
 
-		SELECT	@year	=	CAST (SUBSTRING (@current_semester, 2, 2) AS INT)
-		SELECT	@sem1	=	CASE RIGHT(@current_semester, 2)
+		SELECT	@crs_sem = semester_code
+		FROM	Student_Instructor_Course_Take
+		WHERE	student_id = @student_id
+		AND		course_id = @course_id
+
+		SELECT	@year	=	CAST (SUBSTRING (@crs_sem, 2, 2) AS INT)
+
+		SELECT	@sem1	=	CASE RIGHT(@crs_sem, 2)
 								WHEN 'R1' THEN 'W' + CAST (@year AS VARCHAR)
 								WHEN 'R2' THEN 'S' + CAST ((@year + 1) AS VARCHAR)
-								ELSE @current_semester
+								ELSE @crs_sem
 							END
 		SELECT	@sem2 = IIF(LEFT(@sem1, 1) = 'W', 'S', 'W') + CAST ((@year + 1) AS VARCHAR)
 
