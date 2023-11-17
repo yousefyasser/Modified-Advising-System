@@ -653,6 +653,64 @@ RETURN
 		AND instructor_id= @instructor_id
 GO
 
+--------------------------- 2.3 II ----------------------------------------
+CREATE PROC Procedures_StudentRegisterFirstMakeup
+	@student_id INT,
+	@course_id INT,
+	@current_semester VARCHAR(40)
+
+	AS
+		DECLARE @exam_id INT
+		DECLARE @year INT
+		DECLARE @sem1 VARCHAR(40)
+		DECLARE @sem2 VARCHAR(40)
+
+		SELECT	@year	=	CAST (SUBSTRING (@current_semester, 2, 2) AS INT)
+		SELECT	@sem1	=	CASE RIGHT(@current_semester, 2)
+								WHEN 'R1' THEN 'W' + CAST (@year AS VARCHAR)
+								WHEN 'R2' THEN 'S' + CAST ((@year + 1) AS VARCHAR)
+								ELSE @current_semester
+							END
+		SELECT	@sem2 = IIF(LEFT(@sem1, 1) = 'W', 'S', 'W') + CAST ((@year + 1) AS VARCHAR)
+
+		SELECT @exam_id = exam_id
+		FROM MakeUp_Exam mkx, Semester s
+		WHERE	mk_exam_type		=	'First_makeup' 
+		AND		course_id			=	@course_id
+		AND		mk_exam_date	between	@sem1.s_date AND @sem2.end_date
+
+	
+GO
+
+--------------------------- 2.3 KK ----------------------------------------
+CREATE PROC Procedures_StudentRegisterFirstMakeup
+	@student_id INT,
+	@course_id INT,
+	@current_semester VARCHAR(40)
+
+	AS
+		DECLARE @exam_id INT
+		DECLARE @year INT
+		DECLARE @sem1 VARCHAR(40)
+		DECLARE @sem2 VARCHAR(40)
+
+		SELECT	@year	=	CAST (SUBSTRING (@current_semester, 2, 2) AS INT)
+		SELECT	@sem1	=	CASE RIGHT(@current_semester, 2)
+								WHEN 'R1' THEN 'W' + CAST (@year AS VARCHAR)
+								WHEN 'R2' THEN 'S' + CAST ((@year + 1) AS VARCHAR)
+								ELSE @current_semester
+							END
+		SELECT	@sem2 = IIF(LEFT(@sem1, 1) = 'W', 'S', 'W') + CAST ((@year + 1) AS VARCHAR)
+
+		SELECT @exam_id = exam_id
+		FROM MakeUp_Exam mkx, Semester s
+		WHERE	mk_exam_type		=	'First_makeup' 
+		AND		course_id			=	@course_id
+		AND		mk_exam_date	between	@sem1.s_date AND @sem2.end_date
+
+	
+GO
+
 --------------------------- 2.3 NN ----------------------------------------
 CREATE PROCEDURE Procedures_ViewMS
 	@student_id INT
