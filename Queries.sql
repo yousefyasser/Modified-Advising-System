@@ -361,6 +361,32 @@ EXEC AdminListStudentsWithAdvisors
 
 GO
 
+--------------------------- 2.3 F ----------------------------------------
+CREATE PROC AdminAddingSemester
+	@semester_code VARCHAR(40),
+	@start_date DATE,
+	@end_date DATE
+
+AS
+	INSERT INTO Semester
+	VALUES (@semester_code, @start_date, @end_date)
+
+GO
+
+--------------------------- 2.3 G ----------------------------------------
+CREATE PROC AdminAddingCourse
+	@major VARCHAR(40),
+	@semester INT,
+	@credit_hrs INT,
+	@course_name VARCHAR(40),
+	@offered BIT
+
+AS
+	INSERT INTO Course (course_name, major, is_offered, credit_hours, semester)
+	VALUES (@course_name, @major, @offered, @credit_hrs, @semester)
+
+GO
+
 --------------------------- 2.3 H ----------------------------------------
 CREATE PROCEDURE Procedures_AdminLinkInstructor
     @instructor_id INT,
