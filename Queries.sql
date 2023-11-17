@@ -588,6 +588,35 @@ AS
 	END
 
 GO
+--------------------------- 2.3 BB ----------------------------------------
+CREATE PROCEDURE Procedures_StudentaddMobile
+    @student_id INT,
+    @phone_number VARCHAR(40)
+AS
+    INSERT INTO Student_Phone (student_id, phone_number)
+    VALUES (@student_id, @phone_number);
+GO
+
+--------------------------- 2.3 CC ----------------------------------------
+CREATE FUNCTION FN_SemesterAvailableCourses(@semester_code VARCHAR(40))
+RETURNS TABLE
+AS
+RETURN
+    SELECT
+        c.course_id,
+        c.course_name,
+        c.major,
+        c.is_offered,
+        c.credit_hours,
+		c.semester
+    FROM
+        Course c
+    INNER JOIN
+        Course_Semester cs ON c.course_id = cs.course_id
+    WHERE
+        cs.semester_code = @semester_code
+        AND c.is_offered = 1
+GO
 
 --------------------------- 2.3 DD ----------------------------------------
 CREATE PROCEDURE Procedures_StudentSendingCourseRequest
@@ -609,6 +638,19 @@ CREATE PROCEDURE Procedures_StudentSendingCHRequest
 AS
 	INSERT INTO Request (req_type, comment, student_id, credit_hours)
 	VALUES (@type, @comment, @student_id, @credit_hours)
+GO
+--------------------------- 2.3 HH ----------------------------------------
+CREATE FUNCTION FN_StudentViewSlot(@course_id int, @instructor_id int)
+RETURNS TABLE
+AS
+RETURN 
+	SELECT 
+		slot_id, slot_day, slot_time, slot_location, course_name, instructor_name
+	FROM 
+		Course_Slots_Instructor
+	WHERE 
+		course_id = @course_id
+		AND instructor_id= @instructor_id
 GO
 
 --------------------------- 2.3 NN ----------------------------------------
