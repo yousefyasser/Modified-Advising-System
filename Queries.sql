@@ -677,8 +677,10 @@ CREATE PROC Procedures_StudentRegisterFirstMakeup
 		FROM MakeUp_Exam mkx, Semester s
 		WHERE	mk_exam_type		=	'First_makeup' 
 		AND		course_id			=	@course_id
-		AND		mk_exam_date	between	@sem1.s_date AND @sem2.end_date
+		AND		mk_exam_date	between	@sem1.end_date AND @sem2.s_date
 
+		INSERT INTO Exam_Student
+		VALUES (@exam_id, @student_id, @course_id)
 	
 GO
 
@@ -706,7 +708,10 @@ CREATE PROC Procedures_StudentRegisterSecondMakeup
 		FROM MakeUp_Exam mkx, Semester s
 		WHERE	mk_exam_type		=	'Second_makeup' 
 		AND		course_id			=	@course_id
-		AND		mk_exam_date	between	@sem1.s_date AND @sem2.end_date
+		AND		mk_exam_date	between	@sem1.end_date AND @sem2.s_date
+
+		INSERT INTO Exam_Student
+		VALUES (@exam_id, @student_id, @course_id)
 
 	
 GO
