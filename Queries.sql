@@ -470,6 +470,29 @@ AS
 	WHERE req_status='pending'
 GO
 
+--------------------------- 2.3 P ----------------------------------------
+CREATE PROC Procedures_AdminDeleteSlots
+	@current_semester VARCHAR (40)
+
+AS
+	DELETE Slot
+	FROM Slot sl
+	JOIN Course_Semester crs_sem
+	ON sl.course_id = crs_sem.course_id AND crs_sem.semester_code <> @current_semester
+
+GO
+
+--------------------------- 2.3 Q ----------------------------------------
+CREATE FUNCTION FN_AdvisorLogin (@id INT, @password VARCHAR(40))
+RETURNS BIT
+
+AS
+	BEGIN
+		RETURN IIF (@password = (SELECT pass FROM Student WHERE id = @id), 1, 0)
+	END
+
+GO
+
 --------------------------- 2.3 R ----------------------------------------
 CREATE PROCEDURE Procedures_AdvisorCreateGP
     @semester_code VARCHAR(40),
