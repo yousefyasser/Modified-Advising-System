@@ -488,7 +488,7 @@ RETURNS BIT
 
 AS
 	BEGIN
-		RETURN IIF (@password = (SELECT pass FROM Student WHERE id = @id), 1, 0)
+		RETURN IIF (@password = (SELECT pass FROM Advisor WHERE id = @id), 1, 0)
 	END
 
 GO
@@ -565,6 +565,27 @@ AS
 GO
 
 EXEC Procedures_AdvisorViewAssignedStudents 1234, 'CSEN'
+
+GO
+
+--------------------------- 2.3 Z ----------------------------------------
+CREATE PROC Procedures_AdvisorViewPendingRequests
+	@advisor_id INT
+AS    
+    SELECT *
+	FROM Request
+	WHERE advisor_id = @advisor_id AND req_status = 'pending'
+
+GO
+
+--------------------------- 2.3 AA ----------------------------------------
+CREATE FUNCTION FN_StudentLogin (@id INT, @password VARCHAR(40))
+RETURNS BIT
+
+AS
+	BEGIN
+		RETURN IIF (@password = (SELECT pass FROM Student WHERE id = @id), 1, 0)
+	END
 
 GO
 
