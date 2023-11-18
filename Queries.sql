@@ -528,11 +528,11 @@ GO
 
 --------------------------- 2.3 T ----------------------------------------
 CREATE PROCEDURE Procedures_AdvisorUpdateGP
-	@expected_grad_semster VARCHAR(40),
+	@expected_grad_semester VARCHAR(40),
 	@studentID INT 
 AS
 	UPDATE Graduation_Plan
-	SET expected_grad_semester = @expected_grad_semster
+	SET expected_grad_semester = @expected_grad_semester
 	WHERE student_id = @studentID
 GO
 
@@ -578,9 +578,13 @@ AS
 	Declare @chours int
 	Declare @asghours int
 	Declare @rcourse_id int
-	Select @grade= stc.grade,@chours=c.credit_hours, @asghours=s.assigned_hours, @rcourse_Id=r.course_id
+
+	Select @chours=c.credit_hours, @asghours=s.assigned_hours
+	from Request r Inner Join Course c on r.course_id=c.course_id Inner Join Student s on s.student_id=r.student_id 
+	where r.request_id= @requestID and s.student_id=@studentID and s.advisor_id = @advisorID
+
+	Select @grade= stc.grade, @rcourse_Id=r.course_id
 		from Request r Inner Join PreqCourse_course pre on r.course_id = pre.course_id 
-		Inner Join Course c on r.course_id=c.course_id
 		Inner Join Student s on s.student_id=r.student_id 
 		Inner Join Student_Instructor_Course_Take stc on pre.prerequisite_course_id= stc.course_id
 		where r.request_id= @requestID and stc.student_id=@studentID and s.advisor_id = @advisorID
@@ -593,7 +597,7 @@ AS
 	Begin
 		update Request 
 		Set Request.req_status = 'accepted' where Request.request_id = @RequestID
-		INSERT INTO Student_Instructor_Course_Take ( student_id, course_id)
+		INSERT INTO Student_Instructor_Course_Take (student_id, course_id)
     VALUES (@student_id, @rcourse_id);
 	End
 
