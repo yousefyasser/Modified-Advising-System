@@ -578,7 +578,8 @@ AS
 	Declare @chours int
 	Declare @asghours int
 	Declare @rcourse_id int
-
+	Declare @rinstructor_id int
+	
 	Select @chours=c.credit_hours, @asghours=s.assigned_hours
 	from Request r Inner Join Course c on r.course_id=c.course_id Inner Join Student s on s.student_id=r.student_id 
 	where r.request_id= @requestID and s.student_id=@studentID and s.advisor_id = @advisorID
@@ -587,7 +588,12 @@ AS
 		from Request r Inner Join PreqCourse_course pre on r.course_id = pre.course_id 
 		Inner Join Student s on s.student_id=r.student_id 
 		Inner Join Student_Instructor_Course_Take stc on pre.prerequisite_course_id= stc.course_id
-		where r.request_id= @requestID and stc.student_id=@studentID and s.advisor_id = @advisorID
+		where r.request_id= @requestID and stc.student_id=@studentID and s.advisor_id = @advisorID 
+	
+	Select @rinstructor_id = instructor_id
+		from Request r Inner Join Instructor_Course ic on r.course_id = ic.course_id
+		where r.request_id= @requestID
+
 	IF (@grade is null OR @chours>@asghours)
 	Begin
 		update Request 
@@ -597,8 +603,8 @@ AS
 	Begin
 		update Request 
 		Set Request.req_status = 'accepted' where Request.request_id = @RequestID
-		INSERT INTO Student_Instructor_Course_Take (student_id, course_id)
-    VALUES (@student_id, @rcourse_id);
+		INSERT INTO Student_Instructor_Course_Take (student_id, course_id, instructor_id)
+    VALUES (@student_id, @rcourse_id, @rinstructor_id);
 	End
 
 GO
@@ -816,3 +822,16 @@ AS
 	INSERT INTO Student_Instructor_Course_Take (student_id, instructor_id, course_id)
 	VALUES (@student_id, @instructor_id, @course_id)
 GO
+
+--------------------------- 2.3 OO ----------------------------------------
+/*
+Y) Approve/Reject courses request
+After approving/rejecting the request, the status of the request should be
+updated and all consequences should be handled. The approving/rejecting
+is based on the below conditions:
+● All the Requested course’s prerequisites are taken.
+● Student has enough assigned hours for the requested course.
+
+*/
+
+	
