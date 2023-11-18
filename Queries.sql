@@ -568,6 +568,36 @@ EXEC Procedures_AdvisorViewAssignedStudents 1234, 'CSEN'
 
 GO
 
+--------------------------- 2.3 Y ----------------------------------------
+Create Procedure Procedures_AdvisorApproveRejectCourseRequest
+	@requestID int,
+	@studentID int,
+	@advisorID int 
+AS
+	Declare @grade varchar(40)
+	Declare @chours int
+	Declare @asghours int
+	Declare @rcourse_id int
+	Select @grade= stc.grade,@chours=c.credit_hours, @asghours=s.assigned_hours, @rcourse_Id=r.course_id
+		from Request r Inner Join PreqCourse_course pre on r.course_id = pre.course_id 
+		Inner Join Course c on r.course_id=c.course_id
+		Inner Join Student s on s.student_id=r.student_id 
+		Inner Join Student_Course_Instrucror_Take stc on pre.prerequisite_course_id= stc.course_id
+		where r.request_id= @requestID and stc.student_id=@studentID and s.advisor_id = @advisorID
+	IF (@grade is null OR @chours>@asghours)
+	Begin
+		update Request 
+		Set Request.req_status = 'rejected' where Request.request_id = @RequestID
+	End
+	Else
+	Begin
+		update Request 
+		Set Request.req_status = 'accepted' where Request.request_id = @RequestID
+		INSERT INTO Student_Instructor_Course_Take ( student_id, course_id)
+    VALUES (@student_id, @rcourse_id);
+	End
+
+GO
 --------------------------- 2.3 Z ----------------------------------------
 CREATE PROC Procedures_AdvisorViewPendingRequests
 	@advisor_id INT
