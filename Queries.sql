@@ -574,27 +574,31 @@ Create Procedure Procedures_AdvisorApproveRejectCourseRequest
 	@studentID int,
 	@advisorID int 
 AS
-	Declare @grade varchar(40)
+	Declare @grade bit
 	Declare @chours int
 	Declare @asghours int
 	Declare @rcourse_id int
 	Declare @rinstructor_id int
-	
-	Select @chours=c.credit_hours, @asghours=s.assigned_hours
+
+	Select @chours=c.credit_hours, @asghours=s.assigned_hours, @rcourse_Id=r.course_id
 	from Request r Inner Join Course c on r.course_id=c.course_id Inner Join Student s on s.student_id=r.student_id 
 	where r.request_id= @requestID and s.student_id=@studentID and s.advisor_id = @advisorID
-
-	Select @grade= stc.grade, @rcourse_Id=r.course_id
+	set @grade=0
+	If(exists(Select stc.grade
 		from Request r Inner Join PreqCourse_course pre on r.course_id = pre.course_id 
 		Inner Join Student s on s.student_id=r.student_id 
 		Inner Join Student_Instructor_Course_Take stc on pre.prerequisite_course_id= stc.course_id
-		where r.request_id= @requestID and stc.student_id=@studentID and s.advisor_id = @advisorID 
+		where r.request_id= @requestID and stc.student_id=@studentID and s.advisor_id = @advisorID and stc.grade=null ))
+		BEGIN 
+			set @grade=1
+		end
+		
 	
 	Select @rinstructor_id = instructor_id
 		from Request r Inner Join Instructor_Course ic on r.course_id = ic.course_id
 		where r.request_id= @requestID
 
-	IF (@grade is null OR @chours>@asghours)
+	IF (@grade =1 OR @chours>@asghours)
 	Begin
 		update Request 
 		Set Request.req_status = 'rejected' where Request.request_id = @RequestID
