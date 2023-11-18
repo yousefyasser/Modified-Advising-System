@@ -588,7 +588,7 @@ AS
 		from Request r Inner Join PreqCourse_course pre on r.course_id = pre.course_id 
 		Inner Join Student s on s.student_id=r.student_id 
 		Inner Join Student_Instructor_Course_Take stc on pre.prerequisite_course_id= stc.course_id
-		where r.request_id= @requestID and stc.student_id=@studentID and s.advisor_id = @advisorID and stc.grade=null ))
+		where r.request_id= @requestID and stc.student_id=@studentID and s.advisor_id = @advisorID and stc.grade is null ))
 		BEGIN 
 			set @grade=1
 		end
