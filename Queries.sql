@@ -528,11 +528,11 @@ GO
 
 --------------------------- 2.3 T ----------------------------------------
 CREATE PROCEDURE Procedures_AdvisorUpdateGP
-	@expected_grad_semester VARCHAR(40),
+	@expected_grad_semster VARCHAR(40),
 	@studentID INT 
 AS
 	UPDATE Graduation_Plan
-	SET expected_grad_semester = @expected_grad_semester
+	SET expected_grad_semester = @expected_grad_semster
 	WHERE student_id = @studentID
 GO
 
