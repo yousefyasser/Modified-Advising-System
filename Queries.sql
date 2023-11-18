@@ -582,7 +582,7 @@ AS
 		from Request r Inner Join PreqCourse_course pre on r.course_id = pre.course_id 
 		Inner Join Course c on r.course_id=c.course_id
 		Inner Join Student s on s.student_id=r.student_id 
-		Inner Join Student_Course_Instrucror_Take stc on pre.prerequisite_course_id= stc.course_id
+		Inner Join Student_Instructor_Course_Take stc on pre.prerequisite_course_id= stc.course_id
 		where r.request_id= @requestID and stc.student_id=@studentID and s.advisor_id = @advisorID
 	IF (@grade is null OR @chours>@asghours)
 	Begin
@@ -718,6 +718,33 @@ CREATE PROC Procedures_StudentRegisterFirstMakeup
 
 		INSERT INTO Exam_Student
 		VALUES (@exam_id, @student_id, @course_id)
+
+	
+GO
+
+
+--------------------------- 2.3 JJ ----------------------------------------
+CREATE FUNCTION FN_StudentCheckSMEligiability (@student_id INT, @course_id INT)
+RETURNS BIT
+	AS
+	BEGIN
+		DECLARE @fail_crs_no INT
+		DECLARE @grade VARCHAR(40)
+
+		SELECT @fail_crs_no = COUNT(*)
+		FROM Student_Instructor_Course_Take
+		WHERE student_id = @student_id
+		AND grade = 'failed'
+
+		SELECT	@grade = grade
+		FROM	Student_Instructor_Course_Take
+		WHERE	student_id = @student_id
+		AND		course_id = @course_id
+		AND		exam_type = 'First_makeup'
+
+
+		RETURN IIF(@fail_crs_no <= 2 AND (grade = NULL OR grade = 'failed'), 1, 0)
+	END
 
 	
 GO
