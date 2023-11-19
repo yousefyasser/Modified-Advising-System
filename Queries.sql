@@ -585,10 +585,10 @@ AS
 	where r.request_id= @requestID and s.student_id=@studentID and s.advisor_id = @advisorID
 	set @grade=0
 	If(exists(Select stc.grade
-		from Request r Inner Join PreqCourse_course pre on r.course_id = pre.course_id 
-		Inner Join Student s on s.student_id=r.student_id 
-		Inner Join Student_Instructor_Course_Take stc on pre.prerequisite_course_id= stc.course_id
-		where r.request_id= @requestID and stc.student_id=@studentID and s.advisor_id = @advisorID and stc.grade is null ))
+		from Request r Inner Join Student s on s.student_id=r.student_id 
+		Inner Join Student_Instructor_Course_Take stc on stc.student_id=s.student_id
+		Left Outer Join PreqCourse_course pre on pre.course_id = r.course_id
+		where r.request_id= @requestID and pre.prerequisite_course_id= stc.course_id and stc.student_id=@studentID and s.advisor_id = @advisorID and (stc.grade is not null or pre.prerequisite_course_id is null )))
 		BEGIN 
 			set @grade=1
 		end
@@ -598,7 +598,7 @@ AS
 		from Request r Inner Join Instructor_Course ic on r.course_id = ic.course_id
 		where r.request_id= @requestID
 
-	IF (@grade =1 OR @chours>@asghours)
+	IF (@grade =0 OR @chours>@asghours)
 	Begin
 		update Request 
 		Set Request.req_status = 'rejected' where Request.request_id = @RequestID
