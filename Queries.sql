@@ -38,7 +38,7 @@ AS
 	CREATE TABLE Student_phone(
 		student_id INT NOT NULL,
 		phone_number VARCHAR(40) NOT NULL,
-		CONSTRAINT phone_id PRIMARY KEY(student_id, phone_number),
+		CONSTRAINT Pk_Phone PRIMARY KEY(student_id, phone_number),
 		FOREIGN KEY (student_id) REFERENCES Student ON DELETE CASCADE
 	);
 
@@ -46,7 +46,7 @@ AS
 		course_id INT PRIMARY KEY IDENTITY,
 		course_name VARCHAR(40) NOT NULL,
 		major VARCHAR(40) NOT NULL,
-		is_offered BIT NOT NULL,
+		is_offered BIT CHECK (is_offered IN (0, 1)) /* 0 MEANS OFFERED, 1 MEANS NOT OFFERED Current Sem */,
 		credit_hours INT NOT NULL,
 		semester INT NOT NULL
 	);
@@ -75,23 +75,24 @@ AS
 		FOREIGN KEY (instructor_id) REFERENCES Instructor ON DELETE CASCADE
 	);
 
+	CREATE TABLE Semester(
+		semester_code VARCHAR(40) PRIMARY KEY,
+		s_date date NOT NULL,
+		end_date date NOT NULL
+	);
+
 	CREATE TABLE Student_Instructor_Course_Take(
 		student_id INT NOT NULL,
 		course_id  INT NOT NULL,
 		instructor_id INT NOT NULL,
 		semester_code VARCHAR(40),
-		exam_type VARCHAR(40)  CHECK (exam_type IN ('Normal', 'First_makeup', 'Second_makeup')) DEFAULT 'Normal',
+		exam_type VARCHAR(40) CHECK (exam_type IN ('Normal', 'First_makeup', 'Second_makeup')) DEFAULT 'Normal',
 		grade VARCHAR(40),
-		CONSTRAINT Student_Instructor_Course_Take_id PRIMARY KEY (student_id, course_id, instructor_id),
+		CONSTRAINT Student_Instructor_Course_Take_id PRIMARY KEY (student_id, course_id, semester_code),
 		FOREIGN KEY (student_id) REFERENCES Student ON DELETE CASCADE,
 		FOREIGN KEY (course_id) REFERENCES Course ON DELETE CASCADE,
-		FOREIGN KEY (instructor_id) REFERENCES Instructor ON DELETE CASCADE
-	);
-
-	CREATE TABLE Semester(
-		semester_code VARCHAR(40) PRIMARY KEY,
-		s_date date NOT NULL,
-		end_date date NOT NULL
+		FOREIGN KEY (instructor_id) REFERENCES Instructor ON DELETE CASCADE,
+		FOREIGN KEY (semester_code) REFERENCES Semester ON DELETE CASCADE
 	);
 
 	CREATE TABLE Course_Semester(
@@ -117,7 +118,7 @@ AS
 		plan_id INT,
 		semester_code VARCHAR(40) NOT NULL,
 		semester_credit_hours INT NOT NULL,
-		expected_grad_semester VARCHAR(40) NOT NULL,
+		expected_grad_semester date NOT NULL,
 		advisor_id INT NOT NULL,
 		student_id INT NOT NULL,
 		CONSTRAINT Graduation_plan_id PRIMARY KEY (plan_id, semester_code),
@@ -148,7 +149,7 @@ AS
 	CREATE TABLE MakeUp_Exam(
 		exam_id INT PRIMARY KEY IDENTITY,
 		mk_exam_date datetime NOT NULL,
-		mk_exam_type VARCHAR(40) NOT NULL,
+		mk_exam_type VARCHAR(40) CHECK (mk_exam_type IN ('First_makeup', 'Second_makeup')) DEFAULT 'First_makeup',
 		course_id INT NOT NULL FOREIGN KEY REFERENCES Course ON DELETE CASCADE,
 	);
 
@@ -175,7 +176,7 @@ AS
 		payment_id INT NOT NULL FOREIGN KEY REFERENCES Payment ON DELETE CASCADE,
 		deadline datetime NOT NULL,
 		inst_amount INT NOT NULL,
-		inst_status VARCHAR(40) NOT NULL,
+		inst_status VARCHAR(40) CHECK (inst_status IN ('notPaid', 'Paid')) DEFAULT 'notPaid' NOT NULL,
 		inst_start_date datetime NOT NULL,
 		CONSTRAINT Pk_installment PRIMARY KEY (payment_id,deadline)
 	);
@@ -795,6 +796,32 @@ CREATE PROC Procedures_StudentRegisterSecondMakeup
 		VALUES (@exam_id, @student_id, @course_id)
 
 	
+GO
+
+--------------------------- 2.3 LL ----------------------------------------
+CREATE PROCEDURE Procedures_ViewRequiredCourses
+	@student_id INT,
+	@current_semester_code VARCHAR(40)
+
+	AS
+		
+
+
+
+
+
+
+GO
+
+--------------------------- 2.3 MM ----------------------------------------
+CREATE PROCEDURE Procedures_ViewOptionalCourse
+	@student_id INT,
+	@current_semester_code VARCHAR(40)
+
+	AS
+		
+
+
 GO
 
 --------------------------- 2.3 NN ----------------------------------------
