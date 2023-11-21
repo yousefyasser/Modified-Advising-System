@@ -578,7 +578,6 @@ AS
 	Declare @chours int
 	Declare @asghours int
 	Declare @rcourse_id int
-	Declare @rinstructor_id int
 
 	Select @chours=c.credit_hours, @asghours=s.assigned_hours, @rcourse_Id=r.course_id
 	from Request r Inner Join Course c on r.course_id=c.course_id Inner Join Student s on s.student_id=r.student_id 
@@ -586,19 +585,15 @@ AS
 	set @grade=0
 	If(exists(Select stc.grade
 		from Request r Inner Join Student s on s.student_id=r.student_id 
-		Inner Join Student_Instructor_Course_Take stc on stc.student_id=s.student_id
 		Left Outer Join PreqCourse_course pre on pre.course_id = r.course_id
-		where r.request_id= @requestID and pre.prerequisite_course_id= stc.course_id and stc.student_id=@studentID and s.advisor_id = @advisorID and (stc.grade is not null or pre.prerequisite_course_id is null )))
+		Left Outer Join Student_Instructor_Course_Take stc on stc.student_id=s.student_id and pre.prerequisite_course_id= stc.course_id
+		where r.request_id= @requestID and stc.student_id=@studentID and s.advisor_id = @advisorID and stc.grade is null and pre.prerequisite_course_id is not null ))
 		BEGIN 
 			set @grade=1
 		end
 		
-	
-	Select @rinstructor_id = instructor_id
-		from Request r Inner Join Instructor_Course ic on r.course_id = ic.course_id
-		where r.request_id= @requestID
 
-	IF (@grade =0 OR @chours>@asghours)
+	IF (@grade =1 OR @chours>@asghours)
 	Begin
 		update Request 
 		Set Request.req_status = 'rejected' where Request.request_id = @RequestID
@@ -607,8 +602,8 @@ AS
 	Begin
 		update Request 
 		Set Request.req_status = 'accepted' where Request.request_id = @RequestID
-		INSERT INTO Student_Instructor_Course_Take (student_id, course_id, instructor_id)
-    VALUES (@student_id, @rcourse_id, @rinstructor_id);
+		INSERT INTO Student_Instructor_Course_Take (student_id, course_id)
+    VALUES (@student_id, @rcourse_id);
 	End
 
 GO
