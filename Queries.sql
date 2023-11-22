@@ -613,11 +613,18 @@ RETURNS TABLE
 GO
 
 --------------------------- 2.3 W ----------------------------------------
-CREATE PROC Procedures_AdvisorApproveRejectCHRequest --NEEDS REVISTING BECAUSE IT IS WRONG
+CREATE PROC Procedures_AdvisorApproveRejectCHRequest
 	@request_id INT,
 	@current_semester VARCHAR(40)
 	AS
-		WITH Acc AS
+		DECLARE @acc TABLE (acc INT);
+
+		INSERT
+		INTO	@acc
+		SELECT	request_id
+		FROM	Request
+		WHERE	request_id
+		IN
 		(
 		SELECT	request_id
 		FROM	Request r, Student s
@@ -625,18 +632,17 @@ CREATE PROC Procedures_AdvisorApproveRejectCHRequest --NEEDS REVISTING BECAUSE I
 		AND		req_type		=	'credit'
 		AND		gpa				<=	3.7
 		AND		credit_hours	+	assigned_hours	<	34 --maybe check constraint
-
 		)
 
 		UPDATE	Request
 		SET		req_status	=	'accepted'
 		WHERE	request_id
-		IN		(Acc)
+		IN		(@acc)
 
 		UPDATE	Student
 		SET		assigned_hours	=	assigned_hours	+	IIF(credit_hours > 3, 3, credit_hours)
-		FROM	Acc
-		WHERE	Student.student_id	=	Acc.student_id	
+		FROM	@acc
+		WHERE	Student.student_id	=	@acc.student_id	
 
 GO
 
