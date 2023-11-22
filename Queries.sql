@@ -902,6 +902,32 @@ CREATE PROC Procedures_StudentRegisterSecondMakeup
 		VALUES	(exm_id, @student_id, @course_id)
 GO
 
+--------------------------- 2.3 LLR ----------------------------------------
+CREATE PROC Procedures_ViewRequiredCoursesR
+	@student_id INT,
+	@current_semester_code VARCHAR(40)
+	AS
+	BEGIN
+		SELECT	c.*
+		FROM	Student_Instructor_Course_Take sic, Semester sem
+		WHERE	sic.semester_code				=	sem.semester_code
+		AND		student_id						=	@student_id
+		AND		grade							=	'F'
+		AND		(sem_code						<>	@current_semester_code
+				OR
+				FN_StudentCheckSMEligibility
+				(@student_id, course_id)		=	0)
+
+		UNION
+
+		SELECT	c.*
+		FROM	Student s, Course c, Student_Instructor_Course_Take sic
+		WHERE	s.student_id	=	sic.student_id
+		AND		s.major			=	c.major
+		AND		s.semester		>	c.semester
+	END
+GO
+
 --------------------------- 2.3 LL ----------------------------------------
 CREATE PROCEDURE Procedures_ViewRequiredCourses
 	@student_id INT,
