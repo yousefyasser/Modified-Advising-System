@@ -736,6 +736,20 @@ AS
 	INSERT INTO Request (req_type, comment, student_id, credit_hours)
 	VALUES (@type, @comment, @student_id, @credit_hours)
 GO
+-------------------------- 2.3 GG ----------------------------------------
+CREATE FUNCTION FN_StudentUpcoming_installment (@student_id INT)
+RETURNS	DATETIME
+	AS
+		BEGIN
+			RETURN
+			(SELECT	TOP	1	i.deadline
+			FROM	Payment p, Installment i
+			WHERE	p.student_id	=	@student_id
+			AND		p.payment_id	=	i.payment_id
+			AND		i.inst_status	=	'not paid'
+			ORDER BY i.deadline)
+		END
+GO
 --------------------------- 2.3 HH ----------------------------------------
 CREATE FUNCTION FN_StudentViewSlot(@course_id int, @instructor_id int)
 RETURNS TABLE
