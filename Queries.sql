@@ -849,7 +849,7 @@ CREATE PROC Procedures_StudentRegisterFirstMakeup
 GO
 
 ---------------------------- 2.3 JJ ----------------------------------------
-CREATE FUNCTION FN_StudentCheckSMEligibilityyy (@student_id INT, @course_id INT)
+CREATE FUNCTION FN_StudentCheckSMEligibility (@student_id INT, @course_id INT)
 RETURNS BIT
 	AS
 	BEGIN
@@ -919,7 +919,7 @@ CREATE PROC Procedures_StudentRegisterSecondMakeup
 GO
 
 --------------------------- 2.3 LLR ----------------------------------------
-CREATE PROC Procedures_ViewRequiredCoursesRxyzlmnopqrt
+CREATE PROC Procedures_ViewRequiredCoursesR
 	@student_id INT,
 	@current_semester_code VARCHAR(40)
 	AS
@@ -927,7 +927,7 @@ CREATE PROC Procedures_ViewRequiredCoursesRxyzlmnopqrt
 		DECLARE @course_id INT;
 
 			(
-			SELECT	c1.*, master.FN_StudentCheckSMEligibilityyy (@student_id, course_id) AS func
+			SELECT	c1.*, master.FN_StudentCheckSMEligibility (@student_id, course_id) AS func
 			FROM	Student_Instructor_Course_Take sic1, Semester sem1, Course c1
 			WHERE	sic.semester_code				=	sem.semester_code
 			AND		student_id						=	@student_id
