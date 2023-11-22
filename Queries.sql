@@ -620,7 +620,8 @@ CREATE PROC Procedures_AdvisorApproveRejectCHRequest
 		WHERE	r.student_id	=	s.student_id
 		AND		req_type		=	'credit'
 		AND		gpa				<=	3.7
-		AND		credit_hours	+	assigned_hours	<	34
+		AND		credit_hours	+	assigned_hours	<	34 --maybe check constraint
+
 		)
 		AS	Acc
 
@@ -630,7 +631,7 @@ CREATE PROC Procedures_AdvisorApproveRejectCHRequest
 		IN		(Acc)
 
 		UPDATE	Student
-		SET		assigned_hours	=	assigned_hours	+	credit_hours
+		SET		assigned_hours	=	assigned_hours	+	IIF(credit_hours > 3, 3, credit_hours)
 		FROM	Acc
 		WHERE	Student.student_id	=	Acc.student_id	
 
