@@ -908,23 +908,30 @@ CREATE PROC Procedures_ViewRequiredCoursesR
 	@current_semester_code VARCHAR(40)
 	AS
 	BEGIN
-		SELECT	c.*
-		FROM	Student_Instructor_Course_Take sic, Semester sem
-		WHERE	sic.semester_code				=	sem.semester_code
-		AND		student_id						=	@student_id
-		AND		grade							=	'F'
-		AND		(sem_code						<>	@current_semester_code
-				OR
-				FN_StudentCheckSMEligibility
-				(@student_id, course_id)		=	0)
+		SELECT c2.*
+		FROM(
+			SELECT	course_id
+			FROM	Student_Instructor_Course_Take sic, Semester sem
+			WHERE	sic.semester_code				=	sem.semester_code
+			AND		student_id						=	@student_id
+			AND		grade							=	'F'
+			AND		(sem_code						<>	@current_semester_code
+					OR
+					FN_StudentCheckSMEligibility
+					(@student_id, course_id)		=	0)
 
-		UNION
+			UNION
 
-		SELECT	c.*
-		FROM	Student s, Course c, Student_Instructor_Course_Take sic
-		WHERE	s.student_id	=	sic.student_id
-		AND		s.major			=	c.major
-		AND		s.semester		>	c.semester
+			SELECT	course_id
+			FROM	Student s, Course c1, Student_Instructor_Course_Take sic
+			WHERE	s.student_id	=	sic.student_id
+			AND		s.major			=	c.major
+			AND		s.semester		>	c.semester
+			AND NOT EXIST IN (SELECT course_id FROM sic)
+			) AS temp
+		INNER JOIN Course c2
+		ON c2.course_id = temp.course_id
+			
 	END
 GO
 
