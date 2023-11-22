@@ -771,7 +771,7 @@ RETURNS	DATETIME
 			FROM	Payment p, Installment i
 			WHERE	p.student_id	=	@student_id
 			AND		p.payment_id	=	i.payment_id
-			AND		i.inst_status	=	'not paid'
+			AND		i.inst_status	=	'notPaid'
 			ORDER BY i.deadline)
 		END
 GO
@@ -932,19 +932,28 @@ GO
 CREATE PROCEDURE Procedures_ViewRequiredCourses
 	@student_id INT,
 	@current_semester_code VARCHAR(40)
-AS
-BEGIN
-	SELECT c.*
-	FROM Course c
-	JOIN Student_Instructor_Course_Take sict ON c.course_id = sict.course_id
-	WHERE @student_id = sict.student_id
-		AND (
-			(CAST(RIGHT(@current_semester_code, LEN(@current_semester_code) - 1) AS INT) >= CAST(RIGHT(sict.semester_code, LEN(sict.semester_code) - 1) AS INT) AND sict.grade = 'F' AND FN_StudentCheckSMEligiability(@student_id, sict.course_id) = 0) --loop?
-			OR
-			(CAST(RIGHT(@current_semester_code, LEN(@current_semester_code) - 1) AS INT) > CAST(RIGHT(sict.semester_code, LEN(sict.semester_code) - 1) AS INT) AND sict.grade IS NULL)
-		);
-END
-GO
+	-- see if we need to compare using dates
+	AS
+	BEGIN
+
+	 DECLARE @currsem_date date
+     SELECT @currsem_date = s.s_date 
+	 FROM Semester s
+     WHERE s.semester_code = @current_semester_code
+
+		SELECT c.*
+		FROM Course c
+		JOIN Student_Instructor_Course_Take sict ON c.course_id = sict.course_id
+		WHERE @student_id = sict.student_id
+			AND (
+				(@currsem_date >= s.s_date
+						AND sict.grade = 'F' AND FN_StudentCheckSMEligiability(@student_id, sict.course_id) = 0) --loop?
+				OR
+				(@currsem_date > s.s_date
+						AND sict.grade IS NULL)
+			);
+	END
+	GO
 
 --------------------------- 2.3 MM ----------------------------------------
 CREATE PROCEDURE Procedures_ViewOptionalCourse
@@ -952,10 +961,40 @@ CREATE PROCEDURE Procedures_ViewOptionalCourse
 	@current_semester_code VARCHAR(40)
 
 	AS
-		
-		--in progress
+	BEGIN
 
-GO
+	 DECLARE @currsem_date date
+     SELECT @currsem_date = s.s_date 
+	 FROM Semester s
+     WHERE s.semester_code = @current_semester_code
+
+	 DECLARE @gpc_sem_date date
+	 SELECT @gpc_sem_date = s.s_date 
+	 FROM Semester s, GradPlan_Course gpc
+     WHERE s.semester_code = gpc.semester_code
+
+		--Courses from current semester that are still being taken by the student
+		SELECT c.*
+		FROM Course c
+		JOIN Student_Instructor_Course_Take sict ON c.course_id = sict.course_id
+		WHERE @student_id = sict.student_id
+			AND @current_semester_code = sict.semester_code
+				AND sict.grade IS NULL
+
+		UNION
+
+		--Courses that need to be taken by the student in future to graduate
+		SELECT c.*
+		FROM Graduation_Plan gp
+		JOIN GradPlan_Course gpc ON gp.plan_id = gpc.plan_id
+		JOIN Course c ON gpc.course_id = c.course_id
+		WHERE @student_id = gp.student_id
+			AND (
+				@currsem_date < @gpc_sem_date
+				);
+					
+	END
+	GO
 
 --------------------------- 2.3 NN ----------------------------------------
 CREATE PROCEDURE Procedures_ViewMS
