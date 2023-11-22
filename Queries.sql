@@ -439,6 +439,40 @@ AS
 	VALUES (@date, @type, @course_id)
 GO
 
+--------------------------- 2.3 L ----------------------------------------
+CREATE PROC Procedures_AdminIssueInstallment
+	@payment_id INT
+	AS
+		DECLARE	@i	INT
+		DECLARE	@payment_amount INT
+		DECLARE	@strt_date	DATETIME
+		DECLARE	@ddln	DATETIME
+		DECLARE	@priod	DAY -- in days
+
+		SELECT	
+		@i			=	n_installments,
+		@pay_amnt	=	payment_amount,
+		@strt_date	=	s_date,
+		@ddln		=	payment_deadline
+
+		FROM	Payment
+		WHERE	payment_id	=	@payment_id
+
+		SEt	@priod	=	DATEDIFF(DAY, @ddln, @strt_date)	/	@i
+
+		WHILE @i <> 0
+		BEGIN
+			SET @ddln = DATEADD(DAY, @priod, @strt_date)
+
+			INSERT
+			INTO	installment (payment_id, deadline, inst_amount, inst_start_date)
+			VALUES	(@payment_id, @ddln, @pay_amnt / @i, @strt_date)
+
+			SET @strt_date = DATEADD(DAY, 1, @ddln)
+			SET @i = @i - 1;
+		END
+GO
+
 --------------------------- 2.3 N ----------------------------------------
 CREATE PROCEDURE Procedure_AdminUpdateStudentStatus
 	@student_id INT
