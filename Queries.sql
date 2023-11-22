@@ -952,27 +952,23 @@ CREATE PROC Procedures_ViewRequiredCoursesR
 GO
 
 --------------------------- 2.3 LL ----------------------------------------
-CREATE PROCEDURE Procedures_ViewRequiredCourses --NEEDS REVISTING BECAUSE IT IS WRONG
+CREATE PROCEDURE Procedures_ViewRequiredCourses
 	@student_id INT,
 	@current_semester_code VARCHAR(40)
 	-- see if we need to compare using dates
 	AS
 	BEGIN
-
-	 DECLARE @currsem_date date
-     SELECT @currsem_date = s.s_date 
-	 FROM Semester s
-     WHERE s.semester_code = @current_semester_code
-
 		SELECT c.*
 		FROM Course c
 		JOIN Student_Instructor_Course_Take sict ON c.course_id = sict.course_id
 		WHERE @student_id = sict.student_id
 			AND (
-				(@currsem_date >= s.s_date
-						AND sict.grade = 'F' AND FN_StudentCheckSMEligiability(@student_id, sict.course_id) = 0) --loop?
+				(CAST(RIGHT(@current_semester_code, LEN(@current_semester_code) - 1) AS INT) 
+					>= CAST(RIGHT(sict.semester_code, LEN(sict.semester_code) - 1) AS INT) 
+						AND sict.grade = 'F' AND dbo.FN_StudentCheckSMEligiability(@student_id, sict.course_id) = 0) 
 				OR
-				(@currsem_date > s.s_date
+				(CAST(RIGHT(@current_semester_code, LEN(@current_semester_code) - 1) AS INT) 
+					> CAST(RIGHT(sict.semester_code, LEN(sict.semester_code) - 1) AS INT) 
 						AND sict.grade IS NULL)
 			);
 	END
