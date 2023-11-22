@@ -685,7 +685,7 @@ RETURNS TABLE
 AS
 RETURN 
 	SELECT 
-		slot_id, slot_day, slot_time, slot_location, course_name, instructor_name
+		slot_id, slot_location, slot_time, slot_day, course_name, instructor_name
 	FROM 
 		Course_Slots_Instructor
 	WHERE 
@@ -725,6 +725,7 @@ CREATE PROC Procedures_StudentRegisterFirstMakeup
 		WHERE	mk_exam_type		=	'First_makeup' 
 		AND		course_id			=	@course_id
 		AND		mk_exam_date	between	@sem1.end_date AND @sem2.s_date
+		AND		mk_exam_date		>	@current_semester.end_date
 
 		INSERT INTO Exam_Student
 		VALUES (@exam_id, @student_id, @course_id)
@@ -733,30 +734,25 @@ CREATE PROC Procedures_StudentRegisterFirstMakeup
 GO
 
 
---------------------------- 2.3 JJ ----------------------------------------
-CREATE FUNCTION FN_StudentCheckSMEligiability (@student_id INT, @course_id INT)
+---------------------------- 2.3 JJ ----------------------------------------
+CREATE FUNCTION FN_StudentCheckSMEligibility (@student_id INT, @course_id INT)
 RETURNS BIT
-	AS
-	BEGIN
-		DECLARE @fail_crs_no INT
-		DECLARE @grade VARCHAR(40)
+AS
+BEGIN
+        SELECT COUNT(*) - SUM(IIF (grade IS NOT NULL AND grade > 'F', 1, 0)) AS fail_count
+        FROM Student_Instructor_Course_Take
+        WHERE student_id = @student_id
 
-		SELECT @fail_crs_no = COUNT(*)
-		FROM Student_Instructor_Course_Take
-		WHERE student_id = @student_id
-		AND grade = 'failed'
+        SELECT SUM(IIF (grade IS NOT NULL AND grade > 'F', 1, 0)) AS pass_count
+        FROM Student_Instructor_Course_Take
+        WHERE student_id = @student_id
+        AND course_id = @course_id
+        AND exam_type = 'First_makeup'
 
-		SELECT	@grade = grade
-		FROM	Student_Instructor_Course_Take
-		WHERE	student_id = @student_id
-		AND		course_id = @course_id
-		AND		exam_type = 'First_makeup'
+    RETURN IIF(fail_count <= 2 AND pass_count = 0, 1, 0)
+END
 
 
-		RETURN IIF(@fail_crs_no <= 2 AND (grade = NULL OR grade = 'failed'), 1, 0)
-	END
-
-	
 GO
 
 --------------------------- 2.3 KK ----------------------------------------
@@ -791,6 +787,7 @@ CREATE PROC Procedures_StudentRegisterSecondMakeup
 		WHERE	mk_exam_type		=	'Second_makeup' 
 		AND		course_id			=	@course_id
 		AND		mk_exam_date	between	@sem1.end_date AND @sem2.s_date
+		AND		mk_exam_date		>	@current_semester.end_date
 
 		INSERT INTO Exam_Student
 		VALUES (@exam_id, @student_id, @course_id)
@@ -848,19 +845,9 @@ CREATE PROCEDURE Procedures_ChooseInstructor
 	@instructor_id INT,
 	@course_id INT
 AS
-	INSERT INTO Student_Instructor_Course_Take (student_id, instructor_id, course_id)
-	VALUES (@student_id, @instructor_id, @course_id)
+		UPDATE Student_Course_Instractor_Take
+		SET		instructor_id	=	@instructor_id
+		WHERE	student_id		=	@student_id
+		AND		course_id		=	@course_id
 GO
-
---------------------------- 2.3 OO ----------------------------------------
-/*
-Y) Approve/Reject courses request
-After approving/rejecting the request, the status of the request should be
-updated and all consequences should be handled. The approving/rejecting
-is based on the below conditions:
-● All the Requested course’s prerequisites are taken.
-● Student has enough assigned hours for the requested course.
-
-*/
-
-	
+--
