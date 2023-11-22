@@ -802,15 +802,18 @@ GO
 CREATE PROCEDURE Procedures_ViewRequiredCourses
 	@student_id INT,
 	@current_semester_code VARCHAR(40)
-
-	AS
-		
-
-
-
-
-
-
+AS
+BEGIN
+	SELECT c.*
+	FROM Course c
+	JOIN Student_Instructor_Course_Take sict ON c.course_id = sict.course_id
+	WHERE @student_id = sict.student_id
+		AND (
+			(CAST(RIGHT(@current_semester_code, LEN(@current_semester_code) - 1) AS INT) >= CAST(RIGHT(sict.semester_code, LEN(sict.semester_code) - 1) AS INT) AND sict.grade = 'F' AND FN_StudentCheckSMEligiability(@student_id, sict.course_id) = 0) --loop?
+			OR
+			(CAST(RIGHT(@current_semester_code, LEN(@current_semester_code) - 1) AS INT) > CAST(RIGHT(sict.semester_code, LEN(sict.semester_code) - 1) AS INT) AND sict.grade IS NULL)
+		);
+END
 GO
 
 --------------------------- 2.3 MM ----------------------------------------
@@ -820,7 +823,7 @@ CREATE PROCEDURE Procedures_ViewOptionalCourse
 
 	AS
 		
-
+		--in progress
 
 GO
 
