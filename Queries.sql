@@ -617,7 +617,7 @@ CREATE PROC Procedures_AdvisorApproveRejectCHRequest --NEEDS REVISTING BECAUSE I
 	@request_id INT,
 	@current_semester VARCHAR(40)
 	AS
-		SELECT
+		WITH Acc AS
 		(
 		SELECT	request_id
 		FROM	Request r, Student s
@@ -627,7 +627,6 @@ CREATE PROC Procedures_AdvisorApproveRejectCHRequest --NEEDS REVISTING BECAUSE I
 		AND		credit_hours	+	assigned_hours	<	34 --maybe check constraint
 
 		)
-		AS	Acc
 
 		UPDATE	Request
 		SET		req_status	=	'accepted'
@@ -802,43 +801,45 @@ CREATE PROC Procedures_StudentRegisterFirstMakeup
 	@current_semester VARCHAR(40)
 
 	AS
-		SELECT	semester_code
-		AS		crs_sem
+		DECLARE	@is_odd BIT
+		DECLARE	@exm_id INT
+		DECLARE @curr_year INT
+		DECLARE @start_year INT
+		DECLARE @end_year INT
+		DECLARE @crs_sem VARCHAR(40)
+		DECLARE @start_sem VARCHAR(40)
+		DECLARE @end_sem VARCHAR(40)
+
+
+
+		SELECT	@crs_sem = semester_code
 		FROM	Student_Instructor_Course_Take
 		WHERE	student_id	=	@student_id
 		AND		course_id	=	@course_id
 
-		SELECT
 
-			CAST (IIF (LEFT(crs_sem, 1) = 'W' OR RIGHT(crs_sem, 2) = 'R1', 1, 0) AS BIT)
-			AS is_odd,
+			SELECT	@is_odd		=	IIF (LEFT(crs_sem, 1) = 'W' OR RIGHT(crs_sem, 2) = 'R1', 1, 0),
 
-			CAST (SUBSTRING (@current_semester, 2, 2) AS INT)
-			AS curr_year,
+					@curr_year	=	CAST (SUBSTRING (@current_semester, 2, 2) AS INT),
 
-			curr_year + IIF(@current_semester LIKE '%R%', 1, 0)
-			AS start_year,
+					@start_year =	@curr_year + IIF(@current_semester LIKE '%R%', 1, 0),
 
-			start_year + IIF(is_odd, 1, 0)
-			AS end_year,
+					@end_year =		@start_year + IIF(is_odd, 1, 0),
 
-			IIF(is_odd, 'W', 'S')
-			AS start_sem,
+					@start_sem =	IIF(@is_odd, 'W', 'S'),
 
-			IIF(is_odd, 'S', 'W')
-			AS end_sem
+					@end_sem =		IIF(@is_odd, 'S', 'W')
 
-		SELECT	exam_id
-		AS		exm_id
+		SELECT	@exm_id = exam_id
 		FROM	MakeUp_Exam, Semester
 		WHERE	course_id		=	@course_id
 		AND		mk_exam_type	=	'First_makeup' 
-		AND		mk_exam_date	between	(start_sem	+ start_year).end_date
-								AND		(end_sem	+	end_year).s_date
+		AND		mk_exam_date	between	(@start_sem	+ @start_year).end_date
+								AND		(@end_sem	+	@end_year).s_date
 
 		INSERT
 		INTO	Exam_Student
-		VALUES	(exm_id, @student_id, @course_id)
+		VALUES	(@exm_id, @student_id, @course_id)
 GO
 
 ---------------------------- 2.3 JJ ----------------------------------------
@@ -870,43 +871,45 @@ CREATE PROC Procedures_StudentRegisterSecondMakeup
 	@current_semester VARCHAR(40)
 
 	AS
-		SELECT	semester_code
-		AS		crs_sem
+		DECLARE	@is_odd BIT
+		DECLARE	@exm_id INT
+		DECLARE @curr_year INT
+		DECLARE @start_year INT
+		DECLARE @end_year INT
+		DECLARE @crs_sem VARCHAR(40)
+		DECLARE @start_sem VARCHAR(40)
+		DECLARE @end_sem VARCHAR(40)
+
+
+
+		SELECT	@crs_sem = semester_code
 		FROM	Student_Instructor_Course_Take
 		WHERE	student_id	=	@student_id
 		AND		course_id	=	@course_id
 
-		SELECT
 
-			CAST (IIF (LEFT(crs_sem, 1) = 'W' OR RIGHT(crs_sem, 2) = 'R1', 1, 0) AS BIT)
-			AS is_odd,
+			SELECT	@is_odd		=	IIF (LEFT(crs_sem, 1) = 'W' OR RIGHT(crs_sem, 2) = 'R1', 1, 0),
 
-			CAST (SUBSTRING (@current_semester, 2, 2) AS INT)
-			AS curr_year,
+					@curr_year	=	CAST (SUBSTRING (@current_semester, 2, 2) AS INT),
 
-			curr_year + IIF(@current_semester LIKE '%R%', 1, 0)
-			AS start_year,
+					@start_year =	@curr_year + IIF(@current_semester LIKE '%R%', 1, 0),
 
-			start_year + IIF(is_odd, 1, 0)
-			AS end_year,
+					@end_year =		@start_year + IIF(is_odd, 1, 0),
 
-			IIF(is_odd, 'W', 'S')
-			AS start_sem,
+					@start_sem =	IIF(@is_odd, 'W', 'S'),
 
-			IIF(is_odd, 'S', 'W')
-			AS end_sem
+					@end_sem =		IIF(@is_odd, 'S', 'W')
 
-		SELECT	exam_id
-		AS		exm_id
+		SELECT	@exm_id = exam_id
 		FROM	MakeUp_Exam, Semester
 		WHERE	course_id		=	@course_id
 		AND		mk_exam_type	=	'Second_makeup' 
-		AND		mk_exam_date	between	(start_sem	+ start_year).end_date
-								AND		(end_sem	+	end_year).s_date
+		AND		mk_exam_date	between	(@start_sem	+ @start_year).end_date
+								AND		(@end_sem	+	@end_year).s_date
 
 		INSERT
 		INTO	Exam_Student
-		VALUES	(exm_id, @student_id, @course_id)
+		VALUES	(@exm_id, @student_id, @course_id)
 GO
 
 --------------------------- 2.3 LLR ----------------------------------------
