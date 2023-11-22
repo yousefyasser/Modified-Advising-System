@@ -447,7 +447,6 @@ CREATE PROC Procedures_AdminIssueInstallment
 		DECLARE	@payment_amount INT
 		DECLARE	@strt_date	DATETIME
 		DECLARE	@ddln	DATETIME
-		DECLARE	@priod	DAY -- in days
 
 		SELECT	
 		@i			=	n_installments,
@@ -458,17 +457,15 @@ CREATE PROC Procedures_AdminIssueInstallment
 		FROM	Student_Payment
 		WHERE	payment_id	=	@payment_id
 
-		SEt	@priod	=	DATEDIFF(DAY, @ddln, @strt_date)	/	@i
-
 		WHILE @i <> 0
 		BEGIN
-			SET @ddln = DATEADD(DAY, @priod, @strt_date)
+			SET @ddln = DATEADD(MONTH, 1, @strt_date)
 
 			INSERT
 			INTO	installment (payment_id, deadline, inst_amount, inst_start_date)
 			VALUES	(@payment_id, @ddln, @pay_amnt, @strt_date)
 
-			SET @strt_date = DATEADD(DAY, 1, @ddln)
+			SET @strt_date = @ddln
 			SET @i = @i - 1;
 		END
 GO
