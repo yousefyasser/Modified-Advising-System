@@ -642,7 +642,7 @@ CREATE PROC Procedures_AdvisorApproveRejectCHRequest
 		UPDATE	Student
 		SET		assigned_hours	=	assigned_hours	+	IIF(credit_hours > 3, 3, credit_hours)
 		FROM	@acc
-		WHERE	Student.student_id	=	@acc.student_id	
+		WHERE	Student.student_id	=	@acc.student_id
 
 GO
 
@@ -849,7 +849,7 @@ CREATE PROC Procedures_StudentRegisterFirstMakeup
 GO
 
 ---------------------------- 2.3 JJ ----------------------------------------
-CREATE FUNCTION FN_StudentCheckSMEligibility (@student_id INT, @course_id INT)
+CREATE FUNCTION FN_StudentCheckSMEligibilityyy (@student_id INT, @course_id INT)
 RETURNS BIT
 	AS
 	BEGIN
@@ -919,34 +919,39 @@ CREATE PROC Procedures_StudentRegisterSecondMakeup
 GO
 
 --------------------------- 2.3 LLR ----------------------------------------
-CREATE PROC Procedures_ViewRequiredCoursesR
+CREATE PROC Procedures_ViewRequiredCoursesRxyzlmnopqrt
 	@student_id INT,
 	@current_semester_code VARCHAR(40)
 	AS
 	BEGIN
-		SELECT c2.*
-		FROM(
-			SELECT	course_id
-			FROM	Student_Instructor_Course_Take sic, Semester sem
+		DECLARE @course_id INT;
+
+			(
+			SELECT	c1.*, master.FN_StudentCheckSMEligibilityyy (@student_id, course_id) AS func
+			FROM	Student_Instructor_Course_Take sic1, Semester sem1, Course c1
 			WHERE	sic.semester_code				=	sem.semester_code
 			AND		student_id						=	@student_id
 			AND		grade							=	'F'
-			AND		(sem_code						<>	@current_semester_code
-					OR
-					FN_StudentCheckSMEligibility
-					(@student_id, course_id)		=	0)
+			HAVING	(
+					semester_code	=	@current_semester_code 
+				AND	
+					func = 0
+					)
+			)
 
 			UNION
 
-			SELECT	course_id
-			FROM	Student s, Course c1, Student_Instructor_Course_Take sic
-			WHERE	s.student_id	=	sic.student_id
-			AND		s.major			=	c.major
+			(
+			SELECT	c2.*
+			FROM	Student s, Course c1
+			WHERE	s.major			=	c.major
 			AND		s.semester		>	c.semester
-			AND NOT EXIST IN (SELECT course_id FROM sic)
-			) AS temp
-		INNER JOIN Course c2
-		ON c2.course_id = temp.course_id
+			AND NOT EXIST IN	(
+								SELECT course_id 
+								FROM Student_Instructor_Course_Take sic2
+								WHERE	s.student_id = sic2.student_id
+								)
+			)
 			
 	END
 GO
