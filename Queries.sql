@@ -1,9 +1,13 @@
 ﻿USE master
-DROP DATABASE Advising_Team_27;
+GO
+
 CREATE DATABASE Advising_Team_27;
+GO
 
 USE Advising_Team_27;
+GO
 
+DROP DATABASE Advising_Team_27;
 GO
 
 --------------------------- 2.1 ----------------------------------------
@@ -118,7 +122,7 @@ AS
 		plan_id INT,
 		semester_code VARCHAR(40) NOT NULL,
 		semester_credit_hours INT NOT NULL,
-		expected_grad_semester date NOT NULL,
+		expected_grad_date date NOT NULL,
 		advisor_id INT NOT NULL,
 		student_id INT NOT NULL,
 		CONSTRAINT Graduation_plan_id PRIMARY KEY (plan_id, semester_code),
@@ -450,7 +454,7 @@ CREATE PROC Procedures_AdminIssueInstallment
 
 		SELECT	
 		@i			=	n_installments,
-		@pay_amnt	=	payment_amount / n_installments,
+		@payment_amount	=	payment_amount / n_installments,
 		@strt_date	=	s_date,
 		@ddln		=	payment_deadline
 
@@ -463,7 +467,7 @@ CREATE PROC Procedures_AdminIssueInstallment
 
 			INSERT
 			INTO	installment (payment_id, deadline, inst_amount, inst_start_date)
-			VALUES	(@payment_id, @ddln, @pay_amnt, @strt_date)
+			VALUES	(@payment_id, @ddln, @payment_amount, @strt_date)
 
 			SET @strt_date = @ddln
 			SET @i = @i - 1;
@@ -534,7 +538,7 @@ RETURNS BIT
 
 AS
 	BEGIN
-		RETURN IIF (@password = (SELECT pass FROM Advisor WHERE id = @id), 1, 0)
+		RETURN IIF (@password = (SELECT pass FROM Advisor WHERE advisor_id = @id), 1, 0)
 	END
 
 GO
@@ -549,7 +553,7 @@ CREATE PROCEDURE Procedures_AdvisorCreateGP
 
 AS
 
-    INSERT INTO Graduation_Plan (semester_code, semester_credit_hours, expected_graduation_date, advisor_id, student_id)
+    INSERT INTO Graduation_Plan (semester_code, semester_credit_hours, expected_grad_date, advisor_id, student_id)
     VALUES (@semester_code, @sem_credit_hours, @expected_graduation_date, @advisor_id, @student_id);
 
 GO
@@ -578,7 +582,7 @@ CREATE PROCEDURE Procedures_AdvisorUpdateGP
 	@studentID INT 
 AS
 	UPDATE Graduation_Plan
-	SET expected_grad_semester = @expected_grad_semster
+	SET expected_grad_date = @expected_grad_semster
 	WHERE student_id = @studentID
 GO
 
@@ -609,7 +613,7 @@ RETURNS TABLE
 GO
 
 --------------------------- 2.3 W ----------------------------------------
-CREATE PROC Procedures_AdvisorApproveRejectCHRequest
+CREATE PROC Procedures_AdvisorApproveRejectCHRequest --NEEDS REVISTING BECAUSE IT IS WRONG
 	@request_id INT,
 	@current_semester VARCHAR(40)
 	AS
@@ -687,7 +691,7 @@ AS
 		update Request 
 		Set Request.req_status = 'accepted' where Request.request_id = @RequestID
 		INSERT INTO Student_Instructor_Course_Take (student_id, course_id)
-    VALUES (@student_id, @rcourse_id);
+    VALUES (@studentID, @rcourse_id);
 	End
 
 GO
@@ -707,7 +711,7 @@ RETURNS BIT
 
 AS
 	BEGIN
-		RETURN IIF (@password = (SELECT pass FROM Student WHERE id = @id), 1, 0)
+		RETURN IIF (@password = (SELECT pass FROM Student WHERE student_id = @id), 1, 0)
 	END
 
 GO
@@ -782,16 +786,17 @@ RETURNS TABLE
 AS
 RETURN 
 	SELECT 
-		slot_id, slot_location, slot_time, slot_day, course_name, instructor_name
+		s.slot_id,  s.slot_location ,s.slot_time,  s.slot_day, c.course_name, i.instructor_name
 	FROM 
-		Course_Slots_Instructor
+		Slot s Inner Join Course c on c.course_id = s.course_id
+                Inner Join Instructor i on s.instructor_id= i.instructor_id
 	WHERE 
-		course_id = @course_id
-		AND instructor_id= @instructor_id
+		s.course_id = @course_id
+		AND s.instructor_id= @instructor_id
 GO
 
 --------------------------- 2.3 II ----------------------------------------
-CREATE PROC Procedures_StudentRegisterFirstMakeup
+CREATE PROC Procedures_StudentRegisterFirstMakeup --NEEDS REVISTING BECAUSE IT IS WRONG
 	@student_id INT,
 	@course_id INT,
 	@current_semester VARCHAR(40)
@@ -837,7 +842,7 @@ CREATE PROC Procedures_StudentRegisterFirstMakeup
 GO
 
 ---------------------------- 2.3 JJ ----------------------------------------
-CREATE FUNCTION FN_StudentCheckSMEligibility (@student_id INT, @course_id INT)
+CREATE FUNCTION FN_StudentCheckSMEligibility (@student_id INT, @course_id INT) --NEEDS REVISTING BECAUSE IT IS WRONG
 RETURNS BIT
 	AS
 	BEGIN
@@ -858,7 +863,7 @@ RETURNS BIT
 GO
 
 --------------------------- 2.3 KK ----------------------------------------
-CREATE PROC Procedures_StudentRegisterSecondMakeup
+CREATE PROC Procedures_StudentRegisterSecondMakeup --NEEDS REVISTING BECAUSE IT IS WRONG
 	@student_id INT,
 	@course_id INT,
 	@current_semester VARCHAR(40)
@@ -904,7 +909,7 @@ CREATE PROC Procedures_StudentRegisterSecondMakeup
 GO
 
 --------------------------- 2.3 LLR ----------------------------------------
-CREATE PROC Procedures_ViewRequiredCoursesR
+CREATE PROC Procedures_ViewRequiredCoursesR --NEEDS REVISTING BECAUSE IT IS WRONG
 	@student_id INT,
 	@current_semester_code VARCHAR(40)
 	AS
@@ -937,7 +942,7 @@ CREATE PROC Procedures_ViewRequiredCoursesR
 GO
 
 --------------------------- 2.3 LL ----------------------------------------
-CREATE PROCEDURE Procedures_ViewRequiredCourses
+CREATE PROCEDURE Procedures_ViewRequiredCourses --NEEDS REVISTING BECAUSE IT IS WRONG
 	@student_id INT,
 	@current_semester_code VARCHAR(40)
 	-- see if we need to compare using dates
