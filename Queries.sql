@@ -700,35 +700,40 @@ CREATE PROC Procedures_StudentRegisterFirstMakeup
 	@current_semester VARCHAR(40)
 
 	AS
-		DECLARE @exam_id INT
-		DECLARE @crs_sem VARCHAR(40)
-		DECLARE @year INT
-		DECLARE @sem1 VARCHAR(40)
-		DECLARE @sem2 VARCHAR(40)
-
-		SELECT	@crs_sem = semester_code
+		SELECT	semester_code AS crs_sem
 		FROM	Student_Instructor_Course_Take
 		WHERE	student_id = @student_id
 		AND		course_id = @course_id
 
-		SELECT	@year	=	CAST (SUBSTRING (@crs_sem, 2, 2) AS INT)
+		SELECT
 
-		SELECT	@sem1	=	CASE RIGHT(@crs_sem, 2)
-								WHEN 'R1' THEN 'W' + CAST (@year AS VARCHAR)
-								WHEN 'R2' THEN 'S' + CAST ((@year + 1) AS VARCHAR)
-								ELSE @crs_sem
-							END
-		SELECT	@sem2 = IIF(LEFT(@sem1, 1) = 'W', 'S', 'W') + CAST ((@year + 1) AS VARCHAR)
+			CAST (IFF (LEFT(crs_sem, 1) = 'W' OR RIGHT(crs_sem, 2) = 'R1', 1, 0) AS BIT)
+			AS is_odd,
 
-		SELECT @exam_id = exam_id
+			CAST (SUBSTRING (@current_semester, 2, 2) AS INT)
+			AS curr_year,
+
+			curr_year + IIF(@current_semester LIKE '%R%', 1, 0)
+			AS start_year,
+
+			start_year + IIF(is_odd, 1, 0)
+			AS end_year,
+
+			IIF(is_odd, 'W', 'S')
+			AS start_sem,
+
+			IIF(is_odd, 'S', 'W')
+			AS end_sem
+
+		SELECT exam_id AS exm_id
 		FROM MakeUp_Exam mkx, Semester s
-		WHERE	mk_exam_type		=	'First_makeup' 
-		AND		course_id			=	@course_id
-		AND		mk_exam_date	between	@sem1.end_date AND @sem2.s_date
-		AND		mk_exam_date		>	@current_semester.end_date
+		WHERE	course_id		=	@course_id
+		AND		mk_exam_type	=	'First_makeup' 
+		AND		mk_exam_date	between	(start_sem	+ start_year).end_date
+								AND		(end_sem	+	end_year).s_date
 
 		INSERT INTO Exam_Student
-		VALUES (@exam_id, @student_id, @course_id)
+		VALUES (exm_id, @student_id, @course_id)
 
 	
 GO
@@ -739,11 +744,11 @@ CREATE FUNCTION FN_StudentCheckSMEligibility (@student_id INT, @course_id INT)
 RETURNS BIT
 AS
 BEGIN
-        SELECT COUNT(*) - SUM(IIF (grade IS NOT NULL AND grade > 'F', 1, 0)) AS fail_count
+        SELECT COUNT(*) - SUM(IIF (grade IS NOT NULL AND grade < 'F', 1, 0)) AS fail_count
         FROM Student_Instructor_Course_Take
         WHERE student_id = @student_id
 
-        SELECT SUM(IIF (grade IS NOT NULL AND grade > 'F', 1, 0)) AS pass_count
+        SELECT SUM(IIF (grade IS NOT NULL AND grade < 'F', 1, 0)) AS pass_count
         FROM Student_Instructor_Course_Take
         WHERE student_id = @student_id
         AND course_id = @course_id
@@ -755,45 +760,51 @@ END
 
 GO
 
---------------------------- 2.3 KK ----------------------------------------
+--------------------------- 2.3 JJ ----------------------------------------
 CREATE PROC Procedures_StudentRegisterSecondMakeup
 	@student_id INT,
 	@course_id INT,
 	@current_semester VARCHAR(40)
 
 	AS
-		DECLARE @exam_id INT
-		DECLARE @crs_sem VARCHAR(40)
-		DECLARE @year INT
-		DECLARE @sem1 VARCHAR(40)
-		DECLARE @sem2 VARCHAR(40)
-
-		SELECT	@crs_sem = semester_code
+		SELECT	semester_code AS crs_sem
 		FROM	Student_Instructor_Course_Take
 		WHERE	student_id = @student_id
 		AND		course_id = @course_id
 
-		SELECT	@year	=	CAST (SUBSTRING (@crs_sem, 2, 2) AS INT)
+		SELECT
 
-		SELECT	@sem1	=	CASE RIGHT(@crs_sem, 2)
-								WHEN 'R1' THEN 'W' + CAST (@year AS VARCHAR)
-								WHEN 'R2' THEN 'S' + CAST ((@year + 1) AS VARCHAR)
-								ELSE @crs_sem
-							END
-		SELECT	@sem2 = IIF(LEFT(@sem1, 1) = 'W', 'S', 'W') + CAST ((@year + 1) AS VARCHAR)
+			CAST (IFF (LEFT(crs_sem, 1) = 'W' OR RIGHT(crs_sem, 2) = 'R1', 1, 0) AS BIT)
+			AS is_odd,
 
-		SELECT @exam_id = exam_id
+			CAST (SUBSTRING (@current_semester, 2, 2) AS INT)
+			AS curr_year,
+
+			curr_year + IIF(@current_semester LIKE '%R%', 1, 0)
+			AS start_year,
+
+			start_year + IIF(is_odd, 1, 0)
+			AS end_year,
+
+			IIF(is_odd, 'W', 'S')
+			AS start_sem,
+
+			IIF(is_odd, 'S', 'W')
+			AS end_sem
+
+		SELECT exam_id AS exm_id
 		FROM MakeUp_Exam mkx, Semester s
-		WHERE	mk_exam_type		=	'Second_makeup' 
-		AND		course_id			=	@course_id
-		AND		mk_exam_date	between	@sem1.end_date AND @sem2.s_date
-		AND		mk_exam_date		>	@current_semester.end_date
+		WHERE	course_id		=	@course_id
+		AND		mk_exam_type	=	'Second_makeup' 
+		AND		mk_exam_date	between	(start_sem	+ start_year).end_date
+								AND		(end_sem	+	end_year).s_date
 
 		INSERT INTO Exam_Student
-		VALUES (@exam_id, @student_id, @course_id)
+		VALUES (exm_id, @student_id, @course_id)
 
 	
 GO
+
 
 --------------------------- 2.3 LL ----------------------------------------
 CREATE PROCEDURE Procedures_ViewRequiredCourses
@@ -851,3 +862,5 @@ AS
 		AND		course_id		=	@course_id
 GO
 --
+--
+print(1)
