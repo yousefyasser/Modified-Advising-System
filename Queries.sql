@@ -796,7 +796,7 @@ RETURN
 GO
 
 --------------------------- 2.3 II ----------------------------------------
-CREATE PROC Procedures_StudentRegisterFirstMakeup --NEEDS REVISTING BECAUSE IT IS WRONG
+CREATE PROC Procedures_StudentRegisterFirstMakeup
 	@student_id INT,
 	@course_id INT,
 	@current_semester VARCHAR(40)
@@ -810,7 +810,7 @@ CREATE PROC Procedures_StudentRegisterFirstMakeup --NEEDS REVISTING BECAUSE IT I
 
 		SELECT
 
-			CAST (IFF (LEFT(crs_sem, 1) = 'W' OR RIGHT(crs_sem, 2) = 'R1', 1, 0) AS BIT)
+			CAST (IIF (LEFT(crs_sem, 1) = 'W' OR RIGHT(crs_sem, 2) = 'R1', 1, 0) AS BIT)
 			AS is_odd,
 
 			CAST (SUBSTRING (@current_semester, 2, 2) AS INT)
@@ -842,28 +842,29 @@ CREATE PROC Procedures_StudentRegisterFirstMakeup --NEEDS REVISTING BECAUSE IT I
 GO
 
 ---------------------------- 2.3 JJ ----------------------------------------
-CREATE FUNCTION FN_StudentCheckSMEligibility (@student_id INT, @course_id INT) --NEEDS REVISTING BECAUSE IT IS WRONG
+CREATE FUNCTION FN_StudentCheckSMEligibility (@student_id INT, @course_id INT)
 RETURNS BIT
 	AS
 	BEGIN
-        SELECT	COUNT(*) - SUM(IIF (grade IS NOT NULL AND grade < 'F', 1, 0))
-		AS		fail_count
+		DECLARE	@fail_count INT
+		DECLARE	@pass_count INT
+
+        SELECT	@fail_count  = COUNT(*) - SUM(IIF (grade IS NOT NULL AND grade < 'F', 1, 0))
         FROM	Student_Instructor_Course_Take
         WHERE	student_id	=	@student_id
 
-        SELECT	SUM(IIF (grade IS NOT NULL AND grade < 'F', 1, 0))
-		AS		pass_count
+        SELECT	@pass_count = SUM(IIF (grade IS NOT NULL AND grade < 'F', 1, 0))
         FROM	Student_Instructor_Course_Take
         WHERE	student_id	=	@student_id
         AND		course_id	=	@course_id
         AND		exam_type	=	'First_makeup'
 
-		RETURN IIF(fail_count <= 2 AND pass_count = 0, 1, 0)
+		RETURN IIF(@fail_count <= 2 AND @pass_count = 0, 1, 0)
 	END
 GO
 
 --------------------------- 2.3 KK ----------------------------------------
-CREATE PROC Procedures_StudentRegisterSecondMakeup --NEEDS REVISTING BECAUSE IT IS WRONG
+CREATE PROC Procedures_StudentRegisterSecondMakeup
 	@student_id INT,
 	@course_id INT,
 	@current_semester VARCHAR(40)
@@ -877,7 +878,7 @@ CREATE PROC Procedures_StudentRegisterSecondMakeup --NEEDS REVISTING BECAUSE IT 
 
 		SELECT
 
-			CAST (IFF (LEFT(crs_sem, 1) = 'W' OR RIGHT(crs_sem, 2) = 'R1', 1, 0) AS BIT)
+			CAST (IIF (LEFT(crs_sem, 1) = 'W' OR RIGHT(crs_sem, 2) = 'R1', 1, 0) AS BIT)
 			AS is_odd,
 
 			CAST (SUBSTRING (@current_semester, 2, 2) AS INT)
@@ -909,7 +910,7 @@ CREATE PROC Procedures_StudentRegisterSecondMakeup --NEEDS REVISTING BECAUSE IT 
 GO
 
 --------------------------- 2.3 LLR ----------------------------------------
-CREATE PROC Procedures_ViewRequiredCoursesR --NEEDS REVISTING BECAUSE IT IS WRONG
+CREATE PROC Procedures_ViewRequiredCoursesR
 	@student_id INT,
 	@current_semester_code VARCHAR(40)
 	AS
