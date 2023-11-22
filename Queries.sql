@@ -611,6 +611,34 @@ RETURNS TABLE
 			WHERE	advisor_id	=	@advisor_id
 GO
 
+--------------------------- 2.3 W ----------------------------------------
+CREATE PROC Procedures_AdvisorApproveRejectCHRequest
+	@request_id INT,
+	@current_semester VARCHAR(40)
+	AS
+		SELECT
+		(
+		SELECT	request_id
+		FROM	Request r, Student s
+		WHERE	r.student_id	=	s.student_id
+		AND		req_type		=	'credit'
+		AND		gpa				<=	3.7
+		AND		credit_hours	+	assigned_hours	<	34
+		)
+		AS	Acc
+
+		UPDATE	Request
+		SET		req_status	=	'accepted'
+		WHERE	request_id
+		IN		(Acc)
+
+		UPDATE	Student
+		SET		assigned_hours	=	assigned_hours	+	credit_hours
+		FROM	Acc
+		WHERE	Student.student_id	=	Acc.student_id	
+
+GO
+
 --------------------------- 2.3 X ----------------------------------------
 CREATE PROCEDURE Procedures_AdvisorViewAssignedStudents
 	@advisor_id INT,
