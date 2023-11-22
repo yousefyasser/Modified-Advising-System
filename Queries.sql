@@ -451,7 +451,7 @@ CREATE PROC Procedures_AdminIssueInstallment
 
 		SELECT	
 		@i			=	n_installments,
-		@pay_amnt	=	payment_amount,
+		@pay_amnt	=	payment_amount / n_installments,
 		@strt_date	=	s_date,
 		@ddln		=	payment_deadline
 
@@ -466,11 +466,25 @@ CREATE PROC Procedures_AdminIssueInstallment
 
 			INSERT
 			INTO	installment (payment_id, deadline, inst_amount, inst_start_date)
-			VALUES	(@payment_id, @ddln, @pay_amnt / @i, @strt_date)
+			VALUES	(@payment_id, @ddln, @pay_amnt, @strt_date)
 
 			SET @strt_date = DATEADD(DAY, 1, @ddln)
 			SET @i = @i - 1;
 		END
+GO
+
+--------------------------- 2.3 M ----------------------------------------
+CREATE PROC Procedures_AdminDeleteCourse
+	@course_id INT
+	AS
+		DELETE
+		FROM	Course
+		WHERE	course_id	=	@course_id
+
+		DELETE
+		FROM	Slot
+		WHERE	course_id	=	@course_id
+
 GO
 
 --------------------------- 2.3 N ----------------------------------------
