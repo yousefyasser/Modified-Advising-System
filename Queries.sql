@@ -818,13 +818,13 @@ CREATE PROC Procedures_StudentRegisterFirstMakeup
 		AND		course_id	=	@course_id
 
 
-			SELECT	@is_odd		=	IIF (LEFT(crs_sem, 1) = 'W' OR RIGHT(crs_sem, 2) = 'R1', 1, 0),
+			SELECT	@is_odd		=	IIF (LEFT(@crs_sem, 1) = 'W' OR RIGHT(@crs_sem, 2) = 'R1', 1, 0),
 
 					@curr_year	=	CAST (SUBSTRING (@current_semester, 2, 2) AS INT),
 
 					@start_year =	@curr_year + IIF(@current_semester LIKE '%R%', 1, 0),
 
-					@end_year =		@start_year + IIF(is_odd, 1, 0),
+					@end_year =		@start_year + IIF(@is_odd, 1, 0),
 
 					@start_sem =	IIF(@is_odd, 'W', 'S'),
 
@@ -888,13 +888,13 @@ CREATE PROC Procedures_StudentRegisterSecondMakeup
 		AND		course_id	=	@course_id
 
 
-			SELECT	@is_odd		=	IIF (LEFT(crs_sem, 1) = 'W' OR RIGHT(crs_sem, 2) = 'R1', 1, 0),
+			SELECT	@is_odd		=	IIF (LEFT(@crs_sem, 1) = 'W' OR RIGHT(@crs_sem, 2) = 'R1', 1, 0),
 
 					@curr_year	=	CAST (SUBSTRING (@current_semester, 2, 2) AS INT),
 
 					@start_year =	@curr_year + IIF(@current_semester LIKE '%R%', 1, 0),
 
-					@end_year =		@start_year + IIF(is_odd, 1, 0),
+					@end_year =		@start_year + IIF(@is_odd, 1, 0),
 
 					@start_sem =	IIF(@is_odd, 'W', 'S'),
 
@@ -903,7 +903,7 @@ CREATE PROC Procedures_StudentRegisterSecondMakeup
 		SELECT	@exm_id = exam_id
 		FROM	MakeUp_Exam, Semester
 		WHERE	course_id		=	@course_id
-		AND		mk_exam_type	=	'Second_makeup' 
+		AND		mk_exam_type	=	'First_makeup' 
 		AND		mk_exam_date	between	(@start_sem	+ @start_year).end_date
 								AND		(@end_sem	+	@end_year).s_date
 
