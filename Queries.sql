@@ -700,10 +700,11 @@ CREATE PROC Procedures_StudentRegisterFirstMakeup
 	@current_semester VARCHAR(40)
 
 	AS
-		SELECT	semester_code AS crs_sem
+		SELECT	semester_code
+		AS		crs_sem
 		FROM	Student_Instructor_Course_Take
-		WHERE	student_id = @student_id
-		AND		course_id = @course_id
+		WHERE	student_id	=	@student_id
+		AND		course_id	=	@course_id
 
 		SELECT
 
@@ -725,52 +726,52 @@ CREATE PROC Procedures_StudentRegisterFirstMakeup
 			IIF(is_odd, 'S', 'W')
 			AS end_sem
 
-		SELECT exam_id AS exm_id
-		FROM MakeUp_Exam mkx, Semester s
+		SELECT	exam_id
+		AS		exm_id
+		FROM	MakeUp_Exam, Semester
 		WHERE	course_id		=	@course_id
 		AND		mk_exam_type	=	'First_makeup' 
 		AND		mk_exam_date	between	(start_sem	+ start_year).end_date
 								AND		(end_sem	+	end_year).s_date
 
-		INSERT INTO Exam_Student
-		VALUES (exm_id, @student_id, @course_id)
-
-	
+		INSERT
+		INTO	Exam_Student
+		VALUES	(exm_id, @student_id, @course_id)
 GO
-
 
 ---------------------------- 2.3 JJ ----------------------------------------
 CREATE FUNCTION FN_StudentCheckSMEligibility (@student_id INT, @course_id INT)
 RETURNS BIT
-AS
-BEGIN
-        SELECT COUNT(*) - SUM(IIF (grade IS NOT NULL AND grade < 'F', 1, 0)) AS fail_count
-        FROM Student_Instructor_Course_Take
-        WHERE student_id = @student_id
+	AS
+	BEGIN
+        SELECT	COUNT(*) - SUM(IIF (grade IS NOT NULL AND grade < 'F', 1, 0))
+		AS		fail_count
+        FROM	Student_Instructor_Course_Take
+        WHERE	student_id	=	@student_id
 
-        SELECT SUM(IIF (grade IS NOT NULL AND grade < 'F', 1, 0)) AS pass_count
-        FROM Student_Instructor_Course_Take
-        WHERE student_id = @student_id
-        AND course_id = @course_id
-        AND exam_type = 'First_makeup'
+        SELECT	SUM(IIF (grade IS NOT NULL AND grade < 'F', 1, 0))
+		AS		pass_count
+        FROM	Student_Instructor_Course_Take
+        WHERE	student_id	=	@student_id
+        AND		course_id	=	@course_id
+        AND		exam_type	=	'First_makeup'
 
-    RETURN IIF(fail_count <= 2 AND pass_count = 0, 1, 0)
-END
-
-
+		RETURN IIF(fail_count <= 2 AND pass_count = 0, 1, 0)
+	END
 GO
 
---------------------------- 2.3 JJ ----------------------------------------
+--------------------------- 2.3 KK ----------------------------------------
 CREATE PROC Procedures_StudentRegisterSecondMakeup
 	@student_id INT,
 	@course_id INT,
 	@current_semester VARCHAR(40)
 
 	AS
-		SELECT	semester_code AS crs_sem
+		SELECT	semester_code
+		AS		crs_sem
 		FROM	Student_Instructor_Course_Take
-		WHERE	student_id = @student_id
-		AND		course_id = @course_id
+		WHERE	student_id	=	@student_id
+		AND		course_id	=	@course_id
 
 		SELECT
 
@@ -792,19 +793,18 @@ CREATE PROC Procedures_StudentRegisterSecondMakeup
 			IIF(is_odd, 'S', 'W')
 			AS end_sem
 
-		SELECT exam_id AS exm_id
-		FROM MakeUp_Exam mkx, Semester s
+		SELECT	exam_id
+		AS		exm_id
+		FROM	MakeUp_Exam, Semester
 		WHERE	course_id		=	@course_id
 		AND		mk_exam_type	=	'Second_makeup' 
 		AND		mk_exam_date	between	(start_sem	+ start_year).end_date
 								AND		(end_sem	+	end_year).s_date
 
-		INSERT INTO Exam_Student
-		VALUES (exm_id, @student_id, @course_id)
-
-	
+		INSERT
+		INTO	Exam_Student
+		VALUES	(exm_id, @student_id, @course_id)
 GO
-
 
 --------------------------- 2.3 LL ----------------------------------------
 CREATE PROCEDURE Procedures_ViewRequiredCourses
@@ -862,5 +862,3 @@ AS
 		AND		course_id		=	@course_id
 GO
 --
---
-print(1)
