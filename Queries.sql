@@ -455,7 +455,7 @@ CREATE PROC Procedures_AdminIssueInstallment
 		@strt_date	=	s_date,
 		@ddln		=	payment_deadline
 
-		FROM	Payment
+		FROM	Student_Payment
 		WHERE	payment_id	=	@payment_id
 
 		SEt	@priod	=	DATEDIFF(DAY, @ddln, @strt_date)	/	@i
@@ -600,6 +600,15 @@ AS
 	DELETE FROM GradPlan_Course
 	WHERE plan_id = @plan_id AND semester_code = @semester_code AND course_id = @course_id
 
+GO
+
+--------------------------- 2.3 V ----------------------------------------
+CREATE FUNCTION FN_Advisors_Requests (@advisor_id INT)
+RETURNS TABLE
+	AS
+	RETURN	SELECT	*
+			FROM	Request
+			WHERE	advisor_id	=	@advisor_id
 GO
 
 --------------------------- 2.3 X ----------------------------------------
