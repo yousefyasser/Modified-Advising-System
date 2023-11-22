@@ -830,7 +830,7 @@ CREATE PROC Procedures_StudentRegisterFirstMakeup
 
 					@start_year =	@curr_year + IIF(@current_semester LIKE '%R%', 1, 0),
 
-					@end_year =		@start_year + IIF(@is_oddn = 1, 1, 0),
+					@end_year =		@start_year + IIF(@is_odd = 1, 1, 0),
 
 					@start_sem =	IIF(@is_odd = 1, 'W', 'S'),
 
@@ -900,7 +900,7 @@ CREATE PROC Procedures_StudentRegisterSecondMakeup
 
 					@start_year =	@curr_year + IIF(@current_semester LIKE '%R%', 1, 0),
 
-					@end_year =		@start_year + IIF(@is_oddn = 1, 1, 0),
+					@end_year =		@start_year + IIF(@is_odd = 1, 1, 0),
 
 					@start_sem =	IIF(@is_odd = 1, 'W', 'S'),
 
