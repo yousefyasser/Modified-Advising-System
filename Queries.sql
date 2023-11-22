@@ -34,7 +34,7 @@ AS
 		financial_status BIT CHECK (financial_status IN (0, 1)) /* 0 MEANS BLOCKED, 1 MEANS UNBLOCKED */,
 		semester INT NOT NULL,
 		acquired_hours INT,
-		assigned_hours INT,
+		assigned_hours INT, -- 34 hrs max
 		advisor_id INT,
 		FOREIGN KEY (advisor_id) REFERENCES Advisor ON DELETE CASCADE
 	);
@@ -168,7 +168,7 @@ AS
 		payment_id INT PRIMARY KEY IDENTITY,
 		payment_amount INT NOT NULL,
 		payment_deadline datetime NOT NULL,
-		n_installments INT NOT NULL,
+		n_installments INT NOT NULL, -- check with both dates
 		payment_status VARCHAR(40) NOT NULL CHECK (payment_status IN ('notPaid', 'Paid')) DEFAULT 'notPaid',
 		fund_percentage DECIMAL(3,2) NOT NULL,
 		s_date datetime NOT NULL,
@@ -903,7 +903,7 @@ CREATE PROC Procedures_StudentRegisterSecondMakeup
 		SELECT	@exm_id = exam_id
 		FROM	MakeUp_Exam, Semester
 		WHERE	course_id		=	@course_id
-		AND		mk_exam_type	=	'First_makeup' 
+		AND		mk_exam_type	=	'Second_makeup' 
 		AND		mk_exam_date	between	(@start_sem	+ @start_year).end_date
 								AND		(@end_sem	+	@end_year).s_date
 
