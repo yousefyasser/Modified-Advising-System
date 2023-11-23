@@ -672,10 +672,11 @@ AS
 	Declare @asghours int
 	Declare @rcourse_id int
 	Declare @sem_code varchar(40)
+	Declare @radvisor_id int
 
-	Select @chours=c.credit_hours, @asghours=s.assigned_hours, @rcourse_Id=r.course_id
+	Select @chours=c.credit_hours, @asghours=s.assigned_hours, @rcourse_Id=r.course_id, @radvisor_id=r.advisor_id
 	from Request r Inner Join Course c on r.course_id=c.course_id Inner Join Student s on s.student_id=r.student_id 
-	where r.request_id= @requestID and s.student_id=@studentID and s.advisor_id = @advisorID
+	where r.request_id= @requestID and s.student_id=@studentID
 
 	set @reject=0
 		If( exists( (Select prerequisite_course_id from Request r Inner Join preqCourse_course p on r.course_id = p.course_id)
@@ -688,7 +689,7 @@ AS
 	Select @sem_code = max(semester_code) from
 			Course_Semester c where c.course_id = @rcourse_id
 
-	IF (@reject =1 OR @chours>@asghours)
+	IF (@reject =1 OR @chours>@asghours OR @radvisor_id <> @advisorID)
 	Begin
 		update Request 
 		Set Request.req_status = 'rejected' where Request.request_id = @RequestID
