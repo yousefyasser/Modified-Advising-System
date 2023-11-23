@@ -778,12 +778,16 @@ RETURNS	DATETIME
 	AS
 		BEGIN
 			RETURN
-			(SELECT	TOP	1	i.deadline
-			FROM	Payment p, Installment i
+			(
+			SELECT	TOP	1	i.deadline
+			FROM	Payment p,
+					Installment i
+
 			WHERE	p.student_id	=	@student_id
 			AND		p.payment_id	=	i.payment_id
 			AND		i.inst_status	=	'notPaid'
-			ORDER BY i.deadline)
+			ORDER BY i.deadline
+			)
 		END
 GO
 --------------------------- 2.3 HH ----------------------------------------
@@ -818,10 +822,6 @@ CREATE PROC Procedures_StudentRegisterFirstMakeup
 		DECLARE @end_sem VARCHAR(40)
 		DECLARE @start_date DATE
 		DECLARE @end_date DATE
-
-		DECLARE @YAYA VARCHAR(40) = 'W23'
-
-
 
 		SELECT	@crs_sem = semester_code
 		FROM	Student_Instructor_Course_Take
@@ -870,7 +870,7 @@ RETURNS BIT
 		DECLARE	@fail_count INT
 		DECLARE	@pass_count INT
 
-        SELECT	@fail_count  = COUNT(*) - SUM(IIF (grade IS NOT NULL AND grade < 'F', 1, 0))
+        SELECT	@fail_count	= COUNT(*) - SUM(IIF (grade IS NOT NULL AND grade < 'F', 1, 0))
         FROM	Student_Instructor_Course_Take
         WHERE	student_id	=	@student_id
 
@@ -932,7 +932,8 @@ CREATE PROC Procedures_StudentRegisterSecondMakeup
 
 
 		SELECT	@exm_id = exam_id
-		FROM	MakeUp_Exam, Semester
+		FROM	MakeUp_Exam,
+				Semester
 		WHERE	course_id		=	@course_id
 		AND		mk_exam_type	=	'Second_makeup' 
 		AND		mk_exam_date	between	@start_date
@@ -952,11 +953,15 @@ CREATE PROC Procedures_ViewRequiredCoursesR
 		DECLARE @course_id INT;
 
 			(
-			SELECT	c1.*, master.FN_StudentCheckSMEligibility (@student_id, course_id)
-			FROM	Student_Instructor_Course_Take sic1, Semester sem1, Course c1
-			WHERE	sic1.semester_code				=	sem1.semester_code
-			AND		student_id						=	@student_id
-			AND		grade							=	'F'
+			SELECT	c1.*,
+					master.FN_StudentCheckSMEligibility (@student_id, course_id)
+
+			FROM	Student_Instructor_Course_Take sic1,
+					Semester sem1,
+					Course c1
+			WHERE	sic1.semester_code	=	sem1.semester_code
+			AND		student_id			=	@student_id
+			AND		grade				=	'F'
 			GROUP BY sic1.semester_code
 			HAVING	(
 					sic1.semester_code	=	@current_semester_code 
@@ -964,18 +969,17 @@ CREATE PROC Procedures_ViewRequiredCoursesR
 					master.FN_StudentCheckSMEligibility (@student_id, course_id) = 0
 					)
 			)
-
 			UNION
-
 			(
 			SELECT	c2.*
-			FROM	Student s, Course c1
-			WHERE	s.major			=	c.major
-			AND		s.semester		>	c.semester
+			FROM	Student s,
+					Course c1
+			WHERE	s.major		=	c.major
+			AND		s.semester	>	c.semester
 			AND NOT EXIST IN	(
-								SELECT course_id 
-								FROM Student_Instructor_Course_Take sic2
-								WHERE	s.student_id = sic2.student_id
+								SELECT	course_id 
+								FROM	Student_Instructor_Course_Take sic2
+								WHERE	s.student_id	=	sic2.student_id
 								)
 			)
 			
@@ -1067,7 +1071,7 @@ CREATE PROCEDURE Procedures_ChooseInstructor
 	@instructor_id INT,
 	@course_id INT
 AS
-		UPDATE Student_Course_Instractor_Take
+		UPDATE	Student_Course_Instractor_Take
 		SET		instructor_id	=	@instructor_id
 		WHERE	student_id		=	@student_id
 		AND		course_id		=	@course_id
