@@ -618,27 +618,28 @@ CREATE PROC Procedures_AdvisorApproveRejectCHRequest
 	@current_semester VARCHAR(40)
 AS
 BEGIN
+
 	
-	SELECT request_id
-	FROM (
+		(
 		SELECT	request_id
+		INTO	#temp
 		FROM	Request r, Student s
 		WHERE	r.student_id	=	s.student_id
 		AND		req_type		=	'credit'
 		AND		gpa				<=	3.7
 		AND		(credit_hours 
 				+ assigned_hours) <	34
-	) subquery;
+		)
 
 	UPDATE	Request
-	SET		req_status	=	IIF(request_id IN (subquery), 'accepted', 'rejected')
+	SET		req_status	=	IIF(request_id IN (SELECT request_id FROM #temp), 'accepted', 'rejected')
 
 	UPDATE	Student
 	SET		assigned_hours	=	assigned_hours	+	IIF(credit_hours > 3, 3, credit_hours)
 	FROM	Students s
 	JOIN	Request r
 	ON		r.student_id = s.student_id
-	WHERE	request_id IN (subquery)
+	WHERE	request_id IN (SELECT request_id FROM #temp)
 END;
 
 GO
@@ -901,8 +902,6 @@ CREATE PROC Procedures_StudentRegisterSecondMakeup
 		DECLARE @start_date DATE
 		DECLARE @end_date DATE
 
-		DECLARE @YAYA VARCHAR(40) = 'W23'
-
 
 
 		SELECT	@crs_sem = semester_code
@@ -923,13 +922,13 @@ CREATE PROC Procedures_StudentRegisterSecondMakeup
 
 					@end_sem =		IIF(@is_odd = 1, 'S', 'W')
 
-			SELECT	@start_date = s.end_date
+			SELECT	@start_date	=	s.end_date
 			FROM	Semester s
-			WHERE	s.semester_code = CONCAT(@start_sem, @start_year)
+			WHERE	s.semester_code	=	CONCAT(@start_sem, @start_year)
 
-			SELECT	@end_date = s.s_date
+			SELECT	@end_date	=	s.s_date
 			FROM	Semester s
-			WHERE	s.semester_code = CONCAT(@end_sem, @end_year)
+			WHERE	s.semester_code	=	CONCAT(@end_sem, @end_year)
 
 
 		SELECT	@exm_id = exam_id
