@@ -815,6 +815,10 @@ CREATE PROC Procedures_StudentRegisterFirstMakeup
 		DECLARE @crs_sem VARCHAR(40)
 		DECLARE @start_sem VARCHAR(40)
 		DECLARE @end_sem VARCHAR(40)
+		DECLARE @start_date DATE
+		DECLARE @end_date DATE
+
+		DECLARE @YAYA VARCHAR(40) = 'W23'
 
 
 
@@ -836,12 +840,21 @@ CREATE PROC Procedures_StudentRegisterFirstMakeup
 
 					@end_sem =		IIF(@is_odd = 1, 'S', 'W')
 
+			SELECT	@start_date = s.end_date
+			FROM	Semester s
+			WHERE	s.semester_code = CONCAT(@start_sem, @start_year)
+
+			SELECT	@end_date = s.s_date
+			FROM	Semester s
+			WHERE	s.semester_code = CONCAT(@end_sem, @end_year)
+
+
 		SELECT	@exm_id = exam_id
 		FROM	MakeUp_Exam, Semester
 		WHERE	course_id		=	@course_id
 		AND		mk_exam_type	=	'First_makeup' 
-		AND		mk_exam_date	between	(@start_sem	+ CAST (@start_year AS VARCHAR)).end_date
-								AND		(@end_sem	+	CAST (@end_year AS VARCHAR)).s_date
+		AND		mk_exam_date	between	@start_date
+								AND		@end_date
 
 		INSERT
 		INTO	Exam_Student
@@ -885,6 +898,10 @@ CREATE PROC Procedures_StudentRegisterSecondMakeup
 		DECLARE @crs_sem VARCHAR(40)
 		DECLARE @start_sem VARCHAR(40)
 		DECLARE @end_sem VARCHAR(40)
+		DECLARE @start_date DATE
+		DECLARE @end_date DATE
+
+		DECLARE @YAYA VARCHAR(40) = 'W23'
 
 
 
@@ -906,12 +923,21 @@ CREATE PROC Procedures_StudentRegisterSecondMakeup
 
 					@end_sem =		IIF(@is_odd = 1, 'S', 'W')
 
+			SELECT	@start_date = s.end_date
+			FROM	Semester s
+			WHERE	s.semester_code = CONCAT(@start_sem, @start_year)
+
+			SELECT	@end_date = s.s_date
+			FROM	Semester s
+			WHERE	s.semester_code = CONCAT(@end_sem, @end_year)
+
+
 		SELECT	@exm_id = exam_id
 		FROM	MakeUp_Exam, Semester
 		WHERE	course_id		=	@course_id
 		AND		mk_exam_type	=	'Second_makeup' 
-		AND		mk_exam_date	between	(@start_sem	+ CAST (@start_year AS VARCHAR)).end_date
-								AND		(@end_sem	+	CAST (@end_year AS VARCHAR)).s_date
+		AND		mk_exam_date	between	@start_date
+								AND		@end_date
 
 		INSERT
 		INTO	Exam_Student
