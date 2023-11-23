@@ -927,15 +927,16 @@ CREATE PROC Procedures_ViewRequiredCoursesR
 		DECLARE @course_id INT;
 
 			(
-			SELECT	c1.*, master.FN_StudentCheckSMEligibility (@student_id, course_id) AS func
+			SELECT	c1.*, master.FN_StudentCheckSMEligibility (@student_id, course_id)
 			FROM	Student_Instructor_Course_Take sic1, Semester sem1, Course c1
-			WHERE	sic.semester_code				=	sem.semester_code
+			WHERE	sic1.semester_code				=	sem1.semester_code
 			AND		student_id						=	@student_id
 			AND		grade							=	'F'
+			GROUP BY sic1.semester_code
 			HAVING	(
-					semester_code	=	@current_semester_code 
+					sic1.semester_code	=	@current_semester_code 
 				AND	
-					func = 0
+					master.FN_StudentCheckSMEligibility (@student_id, course_id) = 0
 					)
 			)
 
