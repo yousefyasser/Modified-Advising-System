@@ -298,7 +298,7 @@ GO
 
 --------------------------- 2.2 G ----------------------------------------
 CREATE VIEW Students_Courses_transcript AS
-SELECT s.student_id, st.f_name, st.l_name, s.course_id, co.course_name, s.exam_type, s.grade, s.semester_code, ins.instructor_name
+SELECT s.student_id, CONCAT(st.f_name, ' ', st.l_name) AS student_name, s.course_id, co.course_name, s.exam_type, s.grade, s.semester_code, ins.instructor_name
 FROM Student_Instructor_Course_Take s, Student st, Course co, Instructor ins
 WHERE s.student_id = st.student_id AND s.course_id = co.course_id AND s.instructor_id = ins.instructor_id
 
@@ -515,7 +515,7 @@ GO
 CREATE VIEW all_Pending_Requests 
 
 AS
-	SELECT r.*, s.f_name, s.l_name, a.advisor_name 
+	SELECT r.*, CONCAT(s.f_name, ' ', s.l_name) AS student_name, a.advisor_name 
 	FROM Request r INNER JOIN Student s on s.student_id=r.student_id INNER JOIN Advisor a on a.advisor_id = r.advisor_id
 	WHERE req_status='pending'
 GO
@@ -649,7 +649,7 @@ CREATE PROCEDURE Procedures_AdvisorViewAssignedStudents
 	@advisor_id INT,
 	@major VARCHAR(40)
 AS    
-    Select sct.student_id, sct.f_name, sct.l_name, s.major, sct.course_name
+    Select sct.student_id, CONCAT(s.f_name, ' ', s.l_name) AS student_name, s.major, sct.course_name
     From Students_Courses_transcript sct, Student s 
     where sct.student_id = s.student_id AND s.major = @major AND s.advisor_id = @advisor_id
 
@@ -795,10 +795,7 @@ RETURNS TABLE
 			AND		s.student_id			=	@student_id
 			)
 GO
-	DROP FUNCTION IF EXISTS
-	FN_StudentViewGP;
 
-GO
 -------------------------- 2.3 GG ----------------------------------------
 CREATE FUNCTION FN_StudentUpcoming_installment (@student_id INT)
 RETURNS	DATETIME
@@ -1104,5 +1101,3 @@ AS
 		AND		course_id		=	@course_id
 GO
 --
-
-EXEC sp_columns Graduation_Plan;
