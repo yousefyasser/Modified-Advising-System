@@ -772,6 +772,33 @@ AS
 	INSERT INTO Request (req_type, comment, student_id, credit_hours)
 	VALUES (@type, @comment, @student_id, @credit_hours)
 GO
+
+--------------------------- 2.3 FF ----------------------------------------
+CREATE FUNCTION FN_StudentViewGP (@student_id INT)
+RETURNS TABLE
+	AS
+	RETURN	(
+			SELECT	s.student_id, CONCAT(s.f_name, ' ', s.l_name) AS student_name,
+					gradpln_crs.plan_id, gradpln_crs.course_id,
+					crs.course_name,
+					gradpln.semester_code, gradpln.expected_grad_date, gradpln.semester_credit_hours, gradpln.advisor_id
+
+			FROM	Student			s,
+					GradPlan_Course	gradpln_crs,
+					Course			crs,
+					Graduation_Plan	gradpln
+
+			WHERE	s.student_id			=	gradpln.student_id
+			AND		gradpln.plan_id			=	gradpln_crs.plan_id
+			AND		gradpln.semester_code	=	gradpln_crs.semester_code
+			AND		gradpln_crs.course_id	=	crs.course_id
+			AND		s.student_id			=	@student_id
+			)
+GO
+	DROP FUNCTION IF EXISTS
+	FN_StudentViewGP;
+
+GO
 -------------------------- 2.3 GG ----------------------------------------
 CREATE FUNCTION FN_StudentUpcoming_installment (@student_id INT)
 RETURNS	DATETIME
@@ -1077,3 +1104,5 @@ AS
 		AND		course_id		=	@course_id
 GO
 --
+
+EXEC sp_columns Graduation_Plan;
