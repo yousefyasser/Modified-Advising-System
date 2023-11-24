@@ -1089,6 +1089,41 @@ AS
 	WHERE s.course_id = c.course_id AND s.student_id = @student_id)
 GO
 
+--------------------------- 2.3 NNR ----------------------------------------
+CREATE PROC Procedures_ViewMSR
+	@student_id INT
+	AS
+
+		SELECT	course_id
+		INTO	#taken
+		FROM	Student_Instructor_Course_Take
+
+
+		SELECT	course_id
+		INTO	#takenButNotPass
+		FROM	Student_Instructor_Course_Take
+		WHERE	grade	IS	NULL
+		OR		grade	=	'F'
+
+
+
+		SELECT	crs.*
+
+		FROM	Course							crs,
+				Student							s,
+				Student_Instructor_Course_Take	sic
+
+		WHERE	s.student_id	=	@student_id
+		AND		s.major			=	crs.major
+		AND		s.student_id	=	sic.student_id
+		AND		crs.course_id	=	sic.course_id
+		AND		(
+				crs.course_id	NOT	IN	(SELECT * FROM #taken)
+			OR
+				crs.course_id		IN	(SELECT * FROM #takenButNotPass)
+				)
+GO
+
 --------------------------- 2.3 OO ----------------------------------------
 CREATE PROCEDURE Procedures_ChooseInstructor
 	@student_id INT,
