@@ -12,6 +12,26 @@ GO
 
 --------------------------- 2.1 ----------------------------------------
 
+CREATE FUNCTION checkStudentStatus (@student_id INT)
+RETURNS BIT
+
+AS
+	BEGIN
+		DECLARE @result BIT
+
+		IF EXISTS (SELECT * 
+			FROM Student s 
+			INNER JOIN Payment p on s.student_id = @student_id AND s.student_id = p.student_id 
+			INNER JOIN Installment i on p.payment_id = i.payment_id
+			AND i.inst_status = 'notPaid' AND i.deadline < CURRENT_TIMESTAMP)
+			SET @result = 0
+		ELSE 
+			SET @result = 1
+
+		RETURN @result
+	END
+GO
+
 CREATE PROCEDURE CreateAllTables
 AS
 	CREATE TABLE Advisor(
@@ -26,17 +46,21 @@ AS
 		student_id INT PRIMARY KEY IDENTITY, 
 		f_name VARCHAR(40) NOT NULL, 
 		l_name VARCHAR(40) NOT NULL,
-		gpa DECIMAL(3, 2),
+		gpa DECIMAL(3, 2) ,
 		faculty VARCHAR(40) NOT NULL,
 		email VARCHAR(40) NOT NULL,
 		major VARCHAR(40) NOT NULL,
 		pass VARCHAR(40) NOT NULL,
-		financial_status BIT CHECK (financial_status IN (0, 1)) /* 0 MEANS BLOCKED, 1 MEANS UNBLOCKED */,
+		financial_status BIT DEFAULT 1 /* 0 MEANS BLOCKED, 1 MEANS UNBLOCKED */,
 		semester INT NOT NULL,
 		acquired_hours INT,
-		assigned_hours INT, -- 34 hrs max
+		assigned_hours INT, 
 		advisor_id INT,
-		FOREIGN KEY (advisor_id) REFERENCES Advisor ON DELETE CASCADE
+		FOREIGN KEY (advisor_id) REFERENCES Advisor ON DELETE CASCADE,
+		CHECK (financial_status IN (0, 1)),
+		CHECK (gpa IS NULL OR (gpa BETWEEN 0.70 AND 5.00)),
+		CHECK (assigned_hours IS NULL OR (assigned_hours BETWEEN 0 AND 34)),
+		CHECK (acquired_hours IS NULL OR (acquired_hours >= 34))
 	);
 
 	CREATE TABLE Student_phone(
@@ -50,7 +74,7 @@ AS
 		course_id INT PRIMARY KEY IDENTITY,
 		course_name VARCHAR(40) NOT NULL,
 		major VARCHAR(40) NOT NULL,
-		is_offered BIT CHECK (is_offered IN (0, 1)) /* 0 MEANS OFFERED, 1 MEANS NOT OFFERED Current Sem */,
+		is_offered BIT NOT NULL CHECK (is_offered IN (0, 1)) /* 0 MEANS OFFERED, 1 MEANS NOT OFFERED Current Sem */,
 		credit_hours INT NOT NULL,
 		semester INT NOT NULL
 	);
@@ -180,7 +204,7 @@ AS
 		payment_id INT NOT NULL FOREIGN KEY REFERENCES Payment ON DELETE CASCADE,
 		deadline datetime NOT NULL,
 		inst_amount INT NOT NULL,
-		inst_status VARCHAR(40) CHECK (inst_status IN ('notPaid', 'Paid')) DEFAULT 'notPaid' NOT NULL,
+		inst_status VARCHAR(40)  NOT NULL CHECK (inst_status IN ('notPaid', 'Paid')) DEFAULT 'notPaid',
 		inst_start_date datetime NOT NULL,
 		CONSTRAINT Pk_installment PRIMARY KEY (payment_id,deadline)
 	);
@@ -340,6 +364,36 @@ AS
 	WHERE f_name = @first_name AND l_name = @last_name AND pass = @password AND faculty = @faculty AND email = @email AND major = @major AND semester = @semester
 GO
 
+--------------------------- 2.3 B ----------------------------------------
+
+CREATE PROCEDURE Procedures_AdvisorRegistration
+	@advisor_name VARCHAR(40),
+	@password VARCHAR(40),
+	@email VARCHAR(40),
+	@office VARCHAR(40),
+	@advisor_id INT OUTPUT
+AS
+	
+	INSERT INTO Advisor (advisor_name, office, email, pass)
+	VALUES (@advisor_name, @office, @email, @password)
+
+	SELECT @advisor_id = advisor_id
+	FROM Advisor
+	WHERE advisor_name = @advisor_name AND office = @office AND email = @email AND pass = @password
+
+GO
+
+--------------------------- 2.3 C ----------------------------------------
+
+CREATE PROCEDURE Procedures_AdminListStudents
+
+AS
+
+	Select *
+    From Student;
+
+GO
+
 --------------------------- 2.3 D ----------------------------------------
 CREATE PROCEDURE Procedures_AdminListAdvisors
 
@@ -400,8 +454,9 @@ CREATE PROCEDURE Procedures_AdminLinkInstructor
 
 AS
 
-INSERT INTO Slot (slot_id, course_id, instructor_id)
-VALUES (@slot_id, @course_id, @instructor_id )
+	UPDATE Slot
+	SET course_id = @course_id , instructor_id = @instructor_id
+	WHERE slot_id = @slot_id
 
 GO
 
@@ -552,9 +607,9 @@ CREATE PROCEDURE Procedures_AdvisorCreateGP
     @advisor_id INT
 
 AS
-
-    INSERT INTO Graduation_Plan (semester_code, semester_credit_hours, expected_grad_date, advisor_id, student_id)
-    VALUES (@semester_code, @sem_credit_hours, @expected_graduation_date, @advisor_id, @student_id);
+	IF (EXISTS(SELECT student_id FROM Student WHERE acquired_hours > 157 AND student_id = @student_id))
+		INSERT INTO Graduation_Plan (semester_code, semester_credit_hours, expected_grad_date, advisor_id, student_id)
+		VALUES (@semester_code, @sem_credit_hours, @expected_graduation_date, @advisor_id, @student_id);
 
 GO
 --------------------------- 2.3 S ----------------------------------------
@@ -717,7 +772,7 @@ RETURNS BIT
 
 AS
 	BEGIN
-		RETURN IIF (@password = (SELECT pass FROM Student WHERE student_id = @id), 1, 0)
+		RETURN IIF (@password = (SELECT pass FROM Student WHERE student_id = @id AND dbo.[checkStudentStatus] (@id) = 1), 1, 0)
 	END
 
 GO
@@ -748,7 +803,7 @@ RETURN
         Course_Semester cs ON c.course_id = cs.course_id
     WHERE
         cs.semester_code = @semester_code
-        AND c.is_offered = 1
+       -- AND c.is_offered = 1
 GO
 
 --------------------------- 2.3 DD ----------------------------------------
@@ -978,7 +1033,7 @@ CREATE PROC Procedures_ViewRequiredCoursesR
 
 			(
 			SELECT	c1.*,
-					master.FN_StudentCheckSMEligibility (@student_id, course_id)
+					dbo.FN_StudentCheckSMEligibility (@student_id, course_id)
 
 			FROM	Student_Instructor_Course_Take sic1,
 					Semester sem1,
@@ -990,7 +1045,7 @@ CREATE PROC Procedures_ViewRequiredCoursesR
 			HAVING	(
 					sic1.semester_code	=	@current_semester_code 
 				AND	
-					master.FN_StudentCheckSMEligibility (@student_id, course_id) = 0
+					dbo.FN_StudentCheckSMEligibility (@student_id, course_id) = 0
 					)
 			)
 			UNION
@@ -1135,4 +1190,3 @@ AS
 		WHERE	student_id		=	@student_id
 		AND		course_id		=	@course_id
 GO
---
