@@ -1,13 +1,13 @@
 ﻿USE master
 GO
 
+drop database Advising_Team_27;
+GO
+
 CREATE DATABASE Advising_Team_27;
 GO
 
 USE Advising_Team_27;
-GO
-
-DROP DATABASE Advising_Team_27;
 GO
 
 --------------------------- 2.1 ----------------------------------------
@@ -238,10 +238,6 @@ AS
 
 GO
 
-EXEC DropAllTables;
-
-GO
-
 CREATE PROCEDURE clearAllTables
 AS
 	DELETE FROM Installment
@@ -264,10 +260,6 @@ AS
 	DELETE FROM Course
 	DELETE FROM Instructor
 	DELETE FROM Semester
-
-GO
-
-EXEC clearAllTables;
 
 GO
 
@@ -513,7 +505,7 @@ CREATE PROC Procedures_AdminIssueInstallment
 		@strt_date	=	s_date,
 		@ddln		=	payment_deadline
 
-		FROM	Student_Payment
+		FROM	Payment
 		WHERE	payment_id	=	@payment_id
 
 		WHILE @i <> 0
@@ -672,9 +664,19 @@ CREATE PROC Procedures_AdvisorApproveRejectCHRequest
 	@request_id INT,
 	@current_semester VARCHAR(40)
 AS
+DECLARE @credit_hours INT
 BEGIN
+		SET @credit_hours = (
+		SELECT	credit_hours
+		FROM	Request r, Student s
+		WHERE	r.student_id	=	s.student_id
+		AND		req_type		=	'credit'
+		AND		gpa				<=	3.7
+		AND		(credit_hours 
+				+ assigned_hours) <	34
+		)
 
-	
+
 		(
 		SELECT	request_id
 		INTO	#temp
@@ -697,13 +699,13 @@ BEGIN
 	WHERE	request_id IN (SELECT request_id FROM #temp)
 
 	UPDATE Payment
-	SET amount = amount + 1000 * credit_hours
+	SET payment_amount = payment_amount + 1000 * @credit_hours
 	FROM Payment p, Student s
 	WHERE p.student_id = s.student_id
 	AND  p.semester_code = @current_semester 
 	
 	UPDATE Installment
-	SET amount = amount + 1000 * credit_hours
+	SET inst_amount = inst_amount + 1000 * @credit_hours
 	WHERE deadline IN 
 					(
 					SELECT min(i.deadline) 
@@ -747,9 +749,9 @@ AS
 	Declare @radvisor_id int
 	Declare @rtype varchar(40)
 
-	Select @chours=c.credit_hours, @asghours=s.assigned_hours, @rcourse_Id=r.course_id, @radvisor_id=r.advisor_id, @studentID=r.student_id, @rtype=r.request_type
+	Select @chours=c.credit_hours, @asghours=s.assigned_hours, @rcourse_Id=r.course_id, @radvisor_id=r.advisor_id, @studentID=r.student_id, @rtype=r.req_type
 	from Request r Inner Join Course c on r.course_id=c.course_id Inner Join Student s on s.student_id=r.student_id 
-	where r.request_id= @requestID and r.request_type= 'course'
+	where r.request_id= @requestID and r.req_type= 'course'
 
 	set @reject=0
 		If( exists( (Select prerequisite_course_id from Request r Inner Join preqCourse_course p on r.course_id = p.course_id)
@@ -762,11 +764,12 @@ AS
 
 	If(@rtype = 'course')	
 		Begin
-	IF (@reject =1 OR @asghours is null OR (@asghours is not null AND @chours>@asghours) OR @radvisor_id <> @advisorID)
-	Begin
-		update Request 
-		Set Request.req_status = 'rejected' where Request.request_id = @RequestID
-	End
+			IF (@reject =1 OR @asghours is null OR (@asghours is not null AND @chours>@asghours))
+			Begin
+				update Request 
+				Set Request.req_status = 'rejected' where Request.request_id = @RequestID
+			End
+		end
 	Else
 		Begin
 			update Request 
@@ -775,9 +778,8 @@ AS
 			VALUES (@studentID, @rcourse_id, @current_semester_code)
 			update Student
 			Set Student.assigned_hours= @asghours-@chours
-			where Student.id= @studentID
+			where Student.student_id= @studentID
 		End
-	End
 
 GO
 --------------------------- 2.3 Z ----------------------------------------
@@ -1080,42 +1082,44 @@ CREATE PROC Procedures_ViewRequiredCoursesR
 		DECLARE @course_id INT;
 
 			(
-			SELECT	c1.*,
-					dbo.FN_StudentCheckSMEligibility (@student_id, course_id)
+				SELECT	c1.*
 
-			FROM	Student_Instructor_Course_Take sic1,
-					Semester sem1,
-					Course c1
-			WHERE	sic1.semester_code	=	sem1.semester_code
-			AND		student_id			=	@student_id
-			AND		grade				IN	('F', 'FF')
-			GROUP BY sic1.semester_code
-			HAVING	(
-					sic1.semester_code	=	@current_semester_code 
-				AND	
-					dbo.FN_StudentCheckSMEligibility (@student_id, course_id) = 0
-					)
+				FROM	Student_Instructor_Course_Take sic1,
+						Semester sem1,
+						Course c1
+				WHERE	sic1.semester_code	=	sem1.semester_code
+				AND		student_id			=	@student_id
+				AND		grade				IN	('F', 'FF')
+				AND		c1.course_id		=	sic1.course_id
+				GROUP BY c1.course_id, c1.course_name, c1.credit_hours, c1.is_offered, c1.major, c1.semester, sic1.semester_code, dbo.FN_StudentCheckSMEligibility (@student_id, c1.course_id)
+				HAVING	(
+						sic1.semester_code	=	@current_semester_code 
+					AND	
+						dbo.FN_StudentCheckSMEligibility (@student_id, c1.course_id) = 0
+						)
 			)
 			UNION
 			(
-			SELECT	c2.*
-			FROM	Course c2
-			WHERE	
-			NOT EXISTS	(
-								SELECT	course_id 
-								FROM	Student_Instructor_Course_Take sic2, Student s, Course c2
-								WHERE	s.student_id	=	sic2.student_id
-								AND		s.major		=	c.major
-								AND		s.semester	>	c.semester
-						)
-			OR EXISTS	(
-								SELECT	course_id 
-								FROM	Student_Instructor_Course_Take sic2, Student s, Course c2
-								WHERE	s.student_id	=	sic2.student_id
-								AND		s.major		=	c.major
-								AND		s.semester	>	c.semester
-								AND		sic2.grade = 'FA'
-						)
+				SELECT	c2.*
+				FROM	Course c2
+				WHERE	
+				NOT EXISTS	(
+									SELECT	sic2.course_id 
+									FROM	Student_Instructor_Course_Take sic2, Student s, Course c2
+									WHERE	s.student_id	=	sic2.student_id
+									AND		s.major		=	c2.major
+									AND		s.semester	>	c2.semester
+									AND		sic2.course_id = c2.course_id
+							)
+				OR EXISTS	(
+									SELECT	sic2.course_id 
+									FROM	Student_Instructor_Course_Take sic2, Student s, Course c2
+									WHERE	s.student_id	=	sic2.student_id
+									AND		s.major		=	c2.major
+									AND		s.semester	>	c2.semester
+									AND		sic2.grade = 'FA'
+									AND		sic2.course_id = c2.course_id
+							)
 			)
 			
 	END
