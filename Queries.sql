@@ -717,19 +717,19 @@ GO
 --------------------------- 2.3 Y ----------------------------------------
 Create Procedure Procedures_AdvisorApproveRejectCourseRequest
 	@requestID int,
-	@studentID int,
-	@advisorID int 
+	@current_semester_code varchar(40)
 AS
+	Declare @studentID int
 	Declare @reject bit
 	Declare @chours int
 	Declare @asghours int
 	Declare @rcourse_id int
-	Declare @sem_code varchar(40)
 	Declare @radvisor_id int
+	Declare @rtype varchar(40)
 
-	Select @chours=c.credit_hours, @asghours=s.assigned_hours, @rcourse_Id=r.course_id, @radvisor_id=r.advisor_id
+	Select @chours=c.credit_hours, @asghours=s.assigned_hours, @rcourse_Id=r.course_id, @radvisor_id=r.advisor_id, @studentID=r.student_id, @rtype=r.request_type
 	from Request r Inner Join Course c on r.course_id=c.course_id Inner Join Student s on s.student_id=r.student_id 
-	where r.request_id= @requestID and s.student_id=@studentID
+	where r.request_id= @requestID and r.request_type= 'course'
 
 	set @reject=0
 		If( exists( (Select prerequisite_course_id from Request r Inner Join preqCourse_course p on r.course_id = p.course_id)
@@ -739,20 +739,24 @@ AS
 		set @reject =1
 		end
 
-	Select @sem_code = max(semester_code) from
-			Course_Semester c where c.course_id = @rcourse_id
 
-	IF (@reject =1 OR @chours>@asghours OR @radvisor_id <> @advisorID)
+	If(@rtype = 'course')	
+		Begin
+	IF (@reject =1 OR @asghours is null OR (@asghours is not null AND @chours>@asghours) OR @radvisor_id <> @advisorID)
 	Begin
 		update Request 
 		Set Request.req_status = 'rejected' where Request.request_id = @RequestID
 	End
 	Else
-	Begin
-		update Request 
-		Set Request.req_status = 'accepted' where Request.request_id = @RequestID
-		INSERT INTO Student_Instructor_Course_Take (student_id, course_id, semester_code)
-    VALUES (@studentID, @rcourse_id, @sem_code);
+		Begin
+			update Request 
+			Set Request.req_status = 'accepted' where Request.request_id = @RequestID
+			INSERT INTO Student_Instructor_Course_Take (student_id, course_id, semester_code)
+			VALUES (@studentID, @rcourse_id, @current_semester_code)
+			update Student
+			Set Student.assigned_hours= @asghours-@chours
+			where Student.id= @studentID
+		End
 	End
 
 GO
