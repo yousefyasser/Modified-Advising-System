@@ -695,6 +695,26 @@ BEGIN
 	JOIN	Request r
 	ON		r.student_id = s.student_id
 	WHERE	request_id IN (SELECT request_id FROM #temp)
+
+	UPDATE Payment
+	SET amount = amount + 1000 * credit_hours
+	FROM Payment p, Student s
+	WHERE p.student_id = s.student_id
+	AND  p.semester_code = @current_semester 
+	
+	UPDATE Installment
+	SET amount = amount + 1000 * credit_hours
+	WHERE deadline IN 
+					(
+					SELECT min(i.deadline) 
+					FROM Installment i, Payment p, Student s
+					WHERE p.payment_id = i.payment_id 
+					AND i.deadline > CURRENT_TIMESTAMP 
+					AND i.inst_status = 'notPaid' 
+					AND  p.semester_code = @current_semester
+					AND p.student_id = s.student_id
+					)
+	
 END;
 
 GO
@@ -906,43 +926,67 @@ CREATE PROC Procedures_StudentRegisterFirstMakeup
 		DECLARE @start_date DATE
 		DECLARE @end_date DATE
 
-		SELECT	@crs_sem = semester_code
-		FROM	Student_Instructor_Course_Take
-		WHERE	student_id	=	@student_id
-		AND		course_id	=	@course_id
+		IF (EXISTS(
+				SELECT	*
+				FROM	Student_Instructor_Course_Take
+				WHERE	student_id		=	@student_id
+				AND		course_id		=	@course_id
+				AND		semester_code	=	@current_semester
+				AND		exam_type		=	'Normal'
+				AND		grade			IN	(NULL, 'F', 'FF')
+		)
+
+		AND
+
+			NOT EXISTS(
+				SELECT	*
+				FROM	Student_Instructor_Course_Take
+				WHERE	student_id		=	@student_id
+				AND		course_id		=	@course_id
+				AND		exam_type		=	'First_makeup'
+			)
+		)	
+		BEGIN
+
+			SELECT	@crs_sem = semester_code
+			FROM	Student_Instructor_Course_Take
+			WHERE	student_id	=	@student_id
+			AND		course_id	=	@course_id
 
 
-			SELECT	@is_odd		=	IIF (LEFT(@crs_sem, 1) = 'W' OR RIGHT(@crs_sem, 2) = 'R1', 1, 0),
+				SELECT	@is_odd		=	IIF (LEFT(@crs_sem, 1) = 'W' OR RIGHT(@crs_sem, 2) = 'R1', 1, 0),
 
-					@curr_year	=	CAST (SUBSTRING (@current_semester, 2, 2) AS INT),
+						@curr_year	=	CAST (SUBSTRING (@current_semester, 2, 2) AS INT),
 
-					@start_year =	@curr_year + IIF(@current_semester LIKE '%R%', 1, 0),
+						@start_year =	@curr_year + IIF(@current_semester LIKE '%R%', 1, 0),
 
-					@end_year =		@start_year + IIF(@is_odd = 1, 1, 0),
+						@end_year =		@start_year + IIF(@is_odd = 1, 1, 0),
 
-					@start_sem =	IIF(@is_odd = 1, 'W', 'S'),
+						@start_sem =	IIF(@is_odd = 1, 'W', 'S'),
 
-					@end_sem =		IIF(@is_odd = 1, 'S', 'W')
+						@end_sem =		IIF(@is_odd = 1, 'S', 'W')
 
-			SELECT	@start_date = s.end_date
-			FROM	Semester s
-			WHERE	s.semester_code = CONCAT(@start_sem, @start_year)
+				SELECT	@start_date = s.end_date
+				FROM	Semester s
+				WHERE	s.semester_code = CONCAT(@start_sem, @start_year)
 
-			SELECT	@end_date = s.s_date
-			FROM	Semester s
-			WHERE	s.semester_code = CONCAT(@end_sem, @end_year)
+				SELECT	@end_date = s.s_date
+				FROM	Semester s
+				WHERE	s.semester_code = CONCAT(@end_sem, @end_year)
 
 
-		SELECT	@exm_id = exam_id
-		FROM	MakeUp_Exam, Semester
-		WHERE	course_id		=	@course_id
-		AND		mk_exam_type	=	'First_makeup' 
-		AND		mk_exam_date	between	@start_date
-								AND		@end_date
+			SELECT	@exm_id = exam_id
+			FROM	MakeUp_Exam
+			WHERE	course_id		=	@course_id
+			AND		mk_exam_type	=	'First_makeup' 
+			AND		mk_exam_date	between	@start_date
+									AND		@end_date
 
-		INSERT
-		INTO	Exam_Student
-		VALUES	(@exm_id, @student_id, @course_id)
+			INSERT
+			INTO	Exam_Student
+			VALUES	(@exm_id, @student_id, @course_id)
+
+		END
 GO
 
 ---------------------------- 2.3 JJ ----------------------------------------
@@ -1044,7 +1088,7 @@ CREATE PROC Procedures_ViewRequiredCoursesR
 					Course c1
 			WHERE	sic1.semester_code	=	sem1.semester_code
 			AND		student_id			=	@student_id
-			AND		grade				=	'F'
+			AND		grade				IN	('F', 'FF')
 			GROUP BY sic1.semester_code
 			HAVING	(
 					sic1.semester_code	=	@current_semester_code 
@@ -1055,15 +1099,23 @@ CREATE PROC Procedures_ViewRequiredCoursesR
 			UNION
 			(
 			SELECT	c2.*
-			FROM	Student s,
-					Course c1
-			WHERE	s.major		=	c.major
-			AND		s.semester	>	c.semester
-			AND NOT EXIST IN	(
+			FROM	Course c2
+			WHERE	
+			NOT EXISTS	(
 								SELECT	course_id 
-								FROM	Student_Instructor_Course_Take sic2
+								FROM	Student_Instructor_Course_Take sic2, Student s, Course c2
 								WHERE	s.student_id	=	sic2.student_id
-								)
+								AND		s.major		=	c.major
+								AND		s.semester	>	c.semester
+						)
+			OR EXISTS	(
+								SELECT	course_id 
+								FROM	Student_Instructor_Course_Take sic2, Student s, Course c2
+								WHERE	s.student_id	=	sic2.student_id
+								AND		s.major		=	c.major
+								AND		s.semester	>	c.semester
+								AND		sic2.grade = 'FA'
+						)
 			)
 			
 	END
@@ -1083,7 +1135,7 @@ CREATE PROCEDURE Procedures_ViewRequiredCourses
 			AND (
 				(CAST(RIGHT(@current_semester_code, LEN(@current_semester_code) - 1) AS INT) 
 					>= CAST(RIGHT(sict.semester_code, LEN(sict.semester_code) - 1) AS INT) 
-						AND sict.grade = 'F' AND dbo.FN_StudentCheckSMEligiability(@student_id, sict.course_id) = 0) 
+						AND sict.grade IN ('F', 'FF')  AND dbo.FN_StudentCheckSMEligiability(@student_id, sict.course_id) = 0) 
 				OR
 				(CAST(RIGHT(@current_semester_code, LEN(@current_semester_code) - 1) AS INT) 
 					> CAST(RIGHT(sict.semester_code, LEN(sict.semester_code) - 1) AS INT) 
@@ -1164,7 +1216,7 @@ CREATE PROC Procedures_ViewMSR
 		WHERE	grade	IS	NULL
 		OR		grade	=	'F'
 
-
+		-- get all courses except required and optional ??
 
 		SELECT	crs.*
 
@@ -1187,10 +1239,12 @@ GO
 CREATE PROCEDURE Procedures_ChooseInstructor
 	@student_id INT,
 	@instructor_id INT,
-	@course_id INT
+	@course_id INT,
+	@current_semester_code VARCHAR(40)
 AS
 		UPDATE	Student_Course_Instractor_Take
 		SET		instructor_id	=	@instructor_id
 		WHERE	student_id		=	@student_id
 		AND		course_id		=	@course_id
+		AND		semester_code   =   @current_semester_code
 GO
