@@ -49,9 +49,9 @@ VALUES
 
  INSERT INTO Payment (payment_amount, payment_deadline, n_installments, payment_status, fund_percentage, s_date, student_id, semester_code)
 VALUES
-(4500, '2023-02-28', 3, 'notPaid', 0.4, '2023-01-20', 3, 'W23'),
-(2800, '2023-10-15', 2, 'notPaid', 0.25, '2023-10-01', 2, 'S23'),
-(6000, '2023-03-31', 4, 'notPaid', 0.6, '2023-03-01', 1, 'W23')
+(4500, '2023-04-28', 3, 'notPaid', 0.4, '2023-01-20', 3, 'W23'),
+(2800, '2023-12-15', 2, 'notPaid', 0.25, '2023-10-01', 2, 'S23'),
+(6000, '2023-07-31', 4, 'notPaid', 0.6, '2023-03-01', 1, 'W23')
 ---(3200, '2023-11-30', 2, 'notPaid', 0.35, '2023-11-01', 6, '2023Fall'),
 --(5500, '2023-04-30', 3, 'notPaid', 0.45, '2023-04-01', 7, '2023Spring'),
 --(4000, '2023-12-15', 2, 'notPaid', 0.3, '2023-12-01', 8, '2023Fall'),
@@ -61,19 +61,14 @@ VALUES
 
 
 
-
 INSERT INTO Slot (slot_day, slot_time, slot_location, course_id, instructor_id)
 VALUES
-('Monday', '10:00 AM - 12:00 PM', 'Room A', 1, 1),
-('Wednesday', '02:00 PM - 04:00 PM', 'Room B', 2, 2),
-('Tuesday', '09:00 AM - 11:00 AM', 'Room C', 3, 3),
-('Thursday', '01:00 PM - 03:00 PM', 'Room D', 4, 4),
-('Friday', '03:00 PM - 05:00 PM', 'Room E', 5, 5),
-('Monday', '01:00 PM - 03:00 PM', 'Room F', 6, 1),
-('Wednesday', '10:00 AM - 12:00 PM', 'Room G', 7, 2),
-('Tuesday', '03:00 PM - 05:00 PM', 'Room H', 8, 3),
-('Thursday', '11:00 AM - 01:00 PM', 'Room I', 2, 4),
-('Friday', '09:00 AM - 11:00 AM', 'Room J', 5, 2);
+('Wednesday', '02:00 PM - 04:00 PM', 'Room B', 2,1),
+('Tuesday', '09:00 AM - 11:00 AM', 'Room C', 3, 2),
+('Thursday', '01:00 PM - 03:00 PM', 'Room D', 4, 3),
+('Friday', '03:00 PM - 05:00 PM', 'Room E', 5, 2)
+
+
 
 
 
@@ -107,6 +102,10 @@ INSERT INTO Advisor ( advisor_name, email, office, pass) VALUES
 ('Michael Lee', 'michael@example.com', 'Office6', 'password6');
 
 
+
+
+
+
 Declare @aid int
 exec Procedures_AdvisorRegistration 'Sarah mahmoud', 'sara1h@example.com', 'Office5', 'password10', @aid output
 print @aid
@@ -119,3 +118,19 @@ exec Procedures_AdminLinkStudentToAdvisor 5,7
 
 exec AdminAddingSemester  'W24', '2024-01-15', '2024-05-15'
 exec AdminAddingCourse   'Computer', 8, 3,'Introduction to Computer', 1
+
+exec Procedures_AdminLinkStudent 6,2,6,'W23'
+EXEC Procedures_AdminAddExam 'First_makeup', '2023-05-17', 5
+exec Procedures_AdminIssueInstallment 4
+exec Procedures_AdminDeleteCourse 6
+exec Procedure_AdminUpdateStudentStatus 1
+exec Procedures_AdminDeleteSlots 'W23'
+
+
+declare @xoxo bit
+set @xoxo = dbo.FN_AdvisorLogin(1,'password1')
+print @xoxo
+
+Procedures_AdvisorCreateGP
+
+
