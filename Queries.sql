@@ -252,6 +252,10 @@ AS
 
 GO
 
+EXEC DropAllTables;
+
+GO
+
 CREATE PROCEDURE clearAllTables
 AS
 	DELETE FROM Installment
@@ -274,6 +278,10 @@ AS
 	DELETE FROM Course
 	DELETE FROM Instructor
 	DELETE FROM Semester
+
+GO
+
+EXEC clearAllTables
 
 GO
 
@@ -304,7 +312,7 @@ GO
 
 --------------------------- 2.2 D ----------------------------------------
 CREATE VIEW Student_Payment AS 
-SELECT s.*, p.fund_percentage, p.n_installments, p.payment_amount, p.payment_deadline, p.payment_id, p.payment_status, p.s_date, p.semester_code
+SELECT s.*, p.fund_percentage, p.n_installments, p.amount, p.deadline, p.payment_id, p.status, p.startdate, p.semester_code
 FROM Payment p, Student s
 WHERE p.student_id = s.student_id
 
@@ -312,7 +320,7 @@ GO
 
 --------------------------- 2.2 E ----------------------------------------
 CREATE VIEW Courses_Slots_Instructor  AS
-SELECT i.instructor_name, cr.course_name, sl.*
+SELECT cr.course_id, cr.course_name, sl.slot_id, sl.slot_day, sl.slot_time, sl.slot_location, i.instructor_name
 FROM Course cr, Slot sl, Instructor i
 WHERE cr.course_id = sl.course_id AND sl.instructor_id = i.instructor_id
 
@@ -344,7 +352,7 @@ GO
 
 --------------------------- 2.2 I ----------------------------------------
 CREATE VIEW Advisors_Graduation_Plan AS
-SELECT gp.*, a.advisor_name
+SELECT gp.plan_id, gp.semester_code, gp.semester_credit_hours, gp.expected_grad_date, gp.student_id, a.advisor_id, a.advisor_name
 FROM Graduation_Plan gp, Advisor a
 WHERE gp.advisor_id = a.advisor_id;
 
