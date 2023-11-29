@@ -10,6 +10,18 @@ GO
 USE Advising_Team_27;
 GO
 
+--------------------------- testing on new database ----------------------------------------
+
+drop database Advising_Team_99;
+GO
+
+CREATE DATABASE Advising_Team_99;
+GO
+
+USE Advising_Team_99;
+GO
+
+
 --------------------------- 2.1 ----------------------------------------
 
 CREATE FUNCTION checkStudentStatus (@student_id INT)
@@ -50,7 +62,7 @@ AS
 		faculty VARCHAR(40) NOT NULL,
 		email VARCHAR(40) NOT NULL,
 		major VARCHAR(40) NOT NULL,
-		pass VARCHAR(40) NOT NULL,
+		password VARCHAR(40) NOT NULL,
 		financial_status BIT DEFAULT 1 /* 0 MEANS BLOCKED, 1 MEANS UNBLOCKED */,
 		semester INT NOT NULL,
 		acquired_hours INT,
@@ -143,7 +155,7 @@ AS
 	);
 
 	CREATE TABLE Graduation_Plan(
-		plan_id INT,
+		plan_id INT Identity,
 		semester_code VARCHAR(40) NOT NULL,
 		semester_credit_hours INT NOT NULL,
 		expected_grad_date date NOT NULL,
@@ -153,6 +165,7 @@ AS
 		FOREIGN KEY (advisor_id) REFERENCES Advisor,
 		FOREIGN KEY (student_id) REFERENCES Student ON DELETE CASCADE
 	);
+	
 
 	CREATE TABLE GradPlan_Course(
 		plan_id INT NOT NULL,
@@ -162,12 +175,13 @@ AS
 		FOREIGN KEY (plan_id, semester_code) REFERENCES Graduation_Plan ON DELETE CASCADE,
 		FOREIGN KEY (course_id) REFERENCES Course ON DELETE CASCADE
 	);
+	
 
 	CREATE TABLE Request(
 		request_id INT PRIMARY KEY IDENTITY,
-		req_type VARCHAR(40) NOT NULL,
+		type VARCHAR(40) NOT NULL,
 		comment VARCHAR(40) NOT NULL,
-		req_status VARCHAR(40) CHECK (req_status IN ('pending', 'accepted', 'rejected')) DEFAULT 'pending',
+		status VARCHAR(40) CHECK (status IN ('pending', 'approved', 'rejected')) DEFAULT 'pending',
 		credit_hours INT,
 		student_id INT NOT NULL FOREIGN KEY REFERENCES Student ON DELETE CASCADE,
 		advisor_id INT FOREIGN KEY REFERENCES Advisor,
@@ -177,7 +191,7 @@ AS
 	CREATE TABLE MakeUp_Exam(
 		exam_id INT PRIMARY KEY IDENTITY,
 		mk_exam_date datetime NOT NULL,
-		mk_exam_type VARCHAR(40) CHECK (mk_exam_type IN ('First_makeup', 'Second_makeup')) DEFAULT 'First_makeup',
+		mk_exam_type VARCHAR(40) CHECK (mk_exam_type IN ('First MakeUp', 'Second MakeUp')) DEFAULT 'First MakeUp',
 		course_id INT NOT NULL FOREIGN KEY REFERENCES Course ON DELETE CASCADE,
 	);
 
@@ -190,12 +204,12 @@ AS
 
 	CREATE TABLE Payment(
 		payment_id INT PRIMARY KEY IDENTITY,
-		payment_amount INT NOT NULL,
-		payment_deadline datetime NOT NULL,
+		amount INT NOT NULL,
+		deadline datetime NOT NULL,
 		n_installments INT NOT NULL, -- check with both dates
-		payment_status VARCHAR(40) NOT NULL CHECK (payment_status IN ('notPaid', 'Paid')) DEFAULT 'notPaid',
-		fund_percentage DECIMAL(3,2) NOT NULL,
-		s_date datetime NOT NULL,
+		status VARCHAR(40) NOT NULL CHECK (status IN ('notPaid', 'Paid')) DEFAULT 'notPaid',
+		fund_percentage DECIMAL(4,2) NOT NULL,
+		startdate datetime NOT NULL,
 		student_id INT NOT NULL FOREIGN KEY REFERENCES Student ON DELETE CASCADE,
 		semester_code VARCHAR(40) NOT NULL FOREIGN KEY REFERENCES Semester ON DELETE CASCADE,
 	);
@@ -204,7 +218,7 @@ AS
 		payment_id INT NOT NULL FOREIGN KEY REFERENCES Payment ON DELETE CASCADE,
 		deadline datetime NOT NULL,
 		inst_amount INT NOT NULL,
-		inst_status VARCHAR(40)  NOT NULL CHECK (inst_status IN ('notPaid', 'Paid')) DEFAULT 'notPaid',
+		inst_status VARCHAR(40)  NOT NULL CHECK (inst_status IN (0,1)) DEFAULT 0,
 		inst_start_date datetime NOT NULL,
 		CONSTRAINT Pk_installment PRIMARY KEY (payment_id,deadline)
 	);
