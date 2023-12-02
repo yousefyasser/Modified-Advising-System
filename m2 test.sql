@@ -1,5 +1,5 @@
 ﻿-- Adding 10 records to the Course table
-INSERT INTO Course VALUES
+INSERT INTO Course(name, major, is_offered, credit_hours, semester)  VALUES
 ( 'Mathematics 2', 'Science', 1, 3, 2),
 ( 'CSEN 2', 'Engineering', 1, 4, 2),
 ( 'Database 1', 'MET', 1, 3, 5),
@@ -13,7 +13,7 @@ INSERT INTO Course VALUES
 
 
 -- Adding 10 records to the Instructor table
-INSERT INTO Instructor VALUES
+INSERT INTO Instructor(name, email, faculty, office) VALUES
 ( 'Professor Smith', 'prof.smith@example.com', 'MET', 'Office A'),
 ( 'Professor Johnson', 'prof.johnson@example.com', 'MET', 'Office B'),
 ( 'Professor Brown', 'prof.brown@example.com', 'MET', 'Office C'),
@@ -26,20 +26,18 @@ INSERT INTO Instructor VALUES
 ( 'Professor Moore', 'prof.moore@example.com', 'IET', 'Office J');
 
 -- Adding 10 records to the Semester table
-INSERT INTO Semester VALUES
-('W23', '2023-10-01', '2023-01-31'),
-('S23', '2023-04-01', '2023-06-30'),
-('S23R1', '2023-07-01', '2023-07-15'),
-('S23R2', '2023-07-16', '2023-07-31'),
-('F23', '2023-08-01', '2023-12-31'),
-('W24', '2024-01-01', '2024-03-31'),
-('S24', '2024-04-01', '2024-06-30'),
-('S24R1', '2024-07-01', '2024-07-15'),
-('S24R2', '2024-07-16', '2024-07-31'),
-('F24', '2024-08-01', '2024-12-31');
+INSERT INTO Semester(semester_code, start_date, end_date) VALUES
+('W23', '2023-10-01', '2024-01-31'),
+('S23', '2023-03-01', '2023-06-30'),
+('S23R1', '2023-07-01', '2023-07-31'),
+('S23R2', '2023-08-01', '2023-08-31'),
+('W24', '2024-10-01', '2025-01-31'),
+('S24', '2024-03-01', '2024-06-30'),
+('S24R1', '2024-07-01', '2024-07-31'),
+('S24R2', '2024-08-01', '2024-08-31')
 
 -- Adding 10 records to the Advisor table
-INSERT INTO Advisor VALUES
+INSERT INTO Advisor(advisor_name, email, office, password) VALUES
 ( 'Dr. Anderson', 'anderson@example.com', 'Office A', 'password1'),
 ( 'Prof. Baker', 'baker@example.com', 'Office B', 'password2'),
 ( 'Dr. Carter', 'carter@example.com', 'Office C', 'password3'),
@@ -66,7 +64,7 @@ INSERT INTO Student (f_name, l_name, GPA, faculty, email, major, password, finan
 
 
 -- Adding 10 records to the Student_Phone table
-INSERT INTO Student_Phone VALUES
+INSERT INTO Student_Phone(student_id, phone_number) VALUES
 (4, '456-789-0123'),
 (5, '567-890-1234'),
 (6, '678-901-2345'),
@@ -77,7 +75,7 @@ INSERT INTO Student_Phone VALUES
 
 
 -- Adding 10 records to the PreqCourse_course table
-INSERT INTO PreqCourse_course VALUES
+INSERT INTO PreqCourse_course(prerequisite_course_id, course_id) VALUES
 (2, 7),
 (3, 10),
 (2, 4),
@@ -91,7 +89,7 @@ INSERT INTO PreqCourse_course VALUES
 
 
 -- Adding 10 records to the Instructor_Course table
-INSERT INTO Instructor_Course VALUES
+INSERT INTO Instructor_Course (instructor_id, course_id) VALUES
 (1, 1),
 (2, 2),
 (3, 3),
@@ -105,35 +103,35 @@ INSERT INTO Instructor_Course VALUES
 
 
 -- Adding 10 records to the Student_Instructor_Course_Take table
-INSERT INTO Student_Instructor_Course_Take VALUES
+INSERT INTO Student_Instructor_Course_Take (student_id, course_id, instructor_id, semester_code,exam_type, grade) VALUES
 (1, 1, 1, 'W23', 'Normal', 'A'),
 (2, 2, 2, 'S23', 'First_makeup', 'B'),
 (3, 3, 3, 'S23R1', 'Second_makeup', 'C'),
 (4, 4, 4, 'S23R2', 'Normal', 'B+'),
-(5, 5, 5, 'F23', 'Normal', 'A-'),
+(5, 5, 5, 'W23', 'Normal', 'A-'),
 (6, 6, 6, 'W24', 'First_makeup', 'B'),
 (7, 7, 7, 'S24', 'Second_makeup', 'C+'),
 (8, 8, 8, 'S24R1', 'Normal', 'A+'),
 (9, 9, 9, 'S24R2', 'Normal', 'FF'),
-(10, 10, 10, 'F24', 'First_makeup', 'B-');
+(10, 10, 10, 'S24', 'First_makeup', 'B-');
 
 
 
 -- Adding 10 records to the Course_Semester table
-INSERT INTO Course_Semester VALUES
+INSERT INTO Course_Semester (course_id, semester_code) VALUES
 (1, 'W23'),
 (2, 'S23'),
 (3, 'S23R1'),
 (4, 'S23R2'),
-(5, 'F23'),
+(5, 'W23'),
 (6, 'W24'),
 (7, 'S24'),
 (8, 'S24R1'),
 (9, 'S24R2'),
-(10, 'F24');
+(10, 'S24');
 
 -- Adding 10 records to the Slot table
-INSERT INTO Slot VALUES
+INSERT INTO Slot (day, time, location, course_id, instructor_id) VALUES
 ( 'Monday', 'First', 'Room A', 1, 1),
 ( 'Tuesday', 'First', 'Room B', 2, 2),
 ( 'Wednesday', 'Third', 'Room C', 3, 3),
@@ -147,30 +145,31 @@ INSERT INTO Slot VALUES
 
 
 -- Adding 10 records to the Graduation_Plan table
-INSERT INTO Graduation_Plan VALUES
-( 'W23', 90,    '2023-12-31' ,   1, 1),
-( 'S23', 85,    '2023-12-31'  ,     2, 2),
-( 'S23R1', 75,  '2023-12-31' ,  3, 3),
-( 'S23R2', 95,  '2023-12-31' , 4, 4),
-( 'F23', 80,    '2023-12-31'   ,  5, 5),
-( 'W24', 88,    '2023-12-31'   ,    6, 6),
-( 'S24', 78,    '2023-12-31'    ,  7, 7),
-( 'S24R1', 92,  '2023-12-31'  , 8, 8),
-( 'S24R2', 87,  '2023-12-31'    ,  9, 9),
-( 'F24', 89,    '2023-12-31'    ,    10, 10);
+-- WRITTEN IN QUERIES AS "expected_grad_date" however in schema is correct
+INSERT INTO Graduation_Plan (semester_code, semester_credit_hours, expected_grad_date, student_id, advisor_id) VALUES
+( 'W23', 90,    '2024-01-31' ,   1, 1),
+( 'S23', 85,    '2025-01-31'  ,     2, 2),
+( 'S23R1', 75,  '2025-06-30' ,  3, 3),
+( 'S23R2', 95,  '2024-06-30' , 4, 4),
+( 'W23', 80,    '2026-01-31'   ,  5, 5),
+( 'W24', 88,    '2024-06-30'   ,    6, 6),
+( 'S24', 78,    '2024-06-30'    ,  7, 7),
+( 'S24R1', 92,  '2025-01-31'  , 8, 8),
+( 'S24R2', 87,  '2024-06-30'    ,  9, 9),
+( 'S24', 89,    '2025-01-31'    ,    10, 10);
 
 -- Adding 10 records to the GradPlan_Course table
-INSERT INTO GradPlan_Course VALUES
+INSERT INTO GradPlan_Course(plan_id, semester_code, course_id) VALUES
 (1, 'W23', 1),
 (2, 'S23', 2),
 (3, 'S23R1', 3),
 (4, 'S23R2', 4),
-(5, 'F23', 5),
+(5, 'W23', 5),
 (6, 'W24', 6),
 (7, 'S24', 7),
 (8, 'S24R1', 8),
 (9, 'S24R2', 9),
-(10, 'F24', 10);
+(10, 'S24', 10);
 
 -- Adding 10 records to the Request table
 INSERT INTO Request (type, comment, status, credit_hours, course_id, student_id, advisor_id) VALUES 
@@ -186,58 +185,57 @@ INSERT INTO Request (type, comment, status, credit_hours, course_id, student_id,
 ( 'course', 'Request for course substitution', 'pending', null, 10, 10, 10);
 
 -- Adding 10 records to the MakeUp_Exam table
-INSERT INTO MakeUp_Exam VALUES
-('2023-05-10', 'First MakeUp', 1),
-('2023-06-15', 'First MakeUp', 2),
-('2023-07-05', 'First MakeUp', 3),
-('2023-07-25', 'First MakeUp', 4),
-('2023-09-05', 'First MakeUp', 5),
-('2024-03-10', 'Second MakeUp', 6),
-('2024-05-20', 'Second MakeUp', 7),
-('2024-06-05', 'Second MakeUp', 8),
-('2024-07-10', 'Second MakeUp', 9),
-( '2024-12-15', 'Second MakeUp', 10);
+INSERT INTO MakeUp_Exam (date, type, course_id) VALUES
+('2023-02-10', 'First MakeUp', 1),
+('2023-02-15', 'First MakeUp', 2),
+('2023-02-05', 'First MakeUp', 3),
+('2023-02-25', 'First MakeUp', 4),
+('2023-02-05', 'First MakeUp', 5),
+('2024-09-10', 'Second MakeUp', 6),
+('2024-09-20', 'Second MakeUp', 7),
+('2024-09-05', 'Second MakeUp', 8),
+('2024-09-10', 'Second MakeUp', 9),
+( '2024-09-15', 'Second MakeUp', 10);
 
 -- Adding 10 records to the Exam_Student table
-INSERT INTO Exam_Student VALUES (1, 1, 1);
-INSERT INTO Exam_Student VALUES (1, 2, 1);
-INSERT INTO Exam_Student VALUES (1, 3, 1);
-INSERT INTO Exam_Student VALUES (2, 2, 1);
-INSERT INTO Exam_Student VALUES (2, 3, 1);
-INSERT INTO Exam_Student VALUES (2, 4, 1);
-INSERT INTO Exam_Student VALUES (3, 3, 2);
-INSERT INTO Exam_Student VALUES (3, 4, 2);
-INSERT INTO Exam_Student VALUES (3, 5, 2);
-INSERT INTO Exam_Student VALUES (4, 4, 2);
+INSERT INTO Exam_Student(exam_id, student_id,course_id) VALUES (1, 1, 1);
+INSERT INTO Exam_Student(exam_id, student_id,course_id) VALUES (1, 2, 2);
+INSERT INTO Exam_Student(exam_id, student_id,course_id) VALUES (1, 3, 3);
+INSERT INTO Exam_Student(exam_id, student_id,course_id) VALUES (2, 2, 4);
+INSERT INTO Exam_Student(exam_id, student_id,course_id) VALUES (2, 3, 5);
+INSERT INTO Exam_Student(exam_id, student_id,course_id) VALUES (2, 4, 6);
+INSERT INTO Exam_Student(exam_id, student_id,course_id) VALUES (3, 3, 7);
+INSERT INTO Exam_Student(exam_id, student_id,course_id) VALUES (3, 4, 8);
+INSERT INTO Exam_Student(exam_id, student_id,course_id) VALUES (3, 5, 9);
+INSERT INTO Exam_Student(exam_id, student_id,course_id) VALUES (4, 4, 10);
 
 -- Adding 10 records to the Payment table
 INSERT INTO Payment (amount, startdate,n_installments, status, fund_percentage, student_id, semester_code, deadline)  VALUES
-( 500, '2023-11-22', 3, 'notPaid', 50.00, 1, 'W23', '2023-12-22'),
-( 700, '2023-11-23', 4, 'notPaid', 60.00, 2, 'S23', '2023-12-23'),
-( 600, '2023-11-24', 2, 'notPaid', 40.00, 3, 'S23R1', '2023-12-24'),
-( 800, '2023-11-25', 3, 'notPaid', 70.00, 4, 'S23R2', '2023-12-25'),
-( 550, '2023-11-26', 4, 'notPaid', 45.00, 5, 'F23', '2023-12-26'),
-( 900, '2023-11-27', 2, 'notPaid', 80.00, 6, 'W24', '2023-12-27'),
-( 750, '2023-11-28', 3, 'Paid', 65.00, 7, 'S24', '2023-12-28'),
-( 620, '2023-11-29', 4, 'Paid', 55.00, 8, 'S24R1', '2023-12-29'),
-( 720, '2023-11-30', 2, 'notPaid', 75.00, 9, 'S24R2', '2023-12-30'),
-( 580, '2023-12-01', 3, 'Paid', 47.00, 10, 'F24', '2023-12-31');
+( 500, '2023-11-22', 1, 'notPaid', 50.00, 1, 'W23', '2023-12-22'),
+( 700, '2023-11-23', 1, 'notPaid', 60.00, 2, 'S23', '2023-12-23'),
+( 600, '2023-11-24', 4, 'notPaid', 40.00, 3, 'S23R1', '2024-03-24'),
+( 800, '2023-11-25', 1, 'notPaid', 70.00, 4, 'S23R2', '2023-12-25'),
+( 550, '2023-11-26', 5, 'notPaid', 45.00, 5, 'W23', '2024-04-26'),
+( 900, '2023-11-27', 1, 'notPaid', 80.00, 6, 'W24', '2023-12-27'),
+( 750, '2023-10-28', 2, 'Paid', 65.00, 7, 'S24', '2023-12-28'),
+( 620, '2023-08-29', 4, 'Paid', 55.00, 8, 'S24R1', '2023-12-29'),
+( 720, '2023-11-30', 2, 'notPaid', 75.00, 9, 'S24R2', '2024-01-30'),
+( 580, '2023-11-30', 1, 'Paid', 47.00, 10, 'S24', '2023-12-31');
 
 
 
 -- Adding 10 records to the Installment table
-INSERT INTO Installment VALUES
-(1, '2023-12-01', 50, 1,'2023-12-01'),
-(2, '2023-12-02', 70, 0,'2023-12-02'),
-(3, '2023-12-03', 60, 0,'2023-12-03'),
-( 4,'2023-12-04', 80, 1,'2023-12-04'),
-(5, '2023-12-05', 55, 1,'2023-12-05'),
-( 6,'2023-12-06', 90, 1,'2023-12-06'),
-(7, '2023-12-07', 75, 0,'2023-12-07'),
-( 8,'2023-12-08', 62, 0,'2023-12-08'),
-( 9,'2023-12-09', 72, 0,'2023-12-09'),
-( 10,'2023-12-10', 58, 0,'2023-12-10');
-
+INSERT INTO Installment (payment_id, startdate, amount, status, deadline) VALUES
+(1, '2023-11-22', 50, 'notPaid','2023-12-22'),
+(2, '2023-11-23', 70, 'notPaid','2023-12-23'),
+(3, '2023-12-24', 60, 'notPaid','2024-01-24'),
+( 4,'2023-11-25', 80, 'notPaid','2023-12-25'),
+(5, '2024-2-26', 55, 'notPaid','2024-3-26'),
+( 6,'2023-11-27', 90, 'notPaid','2023-12-06'),
+(7, '2023-10-28', 75, 'Paid','2023-11-28'),
+( 7,'2023-11-28', 62, 'Paid','2023-12-28'),
+( 9,'2023-12-30', 72, 'notPaid','2024-01-30'),
+( 10,'2023-11-30', 58, 'Paid','2023-12-30');
 
 
 --------------------------- testing on new database ----------------------------------------
@@ -252,3 +250,10 @@ GO
 
 USE Advising_Team_99;
 GO
+
+-- JUST TO TEST 2.3 R
+INSERT INTO Advisor(advisor_name, email, office, password) VALUES
+( 'Dr. BABABABAB', 'ABABBABAB@example.com', 'Office ABBAABBA', 'password1SKMSWMN')
+
+INSERT INTO Student (f_name, l_name, GPA, faculty, email, major, password, financial_status, semester, acquired_hours, assigned_hours, advisor_id)   VALUES 
+( 'MAX', 'MAX', 3.5, 'Engineering', 'MAX.doe@example.com', 'CS', 'pas', 1, 8, 170, 30, 11)

@@ -35,7 +35,7 @@ AS
 			FROM Student s 
 			INNER JOIN Payment p on s.student_id = @student_id AND s.student_id = p.student_id 
 			INNER JOIN Installment i on p.payment_id = i.payment_id
-			AND i.inst_status = 'notPaid' AND i.deadline < CURRENT_TIMESTAMP)
+			AND i.status = 'notPaid' AND i.deadline < CURRENT_TIMESTAMP)
 			SET @result = 0
 		ELSE 
 			SET @result = 1
@@ -51,7 +51,7 @@ AS
 		advisor_name VARCHAR(40) NOT NULL,
 		email VARCHAR(40) NOT NULL,
 		office VARCHAR(40) NOT NULL,
-		pass VARCHAR(40) NOT NULL
+		password VARCHAR(40) NOT NULL
 	);
 
 	CREATE TABLE Student(
@@ -84,14 +84,14 @@ AS
 
 	CREATE TABLE Course(
 		course_id INT PRIMARY KEY IDENTITY,
-		course_name VARCHAR(40) NOT NULL,
+		name VARCHAR(40) NOT NULL,
 		major VARCHAR(40) NOT NULL,
 		is_offered BIT NOT NULL CHECK (is_offered IN (0, 1)) /* 0 MEANS OFFERED, 1 MEANS NOT OFFERED Current Sem */,
 		credit_hours INT NOT NULL,
 		semester INT NOT NULL
 	);
 
-	CREATE TABLE preqCourse_course(
+	CREATE TABLE PreqCourse_course(
 		prerequisite_course_id INT NOT NULL,
 		course_id INT NOT NULL,
 		CONSTRAINT preqCourse_course_id PRIMARY KEY (prerequisite_course_id, course_id),
@@ -101,7 +101,7 @@ AS
 
 	CREATE TABLE Instructor(
 		instructor_id INT PRIMARY KEY IDENTITY,
-		instructor_name VARCHAR(40) NOT NULL, 
+		name VARCHAR(40) NOT NULL, 
 		email VARCHAR(40) NOT NULL,
 		faculty VARCHAR(40) NOT NULL,
 		office VARCHAR(40) NOT NULL
@@ -117,7 +117,7 @@ AS
 
 	CREATE TABLE Semester(
 		semester_code VARCHAR(40) PRIMARY KEY,
-		s_date date NOT NULL,
+		start_date date NOT NULL,
 		end_date date NOT NULL
 	);
 
@@ -145,9 +145,9 @@ AS
 
 	CREATE TABLE Slot(
 		slot_id INT PRIMARY KEY IDENTITY,
-		slot_day VARCHAR(40),
-		slot_time VARCHAR(40),
-		slot_location VARCHAR(40),
+		day VARCHAR(40),
+		time VARCHAR(40),
+		location VARCHAR(40),
 		course_id INT NOT NULL,
 		instructor_id INT NOT NULL,
 		FOREIGN KEY (course_id) REFERENCES Course ON DELETE CASCADE,
@@ -158,7 +158,7 @@ AS
 		plan_id INT Identity,
 		semester_code VARCHAR(40) NOT NULL,
 		semester_credit_hours INT NOT NULL,
-		expected_grad_date date NOT NULL,
+		expected_grad_date date NOT NULL, -- WRITTEN IN DATA INSERTIONS AS "expected_grad_semester" however in schema is correct
 		advisor_id INT NOT NULL,
 		student_id INT NOT NULL,
 		CONSTRAINT Graduation_plan_id PRIMARY KEY (plan_id, semester_code),
@@ -190,8 +190,8 @@ AS
 
 	CREATE TABLE MakeUp_Exam(
 		exam_id INT PRIMARY KEY IDENTITY,
-		mk_exam_date datetime NOT NULL,
-		mk_exam_type VARCHAR(40) CHECK (mk_exam_type IN ('First MakeUp', 'Second MakeUp')) DEFAULT 'First MakeUp',
+		date datetime NOT NULL,
+		type VARCHAR(40) CHECK (type IN ('First MakeUp', 'Second MakeUp')) DEFAULT 'First MakeUp',
 		course_id INT NOT NULL FOREIGN KEY REFERENCES Course ON DELETE CASCADE,
 	);
 
@@ -217,9 +217,9 @@ AS
 	CREATE TABLE Installment(
 		payment_id INT NOT NULL FOREIGN KEY REFERENCES Payment ON DELETE CASCADE,
 		deadline datetime NOT NULL,
-		inst_amount INT NOT NULL,
-		inst_status VARCHAR(40)  NOT NULL CHECK (inst_status IN (0,1)) DEFAULT 0,
-		inst_start_date datetime NOT NULL,
+		amount INT NOT NULL,
+		status VARCHAR(40) NOT NULL CHECK (status IN ('notPaid', 'Paid')) DEFAULT 'notPaid',
+		startdate datetime NOT NULL,
 		CONSTRAINT Pk_installment PRIMARY KEY (payment_id,deadline)
 	);
 
@@ -297,7 +297,7 @@ GO
 --------------------------- 2.2 B ----------------------------------------
 CREATE VIEW view_Course_prerequisites AS
 SELECT cr.*, pr.prerequisite_course_id
-FROM Course cr LEFT OUTER JOIN preqCourse_course pr
+FROM Course cr LEFT OUTER JOIN PreqCourse_course pr
 ON cr.course_id = pr.course_id
 
 GO
@@ -320,7 +320,7 @@ GO
 
 --------------------------- 2.2 E ----------------------------------------
 CREATE VIEW Courses_Slots_Instructor  AS
-SELECT cr.course_id, cr.course_name, sl.slot_id, sl.slot_day, sl.slot_time, sl.slot_location, i.instructor_name
+SELECT cr.course_id, cr.name, sl.slot_id, sl.day, sl.time, sl.location, i.name
 FROM Course cr, Slot sl, Instructor i
 WHERE cr.course_id = sl.course_id AND sl.instructor_id = i.instructor_id
 
@@ -328,7 +328,7 @@ GO
 
 --------------------------- 2.2 F ----------------------------------------
 CREATE VIEW Courses_MakeupExams AS
-SELECT cr.course_name, cr.semester, mx.*
+SELECT cr.name, cr.semester, mx.*
 FROM Course cr, MakeUp_Exam mx 
 WHERE cr.course_id = mx.exam_id
 
@@ -336,7 +336,7 @@ GO
 
 --------------------------- 2.2 G ----------------------------------------
 CREATE VIEW Students_Courses_transcript AS
-SELECT s.student_id, CONCAT(st.f_name, ' ', st.l_name) AS student_name, s.course_id, co.course_name, s.exam_type, s.grade, s.semester_code, ins.instructor_name
+SELECT s.student_id, CONCAT(st.f_name, ' ', st.l_name) AS student_name, s.course_id, co.name, s.exam_type, s.grade, s.semester_code, ins.name
 FROM Student_Instructor_Course_Take s, Student st, Course co, Instructor ins
 WHERE s.student_id = st.student_id AND s.course_id = co.course_id AND s.instructor_id = ins.instructor_id
 
@@ -344,7 +344,7 @@ GO
 
 --------------------------- 2.2 H ----------------------------------------
 CREATE VIEW Semster_offered_Courses AS
-SELECT cs.course_id, co.course_name, cs.semester_code
+SELECT cs.course_id, co.name, cs.semester_code
 FROM Course_Semester cs, Course co
 WHERE cs.course_id = co.course_id
 
@@ -370,12 +370,12 @@ CREATE PROCEDURE Procedures_StudentRegistration
 	@student_id INT OUTPUT
 AS
 
-	INSERT INTO Student (f_name, l_name, faculty, email, major, pass, semester)
+	INSERT INTO Student (f_name, l_name, faculty, email, major, password, semester)
 	VALUES (@first_name, @last_name, @faculty, @email, @major, @password, @semester)
 
 	SELECT @student_id = student_id
 	FROM Student
-	WHERE f_name = @first_name AND l_name = @last_name AND pass = @password AND faculty = @faculty AND email = @email AND major = @major AND semester = @semester
+	WHERE f_name = @first_name AND l_name = @last_name AND password = @password AND faculty = @faculty AND email = @email AND major = @major AND semester = @semester
 GO
 
 --------------------------- 2.3 B ----------------------------------------
@@ -388,12 +388,12 @@ CREATE PROCEDURE Procedures_AdvisorRegistration
 	@advisor_id INT OUTPUT
 AS
 	
-	INSERT INTO Advisor (advisor_name, office, email, pass)
+	INSERT INTO Advisor (advisor_name, office, email, password)
 	VALUES (@advisor_name, @office, @email, @password)
 
 	SELECT @advisor_id = advisor_id
 	FROM Advisor
-	WHERE advisor_name = @advisor_name AND office = @office AND email = @email AND pass = @password
+	WHERE advisor_name = @advisor_name AND office = @office AND email = @email AND password = @password
 
 GO
 
@@ -455,7 +455,7 @@ CREATE PROC AdminAddingCourse
 	@offered BIT
 
 AS
-	INSERT INTO Course (course_name, major, is_offered, credit_hours, semester)
+	INSERT INTO Course (name, major, is_offered, credit_hours, semester)
 	VALUES (@course_name, @major, @offered, @credit_hrs, @semester)
 
 GO
@@ -467,6 +467,7 @@ CREATE PROCEDURE Procedures_AdminLinkInstructor
     @slot_id INT
 
 AS
+	-- DO INSERT LIKE 2.3 I?
 
 	UPDATE Slot
 	SET course_id = @course_id , instructor_id = @instructor_id
@@ -474,7 +475,7 @@ AS
 
 GO
 
-EXEC Procedures_AdminLinkInstructor 1234, 123, 12
+EXEC Procedures_AdminLinkInstructor 7, 7, 10
 
 GO
 
@@ -486,9 +487,14 @@ CREATE PROCEDURE Procedures_AdminLinkStudent
     @semester_code VARCHAR(40)
 
 AS
+	-- DO UPDATE LIKE 2.3 H?
 
     INSERT INTO Student_Instructor_Course_Take (instructor_id, student_id, course_id, semester_code)
     VALUES (@instructor_id, @student_id, @course_id, @semester_code);
+
+GO
+
+EXEC Procedures_AdminLinkStudent 4,2,5,'W24'
 
 GO
 
@@ -508,7 +514,7 @@ CREATE PROCEDURE Procedures_AdminAddExam
 	@date datetime,
 	@course_id INT
 AS
-	INSERT INTO MakeUp_Exam (mk_exam_date, mk_exam_type, course_id)
+	INSERT INTO MakeUp_Exam (date, type, course_id)
 	VALUES (@date, @type, @course_id)
 GO
 
@@ -535,7 +541,7 @@ CREATE PROC Procedures_AdminIssueInstallment
 			SET @ddln = DATEADD(MONTH, 1, @strt_date)
 
 			INSERT
-			INTO	installment (payment_id, deadline, inst_amount, inst_start_date)
+			INTO	installment (payment_id, deadline, amount, startdate)
 			VALUES	(@payment_id, @ddln, @payment_amount, @strt_date)
 
 			SET @strt_date = @ddln
@@ -565,7 +571,7 @@ IF EXISTS (SELECT *
 			FROM Student s 
 			INNER JOIN Payment p on s.student_id = @student_id AND s.student_id = p.student_id 
 			INNER JOIN Installment i on p.payment_id = i.payment_id
-			AND i.inst_status = 'notPaid' AND i.deadline < CURRENT_TIMESTAMP)
+			AND i.status = 'notPaid' AND i.deadline < CURRENT_TIMESTAMP)
 BEGIN
 	Update Student
 	Set Student.financial_status= 0
@@ -607,7 +613,7 @@ RETURNS BIT
 
 AS
 	BEGIN
-		RETURN IIF (@password = (SELECT pass FROM Advisor WHERE advisor_id = @id), 1, 0)
+		RETURN IIF (@password = (SELECT password FROM Advisor WHERE advisor_id = @id), 1, 0)
 	END
 
 GO
@@ -617,15 +623,21 @@ CREATE PROCEDURE Procedures_AdvisorCreateGP
     @semester_code VARCHAR(40),
     @expected_graduation_date DATE,
     @sem_credit_hours INT,
-    @student_id INT,
-    @advisor_id INT
+    @advisor_id INT,
+    @student_id INT
 
 AS
 	IF (EXISTS(SELECT student_id FROM Student WHERE acquired_hours > 157 AND student_id = @student_id))
-		INSERT INTO Graduation_Plan (semester_code, semester_credit_hours, expected_grad_date, advisor_id, student_id)
-		VALUES (@semester_code, @sem_credit_hours, @expected_graduation_date, @advisor_id, @student_id);
+
+	INSERT INTO Graduation_Plan (semester_code, semester_credit_hours, expected_grad_date, advisor_id, student_id)
+	VALUES (@semester_code, @sem_credit_hours, @expected_graduation_date, @advisor_id, @student_id);
 
 GO
+
+EXEC Procedures_AdvisorCreateGP 'W24','2025-01-31',45,11,11
+
+GO
+
 --------------------------- 2.3 S ----------------------------------------
 CREATE PROCEDURE Procedures_AdvisorAddCourseGP
 @student_id INT,
@@ -640,8 +652,12 @@ AS
 	(
 	(SELECT plan_id FROM Graduation_Plan WHERE student_id = @student_id AND semester_code = @semester_code),
 	@semester_code,
-	(SELECT course_id FROM Course WHERE course_name = @course_name)
+	(SELECT course_id FROM Course WHERE name = @course_name)
 	)
+
+GO
+
+EXEC Procedures_AdvisorAddCourseGP 1,'W23','CSEN 2'
 
 GO
 
@@ -727,14 +743,14 @@ BEGIN
 	AND  p.semester_code = @current_semester 
 	
 	UPDATE Installment
-	SET inst_amount = inst_amount + 1000 * @credit_hours
+	SET amount = amount + 1000 * @credit_hours
 	WHERE deadline IN 
 					(
 					SELECT min(i.deadline) 
 					FROM Installment i, Payment p, Student s
 					WHERE p.payment_id = i.payment_id 
 					AND i.deadline > CURRENT_TIMESTAMP 
-					AND i.inst_status = 'notPaid' 
+					AND i.status = 'notPaid' 
 					AND  p.semester_code = @current_semester
 					AND p.student_id = s.student_id
 					)
@@ -776,7 +792,7 @@ AS
 	where r.request_id= @requestID and r.req_type= 'course'
 
 	set @reject=0
-		If( exists( (Select prerequisite_course_id from Request r Inner Join preqCourse_course p on r.course_id = p.course_id)
+		If( exists( (Select prerequisite_course_id from Request r Inner Join PreqCourse_course p on r.course_id = p.course_id)
 		Except (Select course_id as prerequisite_course_id from Student s Inner Join Student_Instructor_Course_Take sict on s.student_id= sict.student_id 
 		Where s.student_id = @studentID and sict.grade is not null)))
 		begin
@@ -820,7 +836,7 @@ RETURNS BIT
 
 AS
 	BEGIN
-		RETURN IIF (@password = (SELECT pass FROM Student WHERE student_id = @id AND dbo.[checkStudentStatus] (@id) = 1), 1, 0)
+		RETURN IIF (@password = (SELECT password FROM Student WHERE student_id = @id AND dbo.[checkStudentStatus] (@id) = 1), 1, 0)
 	END
 
 GO
@@ -840,7 +856,7 @@ AS
 RETURN
     SELECT
         c.course_id,
-        c.course_name,
+        c.name,
         c.major,
         c.is_offered,
         c.credit_hours,
@@ -883,7 +899,7 @@ RETURNS TABLE
 	RETURN	(
 			SELECT	s.student_id, CONCAT(s.f_name, ' ', s.l_name) AS student_name,
 					gradpln_crs.plan_id, gradpln_crs.course_id,
-					crs.course_name,
+					crs.name,
 					gradpln.semester_code, gradpln.expected_grad_date, gradpln.semester_credit_hours, gradpln.advisor_id
 
 			FROM	Student			s,
@@ -912,7 +928,7 @@ RETURNS	DATETIME
 
 			WHERE	p.student_id	=	@student_id
 			AND		p.payment_id	=	i.payment_id
-			AND		i.inst_status	=	'notPaid'
+			AND		i.status	=	'notPaid'
 			ORDER BY i.deadline
 			)
 		END
@@ -923,7 +939,7 @@ RETURNS TABLE
 AS
 RETURN 
 	SELECT 
-		s.slot_id,  s.slot_location ,s.slot_time,  s.slot_day, c.course_name, i.instructor_name
+		s.slot_id,  s.location ,s.time,  s.day, c.name, i.name
 	FROM 
 		Slot s Inner Join Course c on c.course_id = s.course_id
                 Inner Join Instructor i on s.instructor_id= i.instructor_id
@@ -994,7 +1010,7 @@ CREATE PROC Procedures_StudentRegisterFirstMakeup
 				FROM	Semester s
 				WHERE	s.semester_code = CONCAT(@start_sem, @start_year)
 
-				SELECT	@end_date = s.s_date
+				SELECT	@end_date = s.start_date
 				FROM	Semester s
 				WHERE	s.semester_code = CONCAT(@end_sem, @end_year)
 
@@ -1002,8 +1018,8 @@ CREATE PROC Procedures_StudentRegisterFirstMakeup
 			SELECT	@exm_id = exam_id
 			FROM	MakeUp_Exam
 			WHERE	course_id		=	@course_id
-			AND		mk_exam_type	=	'First_makeup' 
-			AND		mk_exam_date	between	@start_date
+			AND		type	=	'First_makeup' 
+			AND		date	between	@start_date
 									AND		@end_date
 
 			INSERT
@@ -1077,7 +1093,7 @@ CREATE PROC Procedures_StudentRegisterSecondMakeup
 			FROM	Semester s
 			WHERE	s.semester_code	=	CONCAT(@start_sem, @start_year)
 
-			SELECT	@end_date	=	s.s_date
+			SELECT	@end_date	=	s.start_date
 			FROM	Semester s
 			WHERE	s.semester_code	=	CONCAT(@end_sem, @end_year)
 
@@ -1086,8 +1102,8 @@ CREATE PROC Procedures_StudentRegisterSecondMakeup
 		FROM	MakeUp_Exam,
 				Semester
 		WHERE	course_id		=	@course_id
-		AND		mk_exam_type	=	'Second_makeup' 
-		AND		mk_exam_date	between	@start_date
+		AND		type	=	'Second_makeup' 
+		AND		date	between	@start_date
 								AND		@end_date
 
 		INSERT
@@ -1113,7 +1129,7 @@ CREATE PROC Procedures_ViewRequiredCoursesR
 				AND		student_id			=	@student_id
 				AND		grade				IN	('F', 'FF')
 				AND		c1.course_id		=	sic1.course_id
-				GROUP BY c1.course_id, c1.course_name, c1.credit_hours, c1.is_offered, c1.major, c1.semester, sic1.semester_code, dbo.FN_StudentCheckSMEligibility (@student_id, c1.course_id)
+				GROUP BY c1.course_id, c1.name, c1.credit_hours, c1.is_offered, c1.major, c1.semester, sic1.semester_code, dbo.FN_StudentCheckSMEligibility (@student_id, c1.course_id)
 				HAVING	(
 						sic1.semester_code	=	@current_semester_code 
 					AND	
@@ -1179,12 +1195,12 @@ CREATE PROCEDURE Procedures_ViewOptionalCourse
 	BEGIN
 
 	 DECLARE @currsem_date date
-     SELECT @currsem_date = s.s_date 
+     SELECT @currsem_date = s.start_date 
 	 FROM Semester s
      WHERE s.semester_code = @current_semester_code
 
 	 DECLARE @gpc_sem_date date
-	 SELECT @gpc_sem_date = s.s_date 
+	 SELECT @gpc_sem_date = s.start_date 
 	 FROM Semester s, GradPlan_Course gpc
      WHERE s.semester_code = gpc.semester_code
 
