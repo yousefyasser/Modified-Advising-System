@@ -584,9 +584,6 @@ CREATE PROC Procedures_AdminDeleteCourse
 		
 GO
 
-exec Procedures_AdminDeleteCourse 1
-go
-
 --------------------------- 2.3 N ----------------------------------------
 CREATE PROCEDURE Procedure_AdminUpdateStudentStatus
 	@student_id INT
@@ -1251,22 +1248,7 @@ CREATE PROCEDURE Procedures_ViewOptionalCourse
 	GO
 
 --------------------------- 2.3 NN ----------------------------------------
-CREATE PROCEDURE Procedures_ViewMS
-	@student_id INT
-AS
-	(SELECT c.*
-	FROM Graduation_plan gp, GradPlan_Course gpc, Course c
-	WHERE gp.plan_id = gpc.plan_id AND gpc.course_id = c.course_id AND gp.student_id = @student_id)
-
-	EXCEPT
-
-	(SELECT c.*
-	FROM Student_Instructor_Course_Take s, Course c
-	WHERE s.course_id = c.course_id AND s.student_id = @student_id)
-GO
-
---------------------------- 2.3 NNR ----------------------------------------
-CREATE PROC Procedures_ViewMSR
+CREATE PROC Procedures_ViewMS
 	@student_id INT
 	AS
 
@@ -1278,13 +1260,10 @@ CREATE PROC Procedures_ViewMSR
 		SELECT	course_id
 		INTO	#takenButNotPass
 		FROM	Student_Instructor_Course_Take
-		WHERE	grade	IS	NULL
-		OR		grade	=	'F'
+		WHERE	grade	IN (NULL, 'F', 'FF', 'FA')
 
-		-- get all courses except required and optional ??
 
 		SELECT	crs.*
-
 		FROM	Course							crs,
 				Student							s,
 				Student_Instructor_Course_Take	sic
