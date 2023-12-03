@@ -48,27 +48,27 @@ CREATE PROCEDURE CreateAllTables
 AS
 	CREATE TABLE Advisor(
 		advisor_id INT PRIMARY KEY IDENTITY,
-		advisor_name VARCHAR(40) NOT NULL,
-		email VARCHAR(40) NOT NULL,
-		office VARCHAR(40) NOT NULL,
-		password VARCHAR(40) NOT NULL
+		advisor_name VARCHAR(40),
+		email VARCHAR(40),
+		office VARCHAR(40),
+		password VARCHAR(40)
 	);
 
 	CREATE TABLE Student(
 		student_id INT PRIMARY KEY IDENTITY, 
-		f_name VARCHAR(40) NOT NULL, 
-		l_name VARCHAR(40) NOT NULL,
+		f_name VARCHAR(40), 
+		l_name VARCHAR(40),
 		gpa DECIMAL(3, 2) ,
-		faculty VARCHAR(40) NOT NULL,
-		email VARCHAR(40) NOT NULL,
-		major VARCHAR(40) NOT NULL,
-		password VARCHAR(40) NOT NULL,
+		faculty VARCHAR(40),
+		email VARCHAR(40),
+		major VARCHAR(40),
+		password VARCHAR(40),
 		financial_status BIT DEFAULT 1 /* 0 MEANS BLOCKED, 1 MEANS UNBLOCKED */,
-		semester INT NOT NULL,
+		semester INT,
 		acquired_hours INT,
 		assigned_hours INT, 
 		advisor_id INT,
-		FOREIGN KEY (advisor_id) REFERENCES Advisor ON DELETE CASCADE,
+		FOREIGN KEY (advisor_id) REFERENCES Advisor,
 		CHECK (financial_status IN (0, 1)),
 		CHECK (gpa IS NULL OR (gpa BETWEEN 0.70 AND 5.00)),
 		CHECK (assigned_hours IS NULL OR (assigned_hours BETWEEN 0 AND 34)),
@@ -76,24 +76,24 @@ AS
 	);
 
 	CREATE TABLE Student_phone(
-		student_id INT NOT NULL,
-		phone_number VARCHAR(40) NOT NULL,
+		student_id INT,
+		phone_number VARCHAR(40),
 		CONSTRAINT Pk_Phone PRIMARY KEY(student_id, phone_number),
-		FOREIGN KEY (student_id) REFERENCES Student ON DELETE CASCADE
+		FOREIGN KEY (student_id) REFERENCES Student
 	);
 
 	CREATE TABLE Course(
 		course_id INT PRIMARY KEY IDENTITY,
-		name VARCHAR(40) NOT NULL,
-		major VARCHAR(40) NOT NULL,
-		is_offered BIT NOT NULL CHECK (is_offered IN (0, 1)) /* 0 MEANS OFFERED, 1 MEANS NOT OFFERED Current Sem */,
-		credit_hours INT NOT NULL,
-		semester INT NOT NULL
+		name VARCHAR(40),
+		major VARCHAR(40),
+		is_offered BIT CHECK (is_offered IN (0, 1)) /* 0 MEANS OFFERED, 1 MEANS NOT OFFERED Current Sem */,
+		credit_hours INT,
+		semester INT
 	);
 
 	CREATE TABLE PreqCourse_course(
-		prerequisite_course_id INT NOT NULL,
-		course_id INT NOT NULL,
+		prerequisite_course_id INT,
+		course_id INT,
 		CONSTRAINT preqCourse_course_id PRIMARY KEY (prerequisite_course_id, course_id),
 		FOREIGN KEY (prerequisite_course_id) REFERENCES Course,
 		FOREIGN KEY (course_id) REFERENCES Course
@@ -101,46 +101,46 @@ AS
 
 	CREATE TABLE Instructor(
 		instructor_id INT PRIMARY KEY IDENTITY,
-		name VARCHAR(40) NOT NULL, 
-		email VARCHAR(40) NOT NULL,
-		faculty VARCHAR(40) NOT NULL,
-		office VARCHAR(40) NOT NULL
+		name VARCHAR(40), 
+		email VARCHAR(40),
+		faculty VARCHAR(40),
+		office VARCHAR(40)
 	);
 
 	CREATE TABLE Instructor_Course(
-		course_id INT NOT NULL,
-		instructor_id INT NOT NULL,
+		course_id INT,
+		instructor_id INT,
 		CONSTRAINT Instructor_Course_id PRIMARY KEY (course_id, instructor_id),
-		FOREIGN KEY (course_id) REFERENCES Course ON DELETE CASCADE,
-		FOREIGN KEY (instructor_id) REFERENCES Instructor ON DELETE CASCADE
+		FOREIGN KEY (course_id) REFERENCES Course,
+		FOREIGN KEY (instructor_id) REFERENCES Instructor
 	);
 
 	CREATE TABLE Semester(
 		semester_code VARCHAR(40) PRIMARY KEY,
-		start_date date NOT NULL,
-		end_date date NOT NULL
+		start_date date,
+		end_date date
 	);
 
 	CREATE TABLE Student_Instructor_Course_Take(
-		student_id INT NOT NULL,
-		course_id  INT NOT NULL,
-		instructor_id INT NOT NULL,
+		student_id INT,
+		course_id  INT,
+		instructor_id INT,
 		semester_code VARCHAR(40),
 		exam_type VARCHAR(40) CHECK (exam_type IN ('Normal', 'First_makeup', 'Second_makeup')) DEFAULT 'Normal',
 		grade VARCHAR(40),
 		CONSTRAINT Student_Instructor_Course_Take_id PRIMARY KEY (student_id, course_id, semester_code),
-		FOREIGN KEY (student_id) REFERENCES Student ON DELETE CASCADE,
-		FOREIGN KEY (course_id) REFERENCES Course ON DELETE CASCADE,
-		FOREIGN KEY (instructor_id) REFERENCES Instructor ON DELETE CASCADE,
-		FOREIGN KEY (semester_code) REFERENCES Semester ON DELETE CASCADE
+		FOREIGN KEY (student_id) REFERENCES Student,
+		FOREIGN KEY (course_id) REFERENCES Course,
+		FOREIGN KEY (instructor_id) REFERENCES Instructor,
+		FOREIGN KEY (semester_code) REFERENCES Semester
 	);
 
 	CREATE TABLE Course_Semester(
-		course_id INT NOT NULL,
-		semester_code VARCHAR(40) NOT NULL,
+		course_id INT,
+		semester_code VARCHAR(40),
 		CONSTRAINT Course_Semester_id PRIMARY KEY (course_id, semester_code),
-		FOREIGN KEY (course_id) REFERENCES Course ON DELETE CASCADE,
-		FOREIGN KEY (semester_code) REFERENCES Semester ON DELETE CASCADE
+		FOREIGN KEY (course_id) REFERENCES Course,
+		FOREIGN KEY (semester_code) REFERENCES Semester
 	);
 
 	CREATE TABLE Slot(
@@ -148,78 +148,78 @@ AS
 		day VARCHAR(40),
 		time VARCHAR(40),
 		location VARCHAR(40),
-		course_id INT NOT NULL,
-		instructor_id INT NOT NULL,
-		FOREIGN KEY (course_id) REFERENCES Course ON DELETE CASCADE,
-		FOREIGN KEY (instructor_id) REFERENCES Instructor ON DELETE CASCADE
+		course_id INT,
+		instructor_id INT,
+		FOREIGN KEY (course_id) REFERENCES Course,
+		FOREIGN KEY (instructor_id) REFERENCES Instructor
 	);
 
 	CREATE TABLE Graduation_Plan(
 		plan_id INT Identity,
-		semester_code VARCHAR(40) NOT NULL,
-		semester_credit_hours INT NOT NULL,
-		expected_grad_date date NOT NULL, -- WRITTEN IN DATA INSERTIONS AS "expected_grad_semester" however in schema is correct
-		advisor_id INT NOT NULL,
-		student_id INT NOT NULL,
+		semester_code VARCHAR(40),
+		semester_credit_hours INT,
+		expected_grad_date date, -- WRITTEN IN DATA INSERTIONS AS "expected_grad_semester" however in schema is correct
+		advisor_id INT,
+		student_id INT,
 		CONSTRAINT Graduation_plan_id PRIMARY KEY (plan_id, semester_code),
 		FOREIGN KEY (advisor_id) REFERENCES Advisor,
-		FOREIGN KEY (student_id) REFERENCES Student ON DELETE CASCADE
+		FOREIGN KEY (student_id) REFERENCES Student
 	);
 	
 
 	CREATE TABLE GradPlan_Course(
-		plan_id INT NOT NULL,
-		semester_code VARCHAR(40) NOT NULL,
-		course_id INT NOT NULL,
+		plan_id INT,
+		semester_code VARCHAR(40),
+		course_id INT,
 		CONSTRAINT GradPlan_Course_id PRIMARY KEY (plan_id, semester_code, course_id),
-		FOREIGN KEY (plan_id, semester_code) REFERENCES Graduation_Plan ON DELETE CASCADE,
-		FOREIGN KEY (course_id) REFERENCES Course ON DELETE CASCADE
+		FOREIGN KEY (plan_id, semester_code) REFERENCES Graduation_Plan,
+		FOREIGN KEY (course_id) REFERENCES Course
 	);
 	
 
 	CREATE TABLE Request(
 		request_id INT PRIMARY KEY IDENTITY,
-		type VARCHAR(40) NOT NULL,
-		comment VARCHAR(40) NOT NULL,
+		type VARCHAR(40),
+		comment VARCHAR(40),
 		status VARCHAR(40) CHECK (status IN ('pending', 'approved', 'rejected')) DEFAULT 'pending',
 		credit_hours INT,
-		student_id INT NOT NULL FOREIGN KEY REFERENCES Student ON DELETE CASCADE,
+		student_id INT FOREIGN KEY REFERENCES Student,
 		advisor_id INT FOREIGN KEY REFERENCES Advisor,
-		course_id INT FOREIGN KEY REFERENCES Course ON DELETE CASCADE,
+		course_id INT FOREIGN KEY REFERENCES Course,
 	);
 
 	CREATE TABLE MakeUp_Exam(
 		exam_id INT PRIMARY KEY IDENTITY,
-		date datetime NOT NULL,
+		date datetime,
 		type VARCHAR(40) CHECK (type IN ('First MakeUp', 'Second MakeUp')) DEFAULT 'First MakeUp',
-		course_id INT NOT NULL FOREIGN KEY REFERENCES Course ON DELETE CASCADE,
+		course_id INT FOREIGN KEY REFERENCES Course,
 	);
 
 	CREATE TABLE Exam_Student(
-		exam_id INT NOT NULL FOREIGN KEY REFERENCES MakeUp_Exam ON DELETE CASCADE,
-		student_id INT NOT NULL FOREIGN KEY REFERENCES Student ON DELETE CASCADE,
-		course_id INT NOT NULL FOREIGN KEY REFERENCES Course,
+		exam_id INT FOREIGN KEY REFERENCES MakeUp_Exam,
+		student_id INT FOREIGN KEY REFERENCES Student,
+		course_id INT FOREIGN KEY REFERENCES Course,
 		CONSTRAINT Exam_Student_id PRIMARY KEY (exam_id, student_id)
 	);
 
 	CREATE TABLE Payment(
 		payment_id INT PRIMARY KEY IDENTITY,
-		amount INT NOT NULL,
-		deadline datetime NOT NULL,
+		amount INT,
+		deadline datetime,
 		n_installments INT NOT NULL, -- check with both dates
-		status VARCHAR(40) NOT NULL CHECK (status IN ('notPaid', 'Paid')) DEFAULT 'notPaid',
-		fund_percentage DECIMAL(4,2) NOT NULL,
-		startdate datetime NOT NULL,
-		student_id INT NOT NULL FOREIGN KEY REFERENCES Student ON DELETE CASCADE,
-		semester_code VARCHAR(40) NOT NULL FOREIGN KEY REFERENCES Semester ON DELETE CASCADE,
+		status VARCHAR(40) CHECK (status IN ('notPaid', 'Paid')) DEFAULT 'notPaid',
+		fund_percentage DECIMAL(4,2),
+		startdate datetime,
+		student_id INT FOREIGN KEY REFERENCES Student,
+		semester_code VARCHAR(40) FOREIGN KEY REFERENCES Semester,
 	);
 
 	CREATE TABLE Installment(
-		payment_id INT NOT NULL FOREIGN KEY REFERENCES Payment ON DELETE CASCADE,
-		deadline datetime NOT NULL,
-		amount INT NOT NULL,
-		status VARCHAR(40) NOT NULL CHECK (status IN ('notPaid', 'Paid')) DEFAULT 'notPaid',
-		startdate datetime NOT NULL,
+		payment_id INT FOREIGN KEY REFERENCES Payment,
+		deadline datetime,
+		amount INT,
+		status VARCHAR(40) CHECK (status IN ('notPaid', 'Paid')) DEFAULT 'notPaid',
+		startdate datetime,
 		CONSTRAINT Pk_installment PRIMARY KEY (payment_id,deadline)
 	);
 
