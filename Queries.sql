@@ -485,9 +485,9 @@ CREATE PROC Procedures_AdminIssueInstallment
 
 		SELECT	
 		@i			=	n_installments,
-		@payment_amount	=	payment_amount / n_installments,
+		@payment_amount	=	amount / n_installments,
 		@strt_date	=	s_date,
-		@ddln		=	payment_deadline
+		@ddln		=	deadline
 
 		FROM	Payment
 		WHERE	payment_id	=	@payment_id
@@ -570,7 +570,7 @@ CREATE VIEW all_Pending_Requests
 AS
 	SELECT r.*, CONCAT(s.f_name, ' ', s.l_name) AS student_name, a.name 
 	FROM Request r INNER JOIN Student s on s.student_id=r.student_id INNER JOIN Advisor a on a.advisor_id = r.advisor_id
-	WHERE req_status='pending'
+	WHERE status='pending'
 GO
 
 --------------------------- 2.3 P ----------------------------------------
@@ -680,7 +680,7 @@ BEGIN
 		FROM	Request r, Student s
 		WHERE	r.student_id	=	s.student_id
 		AND		r.request_id = @request_id
-		AND		req_type		=	'credit'
+		AND		type		=	'credit'
 		AND		gpa				<=	3.7
 		AND		(credit_hours 
 				+ assigned_hours) <	34
@@ -693,7 +693,7 @@ BEGIN
 
 	UPDATE	Student
 	SET		assigned_hours	=	assigned_hours	+	IIF(credit_hours > 3, 3, credit_hours)
-	FROM	Students s
+	FROM	Student s
 	JOIN	Request r
 	ON		r.student_id = s.student_id
 	WHERE	request_id IN (SELECT request_id FROM #temp)
@@ -702,10 +702,10 @@ BEGIN
 		BEGIN
 		
 		UPDATE	Request
-		SET		req_status	=	IIF(request_id IN (SELECT request_id FROM #temp), 'accepted', 'rejected')
+		SET		status	=	IIF(request_id IN (SELECT request_id FROM #temp), 'accepted', 'rejected')
 
 		UPDATE Payment
-		SET payment_amount = payment_amount + 1000 * @credit_hours
+		SET amount = amount + 1000 * @credit_hours
 		FROM Payment p, Student s
 		WHERE p.student_id = s.student_id
 		AND  p.semester_code = @current_semester 
@@ -726,7 +726,7 @@ BEGIN
 	ELSE
 		BEGIN
 			UPDATE	Request
-			SET		req_status	= 'pending'
+			SET		status	= 'pending'
 		
 		END
 	
@@ -758,9 +758,9 @@ AS
 	DECLARE @radvisor_id INT
 	DECLARE @rtype VARCHAR(40)
 
-	SELECT @chours = c.credit_hours, @asghours = s.assigned_hours, @rcourse_Id = r.course_id, @radvisor_id = r.advisor_id, @studentID = r.student_id, @rtype = r.req_type
+	SELECT @chours = c.credit_hours, @asghours = s.assigned_hours, @rcourse_Id = r.course_id, @radvisor_id = r.advisor_id, @studentID = r.student_id, @rtype = r.type
 	FROM Request r INNER JOIN Course c ON r.course_id = c.course_id INNER JOIN Student s ON s.student_id = r.student_id 
-	WHERE r.request_id = @requestID AND r.req_type = 'course'
+	WHERE r.request_id = @requestID AND r.type = 'course'
 
 	SET @reject = 0
 	IF( EXISTS( (SELECT prerequisite_course_id FROM Request r INNER JOIN PreqCourse_course p ON r.course_id = p.course_id)
@@ -776,12 +776,12 @@ AS
 			IF (@reject =1 OR @asghours IS NULL OR (@asghours IS NOT NULL AND @chours > @asghours))
 			BEGIN
 				UPDATE Request 
-				SET Request.req_status = 'rejected' WHERE Request.request_id = @RequestID
+				SET Request.status = 'rejected' WHERE Request.request_id = @RequestID
 			END
 	ELSE
 		BEGIN
 			UPDATE Request 
-			SET Request.req_status = 'accepted' WHERE Request.request_id = @RequestID
+			SET Request.status = 'accepted' WHERE Request.request_id = @RequestID
 			INSERT INTO Student_Instructor_Course_Take (student_id, course_id, semester_code)
 			VALUES (@studentID, @rcourse_id, @current_semester_code)
 			UPDATE Student
@@ -796,7 +796,7 @@ CREATE PROC Procedures_AdvisorViewPendingRequests
 AS    
     SELECT *
 	FROM Request
-	WHERE advisor_id = @advisor_id AND req_status = 'pending'
+	WHERE advisor_id = @advisor_id AND status = 'pending'
 
 GO
 
@@ -847,7 +847,7 @@ CREATE PROCEDURE Procedures_StudentSendingCourseRequest
 	@student_id INT,
 	@course_id INT
 AS
-	INSERT INTO Request (req_type, comment, student_id, course_id)
+	INSERT INTO Request (type, comment, student_id, course_id)
 	VALUES (@type, @comment, @student_id, @course_id)
 GO
 
@@ -858,7 +858,7 @@ CREATE PROCEDURE Procedures_StudentSendingCHRequest
 	@credit_hours INT,
 	@student_id INT
 AS
-	INSERT INTO Request (req_type, comment, student_id, credit_hours)
+	INSERT INTO Request (type, comment, student_id, credit_hours)
 	VALUES (@type, @comment, @student_id, @credit_hours)
 GO
 
@@ -1236,7 +1236,7 @@ CREATE PROCEDURE Procedures_ChooseInstructor
 	@course_id INT,
 	@current_semester_code VARCHAR(40)
 AS
-		UPDATE	Student_Course_Instructor_Take
+		UPDATE	Student_Instructor_Course_Take
 		SET		instructor_id	=	@instructor_id
 		WHERE	student_id		=	@student_id
 		AND		course_id		=	@course_id
