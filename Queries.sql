@@ -260,8 +260,6 @@ CREATE PROCEDURE clearAllTables
 AS
 	DELETE FROM Installment
 	DELETE FROM Payment
-	DELETE FROM Installment
-	DELETE FROM Payment
 	DELETE FROM Exam_Student
 	DELETE FROM Request
 	DELETE FROM GradPlan_Course
@@ -553,15 +551,41 @@ GO
 CREATE PROC Procedures_AdminDeleteCourse
 	@course_id INT
 	AS
-		DELETE
-		FROM	Course
+		
+		DELETE FROM	Exam_Student
 		WHERE	course_id	=	@course_id
 
-		DELETE
-		FROM	Slot
+		DELETE FROM	Request
 		WHERE	course_id	=	@course_id
 
+		DELETE FROM	GradPlan_Course
+		WHERE	course_id	=	@course_id
+
+		DELETE FROM	Student_Instructor_Course_Take
+		WHERE	course_id	=	@course_id
+
+		DELETE FROM	Slot
+		WHERE	course_id	=	@course_id
+
+		DELETE FROM	MakeUp_Exam
+		WHERE	course_id	=	@course_id
+
+		DELETE FROM	Course_Semester
+		WHERE	course_id	=	@course_id
+
+		DELETE FROM	Instructor_Course
+		WHERE	course_id	=	@course_id
+
+		DELETE FROM	PreqCourse_course
+		WHERE	course_id	=	@course_id or prerequisite_course_id = @course_id
+
+		DELETE FROM	Course
+		WHERE	course_id	=	@course_id
+		
 GO
+
+exec Procedures_AdminDeleteCourse 1
+go
 
 --------------------------- 2.3 N ----------------------------------------
 CREATE PROCEDURE Procedure_AdminUpdateStudentStatus
@@ -585,7 +609,6 @@ BEGIN
 END
 
 GO
-
 --------------------------- 2.3 O ----------------------------------------
 CREATE VIEW all_Pending_Requests 
 
