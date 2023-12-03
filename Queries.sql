@@ -1,6 +1,9 @@
 ﻿USE master
 GO
 
+drop database Advising_Team_27
+go
+
 CREATE DATABASE Advising_Team_27;
 GO
 
@@ -210,6 +213,8 @@ AS
 
 GO
 
+exec CreateAllTables
+go
 
 CREATE PROCEDURE DropAllTables 
 AS 
@@ -293,7 +298,7 @@ GO
 
 --------------------------- 2.2 E ----------------------------------------
 CREATE VIEW Courses_Slots_Instructor  AS
-SELECT cr.course_id, cr.name, sl.slot_id, sl.day, sl.time, sl.location, i.name
+SELECT cr.course_id, cr.name AS 'Course Name', sl.slot_id, sl.day, sl.time, sl.location, i.name AS 'Instructor Name'
 FROM Course cr, Slot sl, Instructor i
 WHERE cr.course_id = sl.course_id AND sl.instructor_id = i.instructor_id
 
@@ -309,7 +314,7 @@ GO
 
 --------------------------- 2.2 G ----------------------------------------
 CREATE VIEW Students_Courses_transcript AS
-SELECT s.student_id, CONCAT(st.f_name, ' ', st.l_name) AS student_name, s.course_id, co.name, s.exam_type, s.grade, s.semester_code, ins.name
+SELECT s.student_id, CONCAT(st.f_name, ' ', st.l_name) AS student_name, s.course_id, co.name AS course_name, s.exam_type, s.grade, s.semester_code, ins.name AS 'Instructor name'
 FROM Student_Instructor_Course_Take s, Student st, Course co, Instructor ins
 WHERE s.student_id = st.student_id AND s.course_id = co.course_id AND s.instructor_id = ins.instructor_id
 
@@ -486,7 +491,7 @@ CREATE PROC Procedures_AdminIssueInstallment
 		SELECT	
 		@i			=	n_installments,
 		@payment_amount	=	amount / n_installments,
-		@strt_date	=	s_date,
+		@strt_date	=	start_date,
 		@ddln		=	deadline
 
 		FROM	Payment
@@ -739,9 +744,9 @@ CREATE PROCEDURE Procedures_AdvisorViewAssignedStudents
 	@advisor_id INT,
 	@major VARCHAR(40)
 AS    
-    Select sct.student_id, CONCAT(s.f_name, ' ', s.l_name) AS student_name, s.major, sct.course_name
-    From Students_Courses_transcript sct, Student s 
-    where sct.student_id = s.student_id AND s.major = @major AND s.advisor_id = @advisor_id
+    Select s.student_id, CONCAT(s.f_name, ' ', s.l_name) AS student_name, s.major, c.course_name
+    From Student s , Student_Instructor_Course_Take sict,  Course c
+    where sict.student_id = s.student_id AND s.major = @major AND s.advisor_id = @advisor_id and c.course_id = sict.course_id
 
 GO
 
@@ -909,7 +914,7 @@ RETURNS TABLE
 AS
 RETURN 
 	SELECT 
-		s.slot_id,  s.location ,s.time,  s.day, c.name, i.name
+		s.slot_id,  s.location ,s.time,  s.day, c.name AS 'Course Name', i.name AS 'Instructor name'
 	FROM 
 		Slot s INNER JOIN Course c on c.course_id = s.course_id
                 INNER JOIN Instructor i on s.instructor_id = i.instructor_id
