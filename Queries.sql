@@ -744,7 +744,7 @@ CREATE PROCEDURE Procedures_AdvisorViewAssignedStudents
 	@advisor_id INT,
 	@major VARCHAR(40)
 AS    
-    Select s.student_id, CONCAT(s.f_name, ' ', s.l_name) AS student_name, s.major, c.course_name
+    Select s.student_id, CONCAT(s.f_name, ' ', s.l_name) AS student_name, s.major, c.name
     From Student s , Student_Instructor_Course_Take sict,  Course c
     where sict.student_id = s.student_id AND s.major = @major AND s.advisor_id = @advisor_id and c.course_id = sict.course_id
 
@@ -1086,80 +1086,32 @@ CREATE PROC Procedures_StudentRegisterSecondMakeup
 		VALUES	(@exm_id, @student_id, @course_id)
 GO
 
---------------------------- 2.3 LLR ----------------------------------------
-CREATE PROC Procedures_ViewRequiredCoursesR
-	@student_id INT,
-	@current_semester_code VARCHAR(40)
-	AS
-	BEGIN
-		DECLARE @course_id INT;
-
-			(
-				SELECT	c1.*
-
-				FROM	Student_Instructor_Course_Take sic1,
-						Semester sem1,
-						Course c1
-				WHERE	sic1.semester_code	=	sem1.semester_code
-				AND		student_id			=	@student_id
-				AND		grade				IN	('F', 'FF')
-				AND		c1.course_id		=	sic1.course_id
-				GROUP BY c1.course_id, c1.name, c1.credit_hours, c1.is_offered, c1.major, c1.semester, sic1.semester_code, dbo.FN_StudentCheckSMEligibility (@student_id, c1.course_id)
-				HAVING	(
-						sic1.semester_code	=	@current_semester_code 
-					AND	
-						dbo.FN_StudentCheckSMEligibility (@student_id, c1.course_id) = 0
-						)
-			)
-			UNION
-			(
-				SELECT	c2.*
-				FROM	Course c2
-				WHERE	
-				NOT EXISTS	(
-									SELECT	sic2.course_id 
-									FROM	Student_Instructor_Course_Take sic2, Student s, Course c2
-									WHERE	s.student_id	=	sic2.student_id
-									AND		s.major		=	c2.major
-									AND		s.semester	>	c2.semester
-									AND		sic2.course_id = c2.course_id
-							)
-				OR EXISTS	(
-									SELECT	sic2.course_id 
-									FROM	Student_Instructor_Course_Take sic2, Student s, Course c2
-									WHERE	s.student_id	=	sic2.student_id
-									AND		s.major		=	c2.major
-									AND		s.semester	>	c2.semester
-									AND		sic2.grade = 'FA'
-									AND		sic2.course_id = c2.course_id
-							)
-			)
-			
-	END
-GO
-
 --------------------------- 2.3 LL ----------------------------------------
-CREATE PROCEDURE Procedures_ViewRequiredCourses
+CREATE PROCEDURE Procedures_ViewRequiredCourses1
 	@student_id INT,
 	@current_semester_code VARCHAR(40)
-	-- see if we need to compare using dates
 	AS
 	BEGIN
+                Declare @currsem_date date
+                Select @currsem_date=s.start_date from
+                Semester s where s.semester_code=@current_semester_code
 		SELECT c.*
 		FROM Course c
-		JOIN Student_Instructor_Course_Take sict ON c.course_id = sict.course_id
+		INNER JOIN Student_Instructor_Course_Take sict ON c.course_id = sict.course_id
+                INNER JOIN Semester s on s.semester_code= sict.semester_code
 		WHERE @student_id = sict.student_id
 			AND (
-				(CAST(RIGHT(@current_semester_code, LEN(@current_semester_code) - 1) AS INT) 
-					>= CAST(RIGHT(sict.semester_code, LEN(sict.semester_code) - 1) AS INT) 
-						AND sict.grade IN ('F', 'FF')  AND dbo.FN_StudentCheckSMEligiability(@student_id, sict.course_id) = 0) 
+				(@currsem_date >= s.start_date AND sict.grade >= 'F'
+					AND dbo.FN_StudentCheckSMEligibility(@student_id, sict.course_id) = 0)             
+
 				OR
-				(CAST(RIGHT(@current_semester_code, LEN(@current_semester_code) - 1) AS INT) 
-					> CAST(RIGHT(sict.semester_code, LEN(sict.semester_code) - 1) AS INT) 
-						AND sict.grade IS NULL)
-			);
-	END
-	GO
+
+				(@currsem_date > s.start_date AND (sict.grade IS NULL OR sict.grade = 'FA'))
+				);
+END
+
+
+GO
 
 --------------------------- 2.3 MM ----------------------------------------
 CREATE PROCEDURE Procedures_ViewOptionalCourse
