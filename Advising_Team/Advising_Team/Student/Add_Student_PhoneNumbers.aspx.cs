@@ -12,57 +12,40 @@ namespace Advising_Team.Student
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!IsPostBack)
+            // redirect if the session is closed
+            if (Session["user"] == null)
             {
-                // Check if the StudentID cookie exists
-                if (Request.Cookies["StudentID"] != null)
-                {
-                    // Retrieve the student ID from the cookie
-                    int studentId = Convert.ToInt32(Request.Cookies["StudentID"].Value);
-
-                    // Store the student ID in a session variable for future use
-                    Session["StudentID"] = studentId;
-                }
-                else
-                {
-                    Response.Redirect("Student_Login.aspx");
-                }
+                Response.Redirect("Student_Login.aspx");
+                return;
             }
         }
 
         protected void add_phone(object sender, EventArgs e)
         {
-            // Check if the student ID is available in the session
-            if (Session["StudentID"] != null)
+            int studentId = (int)Session["user"];
+
+            string connStr = WebConfigurationManager.ConnectionStrings["Advising_System"].ToString();
+
+            using (SqlConnection conn = new SqlConnection(connStr))
             {
-                int studentId = Convert.ToInt32(Session["StudentID"]);
+                conn.Open();
+                string phoneIn = phones.Text;
 
-                string connStr = WebConfigurationManager.ConnectionStrings["Advising_System"].ToString();
-
-                using (SqlConnection conn = new SqlConnection(connStr))
+                using (SqlCommand phoneProc = new SqlCommand("Procedures_StudentaddMobile", conn))
                 {
-                    conn.Open();
-                    string phoneIn = phones.Text;
+                    phoneProc.CommandType = CommandType.StoredProcedure;
 
-                    using (SqlCommand phoneProc = new SqlCommand("Procedures_StudentaddMobile", conn))
-                    {
-                        phoneProc.CommandType = CommandType.StoredProcedure;
+                    // Add parameters
+                    phoneProc.Parameters.Add(new SqlParameter("@StudentID", studentId));
+                    phoneProc.Parameters.Add(new SqlParameter("@mobile_number", phoneIn));
 
-                        // Add parameters
-                        phoneProc.Parameters.Add(new SqlParameter("@StudentID", studentId));
-                        phoneProc.Parameters.Add(new SqlParameter("@mobile_number", phoneIn));
-
-                        // Execute the stored procedure
-                        phoneProc.ExecuteNonQuery();
-                    }
-
-                    successMessage.Text = "Successfully updated your profile with this phone number";
-                    successMessage.Visible = true;
+                    // Execute the stored procedure
+                    phoneProc.ExecuteNonQuery();
                 }
-            }
-            else
-            {
-                Response.Redirect("Student_Login.aspx");
+
+                successMessage.Text = "Successfully updated your profile with this phone number";
+                successMessage.Visible = true;
+                errorMessage.Visible = false;
             }
         }
     }

@@ -54,31 +54,29 @@ namespace Advising_Team
 
                         if (loginSuccess)
                         {
-                            // Create a cookie and set its value to the student ID
-                            HttpCookie studentCookie = new HttpCookie("StudentID");
-                            studentCookie.Value = idIn.ToString();
-                            studentCookie.Expires = DateTime.Now.AddMinutes(30);
-
-                            Response.Cookies.Add(studentCookie);
+                            Session["user"] = idIn;
 
                             successMessage.Text = "You have successfully logged in";
                             successMessage.Visible = true;
+                            errorMessage.Visible = false;
 
                             // Wait for 1 second before redirecting to home page
-                            string script = "setTimeout(function() { window.location.href = 'Add_Student_PhoneNumbers.aspx'; }, 1000);";
+                            string script = "setTimeout(function() { window.location.href = 'Available_Courses.aspx'; }, 1000);";
                             ScriptManager.RegisterStartupScript(this, GetType(), "redirectScript", script, true);
                         }
                         else
                         {
                             errorMessage.Text = "Please recheck your credentials";
                             errorMessage.Visible = true;
+                            successMessage.Visible = false;
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    errorMessage.Text = "An error occurred. Please try again later.";
+                    errorMessage.Text = "An error occurred: " + ex.Message;
                     errorMessage.Visible = true;
+                    successMessage.Visible = false;
                 }
             }
         }

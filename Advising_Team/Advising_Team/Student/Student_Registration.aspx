@@ -4,13 +4,13 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-    <title>University Advising System - Student Registration</title>
+    <title>GUC Advising System - Student Registration</title>
     <link rel="stylesheet" type="text/css" href="../Css/mainStyle.css" />
 </head>
 <body>
     <form id="form2" runat="server">
         <div>
-            <h2>University Advising System - Student Registration</h2>
+            <h2>GUC Advising System - Student Registration</h2>
 
             First Name
             <asp:TextBox ID="f_name" runat="server"></asp:TextBox>
@@ -42,8 +42,8 @@
             <asp:HyperLink ID="login" href="Student_Login.aspx" runat="server">login</asp:HyperLink>
             <br />
             <br />
-            <asp:Label ID="successMessage" runat="server" CssClass="success-message" Visible="false"></asp:Label>
-            <asp:Label ID="errorMessage" runat="server" CssClass="error-message" Visible="false"></asp:Label>
+            <asp:Label ID="successMessage" runat="server" Visible="false"></asp:Label>
+            <asp:Label ID="errorMessage" runat="server" Visible="false"></asp:Label>
         </div>
     </form>
 </body>

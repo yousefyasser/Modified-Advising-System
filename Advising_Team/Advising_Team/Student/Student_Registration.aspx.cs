@@ -64,6 +64,7 @@ namespace Advising_Team
 
                             successMessage.Text = "Student registered successfully. Student ID: " + studentIdValue;
                             successMessage.Visible = true;
+                            errorMessage.Visible = false;
 
                             // Wait for 2 seconds before redirecting to login page
                             string script = "setTimeout(function() { window.location.href = 'Student_Login.aspx'; }, 2000);";
@@ -73,6 +74,7 @@ namespace Advising_Team
                         {
                             errorMessage.Text = "Registration failed. Student ID not generated.";
                             errorMessage.Visible = true;
+                            successMessage.Visible = false;
                         }
                     }
                 }
@@ -80,6 +82,7 @@ namespace Advising_Team
                 {
                     errorMessage.Text = "Error: " + ex.Message;
                     errorMessage.Visible = true;
+                    successMessage.Visible = false;
                 }
             }
         }
