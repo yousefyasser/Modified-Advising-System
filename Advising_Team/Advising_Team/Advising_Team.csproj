@@ -67,15 +67,25 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Student\Courses_Exams.aspx" />
     <Content Include="Css\mainStyle.css" />
     <Content Include="Student\Add_Student_PhoneNumbers.aspx" />
     <Content Include="Student\Available_Courses.aspx" />
+    <Content Include="Student\Course_Prerequisites.aspx" />
+    <Content Include="Student\Grad_Plan.aspx" />
     <Content Include="Student\Student_Login.aspx" />
     <Content Include="Student\Student_Optional_Courses.aspx" />
     <Content Include="Student\Student_Registration.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Student\Courses_Exams.aspx.cs">
+      <DependentUpon>Courses_Exams.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Student\Courses_Exams.aspx.designer.cs">
+      <DependentUpon>Courses_Exams.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Site.Master.cs">
       <DependentUpon>Site.Master</DependentUpon>
@@ -97,6 +107,20 @@
     </Compile>
     <Compile Include="Student\Available_Courses.aspx.designer.cs">
       <DependentUpon>Available_Courses.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Student\Course_Prerequisites.aspx.cs">
+      <DependentUpon>Course_Prerequisites.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Student\Course_Prerequisites.aspx.designer.cs">
+      <DependentUpon>Course_Prerequisites.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Student\Grad_Plan.aspx.cs">
+      <DependentUpon>Grad_Plan.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Student\Grad_Plan.aspx.designer.cs">
+      <DependentUpon>Grad_Plan.aspx</DependentUpon>
     </Compile>
     <Compile Include="Student\Student_Login.aspx.cs">
       <DependentUpon>Student_Login.aspx</DependentUpon>
