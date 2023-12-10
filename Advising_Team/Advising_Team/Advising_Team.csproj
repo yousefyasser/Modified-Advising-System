@@ -78,6 +78,7 @@
     <Content Include="Student\Student_Login.aspx" />
     <Content Include="Student\Student_Optional_Courses.aspx" />
     <Content Include="Student\Student_Registration.aspx" />
+    <Content Include="Student\Upcoming_Installment.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -158,6 +159,13 @@
     </Compile>
     <Compile Include="Student\Student_Registration.aspx.designer.cs">
       <DependentUpon>Student_Registration.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Student\Upcoming_Installment.aspx.cs">
+      <DependentUpon>Upcoming_Installment.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Student\Upcoming_Installment.aspx.designer.cs">
+      <DependentUpon>Upcoming_Installment.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

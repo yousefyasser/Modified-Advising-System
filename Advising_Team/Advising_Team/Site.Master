@@ -13,10 +13,10 @@
     <form runat="server">
         <ul class="navbar">
             <li>
-                <a href="Courses_Exams.aspx">Courses Exams</a>
+                <a href="Courses_Exams.aspx">Exams</a>
             </li>
             <li>
-                <a href="Course_slots.aspx">Courses Slots</a>
+                <a href="Course_slots.aspx">All Slots</a>
             </li>
             <li>
                 <a href="Course_Prerequisites.aspx">Prerequisites</a>
@@ -26,6 +26,9 @@
             </li>
             <li>
                 <a href="Slot_Course.aspx">Slots</a>
+            </li>
+             <li>
+                <a href="Upcoming_Installment.aspx">Deadline</a>
             </li>
         </ul>
         <asp:ContentPlaceHolder ID="MainContent" runat="server">
