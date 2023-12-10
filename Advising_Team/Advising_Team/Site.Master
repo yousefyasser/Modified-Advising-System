@@ -16,7 +16,7 @@
                 <a href="Courses_Exams.aspx">Courses Exams</a>
             </li>
             <li>
-                <a href="Student_Optional_Courses.aspx">Optional Courses</a>
+                <a href="Course_slots.aspx">Courses Slots</a>
             </li>
             <li>
                 <a href="Course_Prerequisites.aspx">Prerequisites</a>

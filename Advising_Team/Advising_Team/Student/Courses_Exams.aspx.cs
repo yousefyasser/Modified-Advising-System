@@ -26,9 +26,8 @@ namespace Advising_Team.Student
                     Response.Redirect("Student_Login.aspx");
                     return;
                 }
-                using (SqlCommand courseExamProc = new SqlCommand("Select MakeUp_Exam.*, Course.name, Course.semester\r\nfrom MakeUp_Exam inner join Course on MakeUp_Exam.course_id = Course.course_id ", conn))
+                using (SqlCommand courseExamProc = new SqlCommand("Select MakeUp_Exam.*, Course.name, Course.semester from MakeUp_Exam inner join Course on MakeUp_Exam.course_id = Course.course_id ", conn))
                 {
-                    courseExamProc.CommandType = CommandType.StoredProcedure;
                     SqlDataReader reader = courseExamProc.ExecuteReader(CommandBehavior.CloseConnection);
 
                     while (reader.Read())

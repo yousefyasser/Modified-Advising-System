@@ -72,6 +72,7 @@
     <Content Include="Student\Add_Student_PhoneNumbers.aspx" />
     <Content Include="Student\Available_Courses.aspx" />
     <Content Include="Student\Course_Prerequisites.aspx" />
+    <Content Include="Student\Course_Slots.aspx" />
     <Content Include="Student\Grad_Plan.aspx" />
     <Content Include="Student\Student_Login.aspx" />
     <Content Include="Student\Student_Optional_Courses.aspx" />
@@ -114,6 +115,13 @@
     </Compile>
     <Compile Include="Student\Course_Prerequisites.aspx.designer.cs">
       <DependentUpon>Course_Prerequisites.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Student\Course_Slots.aspx.cs">
+      <DependentUpon>Course_Slots.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Student\Course_Slots.aspx.designer.cs">
+      <DependentUpon>Course_Slots.aspx</DependentUpon>
     </Compile>
     <Compile Include="Student\Grad_Plan.aspx.cs">
       <DependentUpon>Grad_Plan.aspx</DependentUpon>

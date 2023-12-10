@@ -26,7 +26,7 @@ namespace Advising_Team.Student
                 Response.Redirect("Student_Login.aspx");
                 return;
             }
-            using (SqlCommand coursePrereqProc = new SqlCommand("Select C1.*, C2.course_id as preRequsite_course_id, C2.name as preRequsite_course_name from Course C1 inner join PreqCourse_course On C1.course_id = PreqCourse_course.course_id inner join Course C2 on PreqCourse_course.prerequisite_course_id = C2.course_id ", conn))
+            using (SqlCommand coursePrereqProc = new SqlCommand("Select * from view_Course_prerequisites ", conn))
             {
                 SqlDataReader reader = coursePrereqProc.ExecuteReader(CommandBehavior.CloseConnection);
 
