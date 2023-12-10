@@ -24,6 +24,9 @@
             <li>
                 <a href="Grad_Plan.aspx">Grad Plan</a>
             </li>
+            <li>
+                <a href="Slot_Course.aspx">Slots</a>
+            </li>
         </ul>
         <asp:ContentPlaceHolder ID="MainContent" runat="server">
         </asp:ContentPlaceHolder>

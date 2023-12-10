@@ -74,6 +74,7 @@
     <Content Include="Student\Course_Prerequisites.aspx" />
     <Content Include="Student\Course_Slots.aspx" />
     <Content Include="Student\Grad_Plan.aspx" />
+    <Content Include="Student\Slot_Course.aspx" />
     <Content Include="Student\Student_Login.aspx" />
     <Content Include="Student\Student_Optional_Courses.aspx" />
     <Content Include="Student\Student_Registration.aspx" />
@@ -129,6 +130,13 @@
     </Compile>
     <Compile Include="Student\Grad_Plan.aspx.designer.cs">
       <DependentUpon>Grad_Plan.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Student\Slot_Course.aspx.cs">
+      <DependentUpon>Slot_Course.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Student\Slot_Course.aspx.designer.cs">
+      <DependentUpon>Slot_Course.aspx</DependentUpon>
     </Compile>
     <Compile Include="Student\Student_Login.aspx.cs">
       <DependentUpon>Student_Login.aspx</DependentUpon>
