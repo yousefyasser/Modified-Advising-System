@@ -30,6 +30,9 @@
              <li>
                 <a href="Upcoming_Installment.aspx">Deadline</a>
             </li>
+            <li>
+                <a href="Instructor_Course.aspx">Choose</a>
+            </li>
         </ul>
         <asp:ContentPlaceHolder ID="MainContent" runat="server">
         </asp:ContentPlaceHolder>
