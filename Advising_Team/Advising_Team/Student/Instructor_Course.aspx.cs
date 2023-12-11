@@ -44,8 +44,8 @@ namespace Advising_Team.Student
                         return;
                     }
                     int sId = (int)Session["user"];
-                    bool c = checkOk(idIn,id2In);
-                    bool c2 = checkOk2(idIn,sId);
+                    bool c = checkInstructorCourse(idIn,id2In);
+                    bool c2 = checkCourseTaken(idIn,sId);
 
                     if (c & c2)
                     {
@@ -110,7 +110,7 @@ namespace Advising_Team.Student
                 throw new InvalidOperationException("Semester not found for the specified student.");
             }
         }
-        public static bool checkOk(int idIn, int id2In)
+        public static bool checkInstructorCourse(int idIn, int id2In)
         {
             string connStr4 = WebConfigurationManager.ConnectionStrings["Advising_System"].ToString();
             using (SqlConnection conn3 = new SqlConnection(connStr4))
@@ -140,7 +140,7 @@ namespace Advising_Team.Student
                 throw new InvalidOperationException("Instructor not found for the specified course.");
             }
         }
-            public static bool checkOk2(int idIn, int sidIn)
+            public static bool checkCourseTaken(int idIn, int sidIn)
             {
                 string connStr2 = WebConfigurationManager.ConnectionStrings["Advising_System"].ToString();
                 using (SqlConnection conn1 = new SqlConnection(connStr2))
