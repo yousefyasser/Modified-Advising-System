@@ -1,15 +1,13 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Makeup_Registration2.aspx.cs" Inherits="Advising_Team.Student.Makeup_Registration2" %>
+﻿<%@ Page Title="GUC Advising System - Second Makeup Registration" Language="C#" AutoEventWireup="true" MasterPageFile="~/Site.Master" CodeBehind="Makeup_Registration2.aspx.cs" Inherits="Advising_Team.Student.Makeup_Registration2" %>
 
-<!DOCTYPE html>
-
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head runat="server">
-    <title></title>
-</head>
-<body>
-    <form id="form1" runat="server">
-        <div>
-        </div>
-    </form>
-</body>
-</html>
+<asp:Content ContentPlaceHolderID="MainContent" runat="server">
+    <h2>GUC Advising System - Second Makeup Registration</h2>
+     Course ID
+    <asp:TextBox ID="c_id" runat="server"></asp:TextBox>
+    <br />
+     <asp:Button ID="Registering" runat="server" Text="Register" OnClick="register" />
+    <br />
+     <asp:Label ID="successMessage" runat="server" Visible="false"></asp:Label>
+    <asp:Label ID="errorMessage" runat="server" Visible="false"></asp:Label>
+ 
+</asp:Content>

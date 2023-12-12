@@ -59,7 +59,7 @@ namespace Advising_Team.Student
                             chooseProc.Parameters.Add(new SqlParameter("@CourseID", idIn));
                             chooseProc.Parameters.Add(new SqlParameter("@current_semester_code", GetCurrentSemester()));
                             chooseProc.ExecuteNonQuery();
-                            successMessage.Text = "Successful Operation";
+                            successMessage.Text = "You have changed instructor for this course";
                             successMessage.Visible = true;
                             errorMessage.Visible = false;
 
