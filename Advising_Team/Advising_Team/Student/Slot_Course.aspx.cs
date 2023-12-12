@@ -25,16 +25,24 @@ namespace Advising_Team.Student
                 try
                 {
                     conn.Open();
+                    if (Session["user"] == null)
+                    {
+                        Response.Redirect("Student_Login.aspx");
+                        return;
+                    }
+
                     if (!int.TryParse(c_id.Text, out int idIn))
                     {
                         errorMessage.Text = "Invalid Course ID";
                         errorMessage.Visible = true;
+                        successMessage.Visible = false;
                         return;
                     }
                     if (!int.TryParse(i_id.Text, out int id2In))
                     {
                         errorMessage.Text = "Invalid Instructor ID";
                         errorMessage.Visible = true;
+                        successMessage.Visible = false;
                         return;
                     }
 

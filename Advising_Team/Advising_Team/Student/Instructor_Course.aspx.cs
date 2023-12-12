@@ -35,12 +35,14 @@ namespace Advising_Team.Student
                     {
                         errorMessage.Text = "Invalid Course ID";
                         errorMessage.Visible = true;
+                        successMessage.Visible = false;
                         return;
                     }
                     if (!int.TryParse(i_id.Text, out int id2In))
                     {
                         errorMessage.Text = "Invalid Instructor ID";
                         errorMessage.Visible = true;
+                        successMessage.Visible = false;
                         return;
                     }
                     int sId = (int)Session["user"];

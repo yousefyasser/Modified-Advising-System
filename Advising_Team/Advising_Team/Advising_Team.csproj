@@ -75,6 +75,8 @@
     <Content Include="Student\Course_Slots.aspx" />
     <Content Include="Student\Grad_Plan.aspx" />
     <Content Include="Student\Instructor_Course.aspx" />
+    <Content Include="Student\Makeup_Registration1.aspx" />
+    <Content Include="Student\Makeup_Registration2.aspx" />
     <Content Include="Student\Slot_Course.aspx" />
     <Content Include="Student\Student_Login.aspx" />
     <Content Include="Student\Student_Optional_Courses.aspx" />
@@ -139,6 +141,20 @@
     </Compile>
     <Compile Include="Student\Instructor_Course.aspx.designer.cs">
       <DependentUpon>Instructor_Course.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Student\Makeup_Registration1.aspx.cs">
+      <DependentUpon>Makeup_Registration1.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Student\Makeup_Registration1.aspx.designer.cs">
+      <DependentUpon>Makeup_Registration1.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Student\Makeup_Registration2.aspx.cs">
+      <DependentUpon>Makeup_Registration2.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Student\Makeup_Registration2.aspx.designer.cs">
+      <DependentUpon>Makeup_Registration2.aspx</DependentUpon>
     </Compile>
     <Compile Include="Student\Slot_Course.aspx.cs">
       <DependentUpon>Slot_Course.aspx</DependentUpon>

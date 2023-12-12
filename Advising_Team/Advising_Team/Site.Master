@@ -16,13 +16,13 @@
                 <a href="Courses_Exams.aspx">Exams</a>
             </li>
             <li>
-                <a href="Course_slots.aspx">All Slots</a>
+                <a href="Course_slots.aspx">Aslots</a>
             </li>
             <li>
                 <a href="Course_Prerequisites.aspx">Prerequisites</a>
             </li>
             <li>
-                <a href="Grad_Plan.aspx">Grad Plan</a>
+                <a href="Grad_Plan.aspx">Plan</a>
             </li>
             <li>
                 <a href="Slot_Course.aspx">Slots</a>
@@ -33,6 +33,9 @@
             <li>
                 <a href="Instructor_Course.aspx">Choose</a>
             </li>
+             <li>
+     <a href="Makeup_Registration1.aspx">Make1</a>
+ </li>
         </ul>
         <asp:ContentPlaceHolder ID="MainContent" runat="server">
         </asp:ContentPlaceHolder>
