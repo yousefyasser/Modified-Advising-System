@@ -50,14 +50,14 @@ namespace Advising_Team.Student
                             int courseId = reader.GetInt32(reader.GetOrdinal("CourseID"));
                             string courseName = reader.GetString(reader.GetOrdinal("Course"));
                             int code = reader.GetInt32(reader.GetOrdinal("instructor_id"));
-                            string prereq = reader.GetString(reader.GetOrdinal("Instructor"));
+                            string insName = reader.GetString(reader.GetOrdinal("Instructor"));
                             int sid = reader.GetInt32(reader.GetOrdinal("slot_id"));
                             string time = reader.GetString(reader.GetOrdinal("time"));
                             string location = reader.GetString(reader.GetOrdinal("location"));
                             string day = reader.GetString(reader.GetOrdinal("day"));
                             TableRow tr = new TableRow();
-                            TableCell p_id = new TableCell();
-                            TableCell p_name = new TableCell();
+                            TableCell i_id = new TableCell();
+                            TableCell i_name = new TableCell();
                             TableCell c_name = new TableCell();
                             TableCell c_id = new TableCell();
                             TableCell s_id = new TableCell();
@@ -66,8 +66,8 @@ namespace Advising_Team.Student
                             TableCell s_location = new TableCell();
                             c_id.Text = courseId.ToString();
                             c_name.Text = courseName;
-                            p_name.Text = prereq;
-                            p_id.Text = code.ToString();
+                            i_name.Text = insName;
+                            i_id.Text = code.ToString();
                             s_id.Text = sid.ToString();
                             s_day.Text = day;
                             s_time.Text = time;
@@ -78,8 +78,8 @@ namespace Advising_Team.Student
                             tr.Cells.Add(s_day);
                             tr.Cells.Add(s_time);
                             tr.Cells.Add(s_location);
-                            tr.Cells.Add(p_id);
-                            tr.Cells.Add(p_name);
+                            tr.Cells.Add(i_id);
+                            tr.Cells.Add(i_name);
                             slotCourse.Controls.Add(tr);
                         }
                     }
