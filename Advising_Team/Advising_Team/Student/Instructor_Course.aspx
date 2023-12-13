@@ -5,7 +5,7 @@
      Course ID
     <asp:TextBox ID="c_id" runat="server"></asp:TextBox>
     <br />
-     Instructor ID
+     Instructor ID 
     <asp:TextBox ID="i_id" runat="server"></asp:TextBox>
     <br />
     <asp:Button ID="choose" runat="server" Text="Choose" OnClick="chooseInstructor" />

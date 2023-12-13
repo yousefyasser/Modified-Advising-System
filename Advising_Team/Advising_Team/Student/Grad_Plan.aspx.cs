@@ -7,6 +7,7 @@ using System.Web;
 using System.Web.Configuration;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Xml.Linq;
 
 namespace Advising_Team.Student
 {
@@ -34,7 +35,7 @@ namespace Advising_Team.Student
 
                     SqlDataReader reader = gradPlanProc.ExecuteReader(CommandBehavior.CloseConnection);
 
-                    while (reader.Read())
+                    if (reader.Read())
                     {
                         int courseId = reader.GetInt32(reader.GetOrdinal("course_id"));
                         int credits= reader.GetInt32(reader.GetOrdinal("semester_credit_hours"));
@@ -44,6 +45,7 @@ namespace Advising_Team.Student
                         DateTime date = reader.GetDateTime(reader.GetOrdinal("expected_grad_date"));
                         int aId = reader.GetInt32(reader.GetOrdinal("advisor_id"));
                         TableRow tr = new TableRow();
+                        TableRow tr2 = new TableRow();
                         TableCell name = new TableCell();
                         TableCell credit = new TableCell();
                         TableCell semester = new TableCell();
@@ -63,9 +65,24 @@ namespace Advising_Team.Student
                         tr.Cells.Add(credit);
                         tr.Cells.Add(dates);
                         tr.Cells.Add(ad_id);
-                        tr.Cells.Add(c_id);
-                        tr.Cells.Add(c_name);
+                        tr2.Cells.Add(c_id);
+                        tr2.Cells.Add(c_name);
                         graduationPlan.Controls.Add(tr);
+                        gradCourses.Controls.Add(tr2);
+                    
+                    }
+                    while (reader.Read())
+                    {
+                        TableRow tr2 = new TableRow();
+                        TableCell c_name = new TableCell();
+                        TableCell c_id = new TableCell();
+                        int courseId = reader.GetInt32(reader.GetOrdinal("course_id"));
+                        string courseName = reader.GetString(reader.GetOrdinal("name"));
+                        c_id.Text = courseId.ToString();
+                        c_name.Text = courseName;
+                        tr2.Cells.Add(c_id);
+                        tr2.Cells.Add(c_name);
+                        gradCourses.Controls.Add(tr2);
                     }
                 }
             }

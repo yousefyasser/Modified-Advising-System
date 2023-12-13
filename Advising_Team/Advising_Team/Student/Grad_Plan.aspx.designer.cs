@@ -15,12 +15,21 @@ namespace Advising_Team.Student
     {
 
         /// <summary>
-        /// coursePrereq control.
+        /// graduationPlan control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Table graduationPlan;
+
+        /// <summary>
+        /// gradCourses control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Table gradCourses;
     }
 }

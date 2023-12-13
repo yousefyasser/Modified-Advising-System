@@ -10,9 +10,13 @@
             <asp:TableCell> Semester Credit Hours </asp:TableCell>
             <asp:TableCell> Expected Grad Date </asp:TableCell>
             <asp:TableCell> Advisor ID </asp:TableCell>
-            <asp:TableCell> Course ID </asp:TableCell>
-            <asp:TableCell> Course Name </asp:TableCell>
         </asp:TableHeaderRow>
     </asp:Table>
+     <asp:Table ID="gradCourses" CssClass="table" runat="server">
+     <asp:TableHeaderRow>
+         <asp:TableCell> Course ID </asp:TableCell>
+         <asp:TableCell> Course Name </asp:TableCell>
+     </asp:TableHeaderRow>
+ </asp:Table>
     <br />
 </asp:Content>

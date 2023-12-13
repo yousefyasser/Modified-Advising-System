@@ -2,6 +2,6 @@
 
 <asp:Content ContentPlaceHolderID="MainContent" runat="server">
 
-    <h2>GUC Advising System - Upcoming Installment</h2><br />
+    <h2>GUC Advising System - Upcoming Installment Deadline</h2><br />
     <asp:Label ID="Date" runat="server" Text="" Visible="false"></asp:Label>
 </asp:Content>

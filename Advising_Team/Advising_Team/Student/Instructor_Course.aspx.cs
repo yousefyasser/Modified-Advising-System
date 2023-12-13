@@ -73,7 +73,7 @@ namespace Advising_Team.Student
                     }
                     else
                     {
-                        errorMessage.Text = "This instructor doesn't teach the course. Please choose again.";
+                        errorMessage.Text = "This instructor doesn't teach the course. Make sure to check the course slots page to check which instructors teach the course.";
                         errorMessage.Visible = true;
                         successMessage.Visible = false;
                     }
