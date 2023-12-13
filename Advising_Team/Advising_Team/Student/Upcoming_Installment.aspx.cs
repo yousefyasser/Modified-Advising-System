@@ -37,9 +37,14 @@ namespace Advising_Team.Student
                     upcomProc.Parameters.Add(installdeadline);
 
                     upcomProc.ExecuteNonQuery();
-                    DateTime x = Convert.ToDateTime(installdeadline.Value); 
-                    Date.Text = x.ToString();
-                    Date.Visible = true;
+                    try {
+                        DateTime x = Convert.ToDateTime(installdeadline.Value); 
+                        Date.Text = x.ToString();
+                        Date.Visible = true;
+                    }catch(Exception ex)
+                    {
+                        
+                    }
 
                 }
             }

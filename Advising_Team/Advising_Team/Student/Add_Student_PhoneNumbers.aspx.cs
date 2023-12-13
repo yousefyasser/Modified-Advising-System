@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlClient;
-using System.Web;
 using System.Web.Configuration;
-using System.Web.UI;
-using System.Web.UI.WebControls;
 
 namespace Advising_Team.Student
 {
@@ -29,7 +26,15 @@ namespace Advising_Team.Student
             using (SqlConnection conn = new SqlConnection(connStr))
             {
                 conn.Open();
-                string phoneIn = phones.Text;
+                string phoneIn = phones.Value;
+
+                if (checkDuplicatePhones(phoneIn))
+                {
+                    errorMessage.Text = "Please enter another phone number";
+                    errorMessage.Visible = true;
+                    successMessage.Visible = false;
+                    return;
+                }
 
                 using (SqlCommand phoneProc = new SqlCommand("Procedures_StudentaddMobile", conn))
                 {
@@ -46,6 +51,26 @@ namespace Advising_Team.Student
                 successMessage.Text = "Successfully updated your profile with this phone number";
                 successMessage.Visible = true;
                 errorMessage.Visible = false;
+            }
+        }
+
+        protected bool checkDuplicatePhones(string phone)
+        {
+            int studentId = (int)Session["user"];
+
+            string connStr1 = WebConfigurationManager.ConnectionStrings["Advising_System"].ToString();
+
+            using (SqlConnection conn1 = new SqlConnection(connStr1))
+            {
+                conn1.Open();
+                
+                using (SqlCommand dupPhone = new SqlCommand("SELECT count(*) FROM Student_Phone WHERE student_id = @studentID AND phone_number = @phone", conn1))
+                {
+                    dupPhone.Parameters.Add(new SqlParameter("@studentID", studentId));
+                    dupPhone.Parameters.Add(new SqlParameter("@phone", phone));
+                    int return_count = (int)dupPhone.ExecuteScalar();
+                    return return_count != 0;
+                }
             }
         }
     }

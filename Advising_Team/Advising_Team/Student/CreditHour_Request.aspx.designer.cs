@@ -11,26 +11,35 @@ namespace Advising_Team.Student
 {
 
 
-    public partial class Add_Student_PhoneNumbers
+    public partial class CreditHour_Request
     {
 
         /// <summary>
-        /// phones control.
+        /// creditHours control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputText phones;
+        protected global::System.Web.UI.HtmlControls.HtmlInputText creditHours;
 
         /// <summary>
-        /// add control.
+        /// comment control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button add;
+        protected global::System.Web.UI.HtmlControls.HtmlInputText comment;
+
+        /// <summary>
+        /// submit control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button submit;
 
         /// <summary>
         /// successMessage control.

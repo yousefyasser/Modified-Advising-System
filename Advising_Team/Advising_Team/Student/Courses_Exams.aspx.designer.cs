@@ -15,7 +15,7 @@ namespace Advising_Team.Student
     {
 
         /// <summary>
-        /// coursePrereq control.
+        /// courseExam control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.

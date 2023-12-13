@@ -30,16 +30,16 @@ namespace Advising_Team
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox id;
+        protected global::System.Web.UI.HtmlControls.HtmlInputText id;
 
         /// <summary>
-        /// password control.
+        /// pass control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox password;
+        protected global::System.Web.UI.HtmlControls.HtmlInputPassword pass;
 
         /// <summary>
         /// login control.

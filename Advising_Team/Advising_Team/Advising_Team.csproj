@@ -67,19 +67,30 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Css\bootstrap\bootstrap.min.css" />
+    <Content Include="js\bootstrap.bundle.js" />
+    <Content Include="js\bootstrap.bundle.min.js" />
+    <Content Include="js\bootstrap.esm.js" />
+    <Content Include="js\bootstrap.esm.min.js" />
+    <Content Include="js\bootstrap.js" />
+    <Content Include="js\bootstrap.min.js" />
     <Content Include="Student\Courses_Exams.aspx" />
     <Content Include="Css\mainStyle.css" />
     <Content Include="Student\Add_Student_PhoneNumbers.aspx" />
     <Content Include="Student\Available_Courses.aspx" />
     <Content Include="Student\Course_Prerequisites.aspx" />
+    <Content Include="Student\Course_Request.aspx" />
     <Content Include="Student\Course_Slots.aspx" />
+    <Content Include="Student\CreditHour_Request.aspx" />
     <Content Include="Student\Grad_Plan.aspx" />
     <Content Include="Student\Instructor_Course.aspx" />
     <Content Include="Student\Makeup_Registration1.aspx" />
     <Content Include="Student\Makeup_Registration2.aspx" />
+    <Content Include="Student\Missing_Courses.aspx" />
+    <Content Include="Student\Optional_Courses.aspx" />
+    <Content Include="Student\Required_Courses.aspx" />
     <Content Include="Student\Slot_Course.aspx" />
     <Content Include="Student\Student_Login.aspx" />
-    <Content Include="Student\Student_Optional_Courses.aspx" />
     <Content Include="Student\Student_Registration.aspx" />
     <Content Include="Student\Upcoming_Installment.aspx" />
     <Content Include="Web.config" />
@@ -121,12 +132,26 @@
     <Compile Include="Student\Course_Prerequisites.aspx.designer.cs">
       <DependentUpon>Course_Prerequisites.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Student\Course_Request.aspx.cs">
+      <DependentUpon>Course_Request.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Student\Course_Request.aspx.designer.cs">
+      <DependentUpon>Course_Request.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Student\Course_Slots.aspx.cs">
       <DependentUpon>Course_Slots.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Student\Course_Slots.aspx.designer.cs">
       <DependentUpon>Course_Slots.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Student\CreditHour_Request.aspx.cs">
+      <DependentUpon>CreditHour_Request.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Student\CreditHour_Request.aspx.designer.cs">
+      <DependentUpon>CreditHour_Request.aspx</DependentUpon>
     </Compile>
     <Compile Include="Student\Grad_Plan.aspx.cs">
       <DependentUpon>Grad_Plan.aspx</DependentUpon>
@@ -156,6 +181,27 @@
     <Compile Include="Student\Makeup_Registration2.aspx.designer.cs">
       <DependentUpon>Makeup_Registration2.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Student\Missing_Courses.aspx.cs">
+      <DependentUpon>Missing_Courses.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Student\Missing_Courses.aspx.designer.cs">
+      <DependentUpon>Missing_Courses.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Student\Optional_Courses.aspx.cs">
+      <DependentUpon>Optional_Courses.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Student\Optional_Courses.aspx.designer.cs">
+      <DependentUpon>Optional_Courses.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Student\Required_Courses.aspx.cs">
+      <DependentUpon>Required_Courses.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Student\Required_Courses.aspx.designer.cs">
+      <DependentUpon>Required_Courses.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Student\Slot_Course.aspx.cs">
       <DependentUpon>Slot_Course.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -169,13 +215,6 @@
     </Compile>
     <Compile Include="Student\Student_Login.aspx.designer.cs">
       <DependentUpon>Student_Login.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Student\Student_Optional_Courses.aspx.cs">
-      <DependentUpon>Student_Optional_Courses.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Student\Student_Optional_Courses.aspx.designer.cs">
-      <DependentUpon>Student_Optional_Courses.aspx</DependentUpon>
     </Compile>
     <Compile Include="Student\Student_Registration.aspx.cs">
       <DependentUpon>Student_Registration.aspx</DependentUpon>
@@ -193,6 +232,12 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="js\bootstrap.bundle.js.map" />
+    <Content Include="js\bootstrap.bundle.min.js.map" />
+    <Content Include="js\bootstrap.esm.js.map" />
+    <Content Include="js\bootstrap.esm.min.js.map" />
+    <Content Include="js\bootstrap.js.map" />
+    <Content Include="js\bootstrap.min.js.map" />
     <None Include="packages.config" />
     <Content Include="Site.Master" />
     <None Include="Web.Debug.config">

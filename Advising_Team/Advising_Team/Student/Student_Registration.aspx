@@ -5,45 +5,45 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <title>GUC Advising System - Student Registration</title>
-    <link rel="stylesheet" type="text/css" href="../Css/mainStyle.css" />
+    <link href="/Css/mainStyle.css" rel="stylesheet"/>
+    <link href="/Css/bootstrap/bootstrap.min.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
     <form id="form2" runat="server">
         <div>
-            <h2>GUC Advising System - Student Registration</h2>
+            <h3>GUC Advising System - Student Registration</h3>
 
-            First Name
-            <asp:TextBox ID="f_name" runat="server"></asp:TextBox>
+            <input id="f_name" runat="server" placeholder="First Name" required/>
             <br />
 
-            Last Name <asp:TextBox ID="l_name" runat="server"></asp:TextBox>
+            <input id="l_name" runat="server" placeholder="Last Name" required/>
             <br />
 
-            Password <asp:TextBox ID="password" runat="server"></asp:TextBox>
+            <input id="password" type="password" runat="server" placeholder="Password" required/>
             <br />
 
-            Faculty <asp:TextBox ID="faculty" runat="server"></asp:TextBox>
+            <input id="faculty" runat="server" placeholder="Faculty" required/>
             <br />
 
-            Email <asp:TextBox ID="email" runat="server"></asp:TextBox>
+            <input id="email" runat="server" placeholder="Email" required/>
             <br />
 
-            Major <asp:TextBox ID="major" runat="server"></asp:TextBox>
+            <input id="major" runat="server" placeholder="Major" required/>
             <br />
 
-            Semester <asp:TextBox ID="semester" runat="server"></asp:TextBox>
+            <input id="semester" runat="server" placeholder="Semester" required/>
 
             <br />
             <br />
-            <asp:Button ID="Registration" runat="server" Text="Register" OnClick="register" />
+            <asp:Button ID="Registration" runat="server" Text="Register" class="btn btn-outline-primary" OnClick="register" />
             <br />
             <br />
             Already have an account?
-            <asp:HyperLink ID="login" href="Student_Login.aspx" runat="server">login</asp:HyperLink>
+            <asp:HyperLink ID="login" CssClass="nav-link" style="color:royalblue" href="Student_Login.aspx" runat="server">login</asp:HyperLink>
             <br />
             <br />
-            <asp:Label ID="successMessage" runat="server" Visible="false"></asp:Label>
-            <asp:Label ID="errorMessage" runat="server" Visible="false"></asp:Label>
+            <asp:Label ID="successMessage" CssClass="alert-success" style="padding: 10px; border-radius:5px;" runat="server" Visible="false"></asp:Label>
+            <asp:Label ID="errorMessage" CssClass="alert-danger" style="padding: 10px; border-radius: 5px;" runat="server" Visible="false"></asp:Label>
         </div>
     </form>
 </body>

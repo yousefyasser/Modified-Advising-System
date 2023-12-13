@@ -30,7 +30,7 @@ namespace Advising_Team
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox f_name;
+        protected global::System.Web.UI.HtmlControls.HtmlInputText f_name;
 
         /// <summary>
         /// l_name control.
@@ -39,7 +39,7 @@ namespace Advising_Team
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox l_name;
+        protected global::System.Web.UI.HtmlControls.HtmlInputText l_name;
 
         /// <summary>
         /// password control.
@@ -48,7 +48,7 @@ namespace Advising_Team
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox password;
+        protected global::System.Web.UI.HtmlControls.HtmlInputPassword password;
 
         /// <summary>
         /// faculty control.
@@ -57,7 +57,7 @@ namespace Advising_Team
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox faculty;
+        protected global::System.Web.UI.HtmlControls.HtmlInputText faculty;
 
         /// <summary>
         /// email control.
@@ -66,7 +66,7 @@ namespace Advising_Team
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox email;
+        protected global::System.Web.UI.HtmlControls.HtmlInputText email;
 
         /// <summary>
         /// major control.
@@ -75,7 +75,7 @@ namespace Advising_Team
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox major;
+        protected global::System.Web.UI.HtmlControls.HtmlInputText major;
 
         /// <summary>
         /// semester control.
@@ -84,7 +84,7 @@ namespace Advising_Team
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox semester;
+        protected global::System.Web.UI.HtmlControls.HtmlInputText semester;
 
         /// <summary>
         /// Registration control.

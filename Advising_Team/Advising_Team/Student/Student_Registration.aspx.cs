@@ -1,14 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Data;
-using System.Linq;
-using System.Web;
 using System.Web.Configuration;
 using System.Web.UI;
-using System.Web.UI.WebControls;
-using System.Xml.Linq;
-using System.Threading.Tasks;
 
 namespace Advising_Team
 {
@@ -29,13 +23,21 @@ namespace Advising_Team
                 {
                     conn.Open();
 
-                    string f_nameIn = f_name.Text;
-                    string l_nameIn = l_name.Text;
-                    string passwordIn = password.Text;
-                    string facultyIn = faculty.Text;
-                    string emailIn = email.Text;
-                    string majorIn = major.Text;
-                    int semesterIn = Int16.Parse(semester.Text);
+                    string f_nameIn = f_name.Value;
+                    string l_nameIn = l_name.Value;
+                    string passwordIn = password.Value;
+                    string facultyIn = faculty.Value;
+                    string emailIn = email.Value;
+                    string majorIn = major.Value;
+
+
+                    if (!int.TryParse(semester.Value, out int semesterIn))
+                    {
+                        errorMessage.Text = "Invalid Semester";
+                        errorMessage.Visible = true;
+                        successMessage.Visible = false;
+                        return;
+                    }
 
                     using (SqlCommand registerProc = new SqlCommand("Procedures_StudentRegistration", conn))
                     {

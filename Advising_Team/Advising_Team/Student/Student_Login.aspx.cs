@@ -1,14 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Web;
 using System.Web.Configuration;
 using System.Web.UI;
-using System.Web.UI.WebControls;
-using System.Xml.Linq;
 
 namespace Advising_Team
 {
@@ -28,15 +22,33 @@ namespace Advising_Team
                 try
                 {
                     conn.Open();
+                    string passwordIn = pass.Value;
 
-                    if (!int.TryParse(id.Text, out int idIn))
+                    if (!int.TryParse(id.Value, out int idIn))
                     {
                         errorMessage.Text = "Invalid Student ID";
                         errorMessage.Visible = true;
+                        successMessage.Visible = false;
                         return;
                     }
 
-                    string passwordIn = password.Text;
+                    if(idIn == -1 && passwordIn == "admin")
+                    {
+                        Session["admin"] = true;
+
+                        successMessage.Text = "Welcome Boss";
+                        successMessage.Visible = true;
+                        errorMessage.Visible = false;
+
+                        // Wait for 1 second before redirecting
+                        string script = "setTimeout(function() { window.location.href = 'Advisors.aspx'; }, 1000);";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "redirectScript", script, true);
+                        return;
+                    }
+                    else
+                    {
+                        Session["admin"] = false;
+                    }
 
                     using (SqlCommand loginFn = new SqlCommand("dbo.FN_StudentLogin", conn))
                     {

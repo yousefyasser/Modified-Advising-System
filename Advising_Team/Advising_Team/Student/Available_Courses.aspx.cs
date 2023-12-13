@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Web;
 using System.Web.Configuration;
-using System.Web.UI;
 using System.Web.UI.WebControls;
-using static Advising_Team.Student.Student_Optional_Courses;
+using static Advising_Team.Student.Optional_Courses;
 
 namespace Advising_Team.Student
 {
