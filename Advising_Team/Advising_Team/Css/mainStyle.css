@@ -44,13 +44,13 @@ input[type="text"], input[type="password"] {
     margin-top: 10px;
 }
 
-.table {
+#table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 1px;
 }
 
-.table th {
+#table th {
     background-color: #4CAF50;
     color: green;
     font-weight: bold;
@@ -58,12 +58,12 @@ input[type="text"], input[type="password"] {
     border: 15px solid #ddd;
 }
 
-.table td {
+#table td {
     padding: 15px;
     border: 1px solid #ddd;
 }
 
-.table tr:nth-child(even) {
+#table tr:nth-child(even) {
     background-color: #f2f2f2;
 }
 
@@ -102,3 +102,24 @@ input[type="text"], input[type="password"] {
     height: 20px;
     cursor: pointer;
 }
+
+.img {
+    display: inline-block;
+    padding: 10px 20px;
+    color: #fff; /* White text */
+    text-decoration: none;
+    background-size: cover;
+    background-position: center;
+    transition: transform 0.3s, background-color 0.3s;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+    /* Hover effect */
+    .img:hover {
+        transform: scale(1.1); /* Increase in size on hover */
+        cursor: pointer;
+    }
+
+

@@ -18,6 +18,12 @@ namespace Advising_Team
 
         }
 
+        protected void advisorImage_Click(object sender, ImageClickEventArgs e)
+        {
+            // Redirect to another page
+            Response.Redirect("~/Student/Student_Login.aspx");
+        }
+
         protected void register(object sender, EventArgs e)
         {
             string connStr = WebConfigurationManager.ConnectionStrings["Advising_System"].ToString();

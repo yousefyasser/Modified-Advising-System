@@ -3,6 +3,8 @@ using System.Data.SqlClient;
 using System.Data;
 using System.Web.Configuration;
 using System.Web.UI;
+using static Advising_Team.Advisor.Pick_Major;
+using Advising_Team.Advisor;
 
 namespace Advising_Team
 {
@@ -30,6 +32,11 @@ namespace Advising_Team
                     string emailIn = email.Value;
                     string majorIn = major.Value;
 
+                    if (f_nameIn.Length == 0 || l_nameIn.Length == 0 || passwordIn.Length == 0 || facultyIn.Length == 0 || emailIn.Length == 0 || majorIn.Length == 0)
+                    {
+                        Pick_Major.ShowErrorMessage("Please fill in all the fields", errorMessage, successMessage);
+                        return;
+                    }
 
                     if (!int.TryParse(semester.Value, out int semesterIn))
                     {

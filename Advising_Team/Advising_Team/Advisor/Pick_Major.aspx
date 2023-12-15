@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <title>Pick Major</title>
-    <link href="/Css/mainStyle.css" rel="stylesheet" />
+    <link href= "~/Css/mainStyle.css" rel="stylesheet" />
 </head>
 <body>
     <form id="form1" runat="server">
@@ -16,11 +16,11 @@
             <br />
 
             <asp:Button ID="btnSubmit" runat="server" Text="Submit" CssClass="option-btn" OnClick="btnSubmit_Click" />
-                <asp:HyperLink ID="back8" href="View_Options.aspx" runat="server">Go Back</asp:HyperLink>
+                <asp:HyperLink ID="back8" href="Views/View_Options.aspx" runat="server">Go Back</asp:HyperLink>
                 <br />
 
-            <asp:Label ID="successMessage" runat="server" Visible="false"></asp:Label>
-            <asp:Label ID="errorMessage" runat="server" Visible="false"></asp:Label>
+            <asp:Label ID="successMessage" CssClass="alert-success" style="padding:10px; border-radius:5px;" runat="server" Visible="false"></asp:Label>
+            <asp:Label ID="errorMessage" CssClass="alert-danger" style="padding:10px; border-radius:5px;" runat="server" Visible="false"></asp:Label>
         </div>
     </form>
 </body>

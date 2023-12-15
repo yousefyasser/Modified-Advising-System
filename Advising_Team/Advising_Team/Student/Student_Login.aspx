@@ -30,6 +30,7 @@
             <asp:HyperLink ID="register" CssClass="nav-link" style="color:royalblue" href="Student_Registration.aspx" runat="server">Register</asp:HyperLink>
             <br />
             <br />
+
             <asp:Label ID="successMessage" CssClass="alert-success" style="padding: 10px; border-radius:5px;" runat="server" Visible="false"></asp:Label>
             <asp:Label ID="errorMessage" CssClass="alert-danger" style="padding: 10px; border-radius: 5px;" runat="server" Visible="false"></asp:Label>
         </div>

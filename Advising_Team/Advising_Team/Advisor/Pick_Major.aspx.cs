@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Web.UI.WebControls;
 
 namespace Advising_Team.Advisor
 {
@@ -9,7 +10,7 @@ namespace Advising_Team.Advisor
             // redirect if the session is closed
             if (Session["user"] == null)
             {
-                Response.Redirect("Advisor_Login.aspx");
+                Response.Redirect("../Advisor_Login.aspx");
                 return;
             }
         }
@@ -19,7 +20,7 @@ namespace Advising_Team.Advisor
             // Validate that the major is entered
             if (string.IsNullOrWhiteSpace(mAjor.Text))
             {
-                ShowErrorMessage("Major field is required.");
+                ShowErrorMessage("Major field is required.", errorMessage, successMessage);
                 return;
             }
 
@@ -27,10 +28,10 @@ namespace Advising_Team.Advisor
             Session["major"] = mAjor.Text;
 
             // Redirect to view assigned students related to major
-            Response.Redirect("View_Students_Major.aspx"); 
+            Response.Redirect("Views/View_Students_Major.aspx"); 
         }
 
-        private void ShowErrorMessage(string message)
+        public static void ShowErrorMessage(string message, Label errorMessage,Label successMessage)
         {
             errorMessage.Text = message;
             errorMessage.Visible = true;

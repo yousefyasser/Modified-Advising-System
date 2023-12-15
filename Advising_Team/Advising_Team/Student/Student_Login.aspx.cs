@@ -73,7 +73,7 @@ namespace Advising_Team
                             errorMessage.Visible = false;
 
                             // Wait for 1 second before redirecting to home page
-                            string script = "setTimeout(function() { window.location.href = 'Available_Courses.aspx'; }, 1000);";
+                            string script = "setTimeout(function() { window.location.href = 'Courses/Available_Courses.aspx'; }, 1000);";
                             ScriptManager.RegisterStartupScript(this, GetType(), "redirectScript", script, true);
                         }
                         else

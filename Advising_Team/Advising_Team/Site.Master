@@ -21,27 +21,44 @@
                 <button type="button" class="btn btn-info dropdown-toggle" data-bs-toggle="dropdown">
                 Courses
                 </button>
-                <div class="dropdown-menu">
-                    <a class="dropdown-item" href="Available_Courses.aspx">Available Courses</a>
-                    <a class="dropdown-item" href="Required_Courses.aspx">Required Courses</a>
-                    <a class="dropdown-item" href="Optional_Courses.aspx">Optional Courses</a>
-                    <a class="dropdown-item" href="Missing_Courses.aspx">Missing Courses</a>
-                    <a class="dropdown-item" href="Course_Prerequisites.aspx">Prerequisites</a>
-                    <a class="dropdown-item" href="Course_Slots.aspx">Course Slot</a>
-                    <a class="dropdown-item" href="Courses_Exams.aspx">Exams</a>
-                    <a class="dropdown-item" href="Instructor_Course.aspx">Course Instructors</a>
-                    <a class="dropdown-item" href="Slot_Course.aspx">Slot Course</a>
+                <div class="dropdown-menu" style="margin-left:50px;">
+                    <a class="dropdown-item" href="/Student/Courses/Available_Courses.aspx">Available Courses</a>
+                    <a class="dropdown-item" href="/Student/Courses/Required_Courses.aspx">Required Courses</a>
+                    <a class="dropdown-item" href="/Student/Courses/Optional_Courses.aspx">Optional Courses</a>
+                    <a class="dropdown-item" href="/Student/Courses/Missing_Courses.aspx">Missing Courses</a>
+                    <a class="dropdown-item" href="/Student/Courses/Course_Prerequisites.aspx">Prerequisites</a>
+                    <a class="dropdown-item" href="/Student/Courses/Course_Slots.aspx">Course Slot</a>
+                    <a class="dropdown-item" href="/Student/Exams/Courses_Exams.aspx">Exams</a>
+                    <a class="dropdown-item" href="/Student/Courses/Instructor_Course.aspx">Course Instructors</a>
+                    <a class="dropdown-item" href="/Student/Courses/Slot_Course.aspx">Slot Course</a>
                 </div>
         </div>
 
-        <a class="nav-link text-light" href="Course_Request.aspx">Send Course Request</a>
-        <a class="nav-link text-light" href="CreditHour_Request.aspx">Send Credit Hour Request</a>
-        <a class="nav-link text-light" href="Add_Student_PhoneNumbers.aspx">Add Phone Number</a>
+        <div class="nav-item">
+            <button type="button" class="btn btn-info dropdown-toggle" data-bs-toggle="dropdown">
+            Makeup Registration
+            </button>
+            <div class="dropdown-menu" style="margin-left:250px;">
+                <a class="dropdown-item" href="/Student/Exams/Makeup_Registration1.aspx">First Makeup Registration</a>
+                <a class="dropdown-item" href="/Student/Exams/Makeup_Registration2.aspx">Second Makeup Registration</a>
+            </div>
+        </div>
 
-        <a class="nav-link text-light" href="Grad_Plan.aspx">Graduation Plan</a>
-        <a class="nav-link text-light" href="Makeup_Registration1.aspx">First Makeup Registration</a>
-        <a class="nav-link text-light" href="Makeup_Registration2.aspx">Second Makeup Registration</a>
-        <a class="nav-link text-light" href="Upcoming_Installment.aspx">Upcoming Installment</a>
+        <div class="nav-item">
+            <button type="button" class="btn btn-info dropdown-toggle" data-bs-toggle="dropdown">
+            Requests
+            </button>
+            <div class="dropdown-menu" style="margin-left:500px;">
+                <a class="dropdown-item" href="/Student/Courses/Course_Request.aspx">Send Course Request</a>
+                <a class="dropdown-item" href="/Student/CreditHour_Request.aspx">Send Credit Hour Request</a>
+            </div>
+        </div>
+
+        
+        <a class="nav-link text-light" href="/Student/Add_Student_PhoneNumbers.aspx">Add Phone Number</a>
+        <a class="nav-link text-light" href="/Student/Grad_Plan.aspx">Graduation Plan</a>
+        <a class="nav-link text-light" href="/Student/Upcoming_Installment.aspx">Upcoming Installment</a>
+        <a class="nav-link text-light" href="/Student/Student_Login.aspx">Sign Out</a>
             
     </nav>
 
