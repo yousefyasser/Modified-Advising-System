@@ -49,7 +49,7 @@ namespace Advising_Team.Advisor
                             return;
                         }
 
-                        if (idIn == -1 && passwordIn == "admin")
+                        if (idIn == 666 && passwordIn == "admin")
                         {
                             Session["admin"] = true;
 
@@ -58,7 +58,7 @@ namespace Advising_Team.Advisor
                             errorMessage.Visible = false;
 
                             // Wait for 1 second before redirecting
-                            string script = "setTimeout(function() { window.location.href = 'Advisors.aspx'; }, 1000);";
+                            string script = "setTimeout(function() { window.location.href = '../Admin2/AdminNav.aspx'; }, 1000);";
                             ScriptManager.RegisterStartupScript(this, GetType(), "redirectScript", script, true);
                             return;
                         }

@@ -7,7 +7,7 @@
     <ProductVersion>
     </ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{A01D9741-C459-4A51-AC3B-645047521D72}</ProjectGuid>
+    <ProjectGuid>{65243F04-BFF8-4110-80F1-F035E68177F2}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -67,6 +67,17 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Admin2\AdminAddExam.aspx" />
+    <Content Include="Admin2\AdminDeleteCourse.aspx" />
+    <Content Include="Admin2\AdminDeleteSlots.aspx" />
+    <Content Include="Admin2\AdminIssueInstallments.aspx" />
+    <Content Include="Admin2\AdminNav.aspx" />
+    <Content Include="Admin2\AdminUpdateStatus.aspx" />
+    <Content Include="Admin2\AdminViewActiveStudents.aspx" />
+    <Content Include="Admin2\AdminViewGradPlans.aspx" />
+    <Content Include="Admin2\AdminViewPayments.aspx" />
+    <Content Include="Admin2\AdminViewSemesters.aspx" />
+    <Content Include="Admin2\AdminViewTranscripts.aspx" />
     <Content Include="Advisor\Advisor_Login.aspx" />
     <Content Include="Advisor\Advisor_Registration.aspx" />
     <Content Include="Advisor\All_Options.aspx" />
@@ -116,6 +127,83 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Admin2\AdminAddExam.aspx.cs">
+      <DependentUpon>AdminAddExam.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin2\AdminAddExam.aspx.designer.cs">
+      <DependentUpon>AdminAddExam.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin2\AdminDeleteCourse.aspx.cs">
+      <DependentUpon>AdminDeleteCourse.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin2\AdminDeleteCourse.aspx.designer.cs">
+      <DependentUpon>AdminDeleteCourse.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin2\AdminDeleteSlots.aspx.cs">
+      <DependentUpon>AdminDeleteSlots.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin2\AdminDeleteSlots.aspx.designer.cs">
+      <DependentUpon>AdminDeleteSlots.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin2\AdminIssueInstallments.aspx.cs">
+      <DependentUpon>AdminIssueInstallments.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin2\AdminIssueInstallments.aspx.designer.cs">
+      <DependentUpon>AdminIssueInstallments.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin2\AdminNav.aspx.cs">
+      <DependentUpon>AdminNav.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin2\AdminNav.aspx.designer.cs">
+      <DependentUpon>AdminNav.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin2\AdminUpdateStatus.aspx.cs">
+      <DependentUpon>AdminUpdateStatus.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin2\AdminUpdateStatus.aspx.designer.cs">
+      <DependentUpon>AdminUpdateStatus.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin2\AdminViewActiveStudents.aspx.cs">
+      <DependentUpon>AdminViewActiveStudents.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin2\AdminViewActiveStudents.aspx.designer.cs">
+      <DependentUpon>AdminViewActiveStudents.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin2\AdminViewGradPlans.aspx.cs">
+      <DependentUpon>AdminViewGradPlans.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin2\AdminViewGradPlans.aspx.designer.cs">
+      <DependentUpon>AdminViewGradPlans.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin2\AdminViewPayments.aspx.cs">
+      <DependentUpon>AdminViewPayments.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin2\AdminViewPayments.aspx.designer.cs">
+      <DependentUpon>AdminViewPayments.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin2\AdminViewSemesters.aspx.cs">
+      <DependentUpon>AdminViewSemesters.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin2\AdminViewSemesters.aspx.designer.cs">
+      <DependentUpon>AdminViewSemesters.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin2\AdminViewTranscripts.aspx.cs">
+      <DependentUpon>AdminViewTranscripts.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin2\AdminViewTranscripts.aspx.designer.cs">
+      <DependentUpon>AdminViewTranscripts.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Advisor\Advisor_Login.aspx.cs">
       <DependentUpon>Advisor_Login.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -371,13 +459,13 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Advisor\Views\Site1.Master" />
     <Content Include="js\bootstrap.bundle.js.map" />
     <Content Include="js\bootstrap.bundle.min.js.map" />
     <Content Include="js\bootstrap.esm.js.map" />
     <Content Include="js\bootstrap.esm.min.js.map" />
     <Content Include="js\bootstrap.js.map" />
     <Content Include="js\bootstrap.min.js.map" />
-    <Content Include="Advisor\Views\Site1.Master" />
     <None Include="packages.config" />
     <Content Include="Site.Master" />
     <None Include="Web.Debug.config">
@@ -400,9 +488,9 @@
         <WebProjectProperties>
           <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>64752</DevelopmentServerPort>
+          <DevelopmentServerPort>56488</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:64752/</IISUrl>
+          <IISUrl>http://localhost:56488/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
