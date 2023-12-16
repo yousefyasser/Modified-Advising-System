@@ -7,7 +7,7 @@
     <ProductVersion>
     </ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{65243F04-BFF8-4110-80F1-F035E68177F2}</ProjectGuid>
+    <ProjectGuid>{D37282EA-B2BB-4997-9ED0-2F8C9C9BCE84}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -67,6 +67,17 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Admin1\add_course.aspx" />
+    <Content Include="Admin1\add_semester.aspx" />
+    <Content Include="Admin1\admin_page.aspx" />
+    <Content Include="Admin1\Link_instructor_to_course_in_certain_slot.aspx" />
+    <Content Include="Admin1\Link_student_to_advisor.aspx" />
+    <Content Include="Admin1\Link_student_to_course_with_certain_instructor.aspx" />
+    <Content Include="Admin1\View_all_advisors.aspx" />
+    <Content Include="Admin1\view_all_details_of_instructors_with_courses.aspx" />
+    <Content Include="Admin1\view_all_pending_requests.aspx" />
+    <Content Include="Admin1\view_all_students_with_advisors.aspx" />
+    <Content Include="Admin1\view_semester_along_with_their_courses.aspx" />
     <Content Include="Admin2\AdminAddExam.aspx" />
     <Content Include="Admin2\AdminDeleteCourse.aspx" />
     <Content Include="Admin2\AdminDeleteSlots.aspx" />
@@ -94,6 +105,8 @@
     <Content Include="Advisor\Views\View_Pending_Requests.aspx" />
     <Content Include="Advisor\Views\View_Students.aspx" />
     <Content Include="Advisor\Views\View_Students_Major.aspx" />
+    <Content Include="bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll" />
+    <Content Include="bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml" />
     <Content Include="Css\bootstrap\bootstrap.min.css" />
     <Content Include="Css\mainStyle.css" />
     <Content Include="Images\advisor-blackandwhite.jpeg" />
@@ -127,6 +140,83 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Admin1\add_course.aspx.cs">
+      <DependentUpon>add_course.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin1\add_course.aspx.designer.cs">
+      <DependentUpon>add_course.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin1\add_semester.aspx.cs">
+      <DependentUpon>add_semester.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin1\add_semester.aspx.designer.cs">
+      <DependentUpon>add_semester.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin1\admin_page.aspx.cs">
+      <DependentUpon>admin_page.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin1\admin_page.aspx.designer.cs">
+      <DependentUpon>admin_page.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin1\Link_instructor_to_course_in_certain_slot.aspx.cs">
+      <DependentUpon>Link_instructor_to_course_in_certain_slot.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin1\Link_instructor_to_course_in_certain_slot.aspx.designer.cs">
+      <DependentUpon>Link_instructor_to_course_in_certain_slot.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin1\Link_student_to_advisor.aspx.cs">
+      <DependentUpon>Link_student_to_advisor.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin1\Link_student_to_advisor.aspx.designer.cs">
+      <DependentUpon>Link_student_to_advisor.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin1\Link_student_to_course_with_certain_instructor.aspx.cs">
+      <DependentUpon>Link_student_to_course_with_certain_instructor.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin1\Link_student_to_course_with_certain_instructor.aspx.designer.cs">
+      <DependentUpon>Link_student_to_course_with_certain_instructor.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin1\View_all_advisors.aspx.cs">
+      <DependentUpon>View_all_advisors.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin1\View_all_advisors.aspx.designer.cs">
+      <DependentUpon>View_all_advisors.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin1\view_all_details_of_instructors_with_courses.aspx.cs">
+      <DependentUpon>view_all_details_of_instructors_with_courses.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin1\view_all_details_of_instructors_with_courses.aspx.designer.cs">
+      <DependentUpon>view_all_details_of_instructors_with_courses.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin1\view_all_pending_requests.aspx.cs">
+      <DependentUpon>view_all_pending_requests.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin1\view_all_pending_requests.aspx.designer.cs">
+      <DependentUpon>view_all_pending_requests.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin1\view_all_students_with_advisors.aspx.cs">
+      <DependentUpon>view_all_students_with_advisors.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin1\view_all_students_with_advisors.aspx.designer.cs">
+      <DependentUpon>view_all_students_with_advisors.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin1\view_semester_along_with_their_courses.aspx.cs">
+      <DependentUpon>view_semester_along_with_their_courses.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin1\view_semester_along_with_their_courses.aspx.designer.cs">
+      <DependentUpon>view_semester_along_with_their_courses.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Admin2\AdminAddExam.aspx.cs">
       <DependentUpon>AdminAddExam.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -323,6 +413,7 @@
     <Compile Include="Advisor\Views\View_Students_Major.aspx.designer.cs">
       <DependentUpon>View_Students_Major.aspx</DependentUpon>
     </Compile>
+    <Compile Include="obj\Debug\.NETFramework,Version=v4.8.AssemblyAttributes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Site.Master.cs">
       <DependentUpon>Site.Master</DependentUpon>
@@ -466,6 +557,8 @@
     <Content Include="js\bootstrap.esm.min.js.map" />
     <Content Include="js\bootstrap.js.map" />
     <Content Include="js\bootstrap.min.js.map" />
+    <Content Include="obj\Debug\Advising_Team.csproj.AssemblyReference.cache" />
+    <Content Include="obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
     <None Include="packages.config" />
     <Content Include="Site.Master" />
     <None Include="Web.Debug.config">
@@ -474,6 +567,9 @@
     <None Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="obj\Debug\TempPE\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -488,9 +584,9 @@
         <WebProjectProperties>
           <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>56488</DevelopmentServerPort>
+          <DevelopmentServerPort>62317</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:56488/</IISUrl>
+          <IISUrl>http://localhost:62317/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

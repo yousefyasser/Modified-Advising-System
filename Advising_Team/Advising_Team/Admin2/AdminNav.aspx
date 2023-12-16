@@ -19,6 +19,8 @@
             <asp:Button ID="Button8" runat="server" Text="View Graduation Plans" OnClick="ViewGradPlans"/>
             <asp:Button ID="Button9" runat="server" Text="ViewTranscripts" OnClick="ViewTranscripts"/>
             <asp:Button ID="Button10" runat="server" Text="View Semesters" OnClick="ViewSemesters"/>
+            <asp:Button ID="Button11" runat="server" Text="Other Admin Functions" OnClick="Admin1"/>
+
         </div>
     </form>
 </body>

@@ -57,5 +57,9 @@ namespace Advising_Team.Admin2
         {
             Response.Redirect("AdminViewSemesters.aspx");
         }
+        protected void Admin1(object sender, EventArgs e)
+        {
+            Response.Redirect("../Admin1/admin_page.aspx");
+        }
     }
 }
