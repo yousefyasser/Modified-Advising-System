@@ -23,43 +23,39 @@ namespace Advising_Team.Admin1
         {
             try
             {
-                if (String.IsNullOrEmpty(t1.Text) || String.IsNullOrEmpty(t2.Text)
-                   || String.IsNullOrEmpty(t3.Text) || String.IsNullOrEmpty(t4.Text)
-                   || String.IsNullOrEmpty(t5.Text))
+                if (String.IsNullOrEmpty(t1.Value) || String.IsNullOrEmpty(t2.Value)
+                   || String.IsNullOrEmpty(t3.Value) || String.IsNullOrEmpty(t4.Value)
+                   || String.IsNullOrEmpty(t5.Value))
                 {
                     Response.Write("Please enter all inputs");
 
                 }
                 else
                 {
-                    String themajor = t1.Text;
-                    int thesemster = Int16.Parse(t2.Text);
-                    int thecredithours = Int16.Parse(t3.Text);
-                    String thename = t4.Text;
-                    String isoffered = t5.Text;
+                    String themajor = t1.Value;
+                    int thesemster = Int16.Parse(t2.Value);
+                    int thecredithours = Int16.Parse(t3.Value);
+                    String thename = t4.Value;
+                    String isoffered = t5.Value;
                     string connStr = WebConfigurationManager.ConnectionStrings["Advising_System"].ToString();
                     SqlConnection conn = new SqlConnection(connStr);
-                    SqlCommand add_course = new SqlCommand("Procedures_AdminAddingCourse", conn);
+                    SqlCommand add_course = new SqlCommand("AdminAddingCourse", conn);
                     add_course.CommandType = CommandType.StoredProcedure;
                     add_course.Parameters.Add(new SqlParameter("@major", themajor));
                     add_course.Parameters.Add(new SqlParameter("@semester", thesemster));
-                    add_course.Parameters.Add(new SqlParameter("@credit_hours", thecredithours));
+                    add_course.Parameters.Add(new SqlParameter("@credit_hrs", thecredithours));
                     add_course.Parameters.Add(new SqlParameter("@name", thename));
-                    add_course.Parameters.Add(new SqlParameter("@is_offered", isoffered));
+                    add_course.Parameters.Add(new SqlParameter("@offered", isoffered));
                     conn.Open();
                     add_course.ExecuteNonQuery();
                 }
             }
             catch (Exception error) {
-                Response.Write( error.Message );
+                msg.Text = error.Message;
+                msg.Visible = true;
             }
 
 
-        }
-
-        protected void Button2_Click(object sender, EventArgs e)
-        {
-            Response.Redirect("admin_page.aspx");
         }
     }
 }

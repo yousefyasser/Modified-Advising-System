@@ -41,7 +41,7 @@ namespace Advising_Team
                         errorMessage.Visible = false;
 
                         // Wait for 1 second before redirecting
-                        string script = "setTimeout(function() { window.location.href = '../Admin2/AdminNav.aspx'; }, 1000);";
+                        string script = "setTimeout(function() { window.location.href = '../Admin2/AdminDeleteCourse.aspx'; }, 1000);";
                         ScriptManager.RegisterStartupScript(this, GetType(), "redirectScript", script, true);
                         return;
                     }
@@ -53,7 +53,7 @@ namespace Advising_Team
                     using (SqlCommand loginFn = new SqlCommand("dbo.FN_StudentLogin", conn))
                     {
                         loginFn.CommandType = CommandType.StoredProcedure;
-                        loginFn.Parameters.Add(new SqlParameter("@Student_id", idIn));
+                        loginFn.Parameters.Add(new SqlParameter("@id", idIn));
                         loginFn.Parameters.Add(new SqlParameter("@password", passwordIn));
 
                         SqlParameter success = new SqlParameter("@success", SqlDbType.Bit);

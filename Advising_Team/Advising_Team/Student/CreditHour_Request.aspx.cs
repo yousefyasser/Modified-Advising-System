@@ -39,7 +39,7 @@ namespace Advising_Team.Student
                 {
                     creditHourRequestProc.CommandType = CommandType.StoredProcedure;
                     creditHourRequestProc.Parameters.Add(new SqlParameter("@credit_hours", creditHoursIn));
-                    creditHourRequestProc.Parameters.Add(new SqlParameter("@StudentID", studentId));
+                    creditHourRequestProc.Parameters.Add(new SqlParameter("@student_id", studentId));
                     creditHourRequestProc.Parameters.Add(new SqlParameter("@type", "credit hours"));
                     creditHourRequestProc.Parameters.Add(new SqlParameter("@comment", commentIn));
 

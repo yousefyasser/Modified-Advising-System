@@ -20,8 +20,8 @@ namespace Advising_Team.Admin1
         {
             try
             {
-                if (String.IsNullOrEmpty(t1.Text)
-                              || String.IsNullOrEmpty(t2.Text))
+                if (String.IsNullOrEmpty(t1.Value)
+                              || String.IsNullOrEmpty(t2.Value))
                 {
                     Response.Write("please enter all inputs");
                 }
@@ -31,8 +31,8 @@ namespace Advising_Team.Admin1
                     SqlConnection conn = new SqlConnection(connStr);
                     SqlCommand action = new SqlCommand("Procedures_AdminLinkStudentToAdvisor", conn);
                    action.CommandType = CommandType.StoredProcedure;
-                    action .Parameters.Add(new SqlParameter("@studentID", t1.Text));
-                    action.Parameters.Add(new SqlParameter("@advisorID", t2.Text));
+                    action .Parameters.Add(new SqlParameter("@student_id", t1.Value));
+                    action.Parameters.Add(new SqlParameter("@advisor_id", t2.Value));
 
                     conn.Open();
                     action.ExecuteNonQuery();

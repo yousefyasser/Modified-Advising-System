@@ -1,25 +1,19 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="AdminIssueInstallments.aspx.cs" Inherits="Advising_Team.Admin2.AdminIssueInstallments" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" MasterPageFile="AdminNav.Master" CodeBehind="AdminIssueInstallments.aspx.cs" Inherits="Advising_Team.Admin2.AdminIssueInstallments" %>
 
-<!DOCTYPE html>
+<asp:Content ContentPlaceHolderID="MainContent" runat="server">
+    <h4>GUC Advising System - Issue Installment</h4>
+    <br />
+    <br />
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head runat="server">
-    <title>Issue Installments</title>
-</head>
-<body>
-    <form id="form1" runat="server">
-        <div>
-            <asp:Label runat="server" Text="Enter payment ID to issue installments"></asp:Label>
-        </div>
-        <div>
-            <asp:TextBox runat="server" ID="paymentID"></asp:TextBox>
-        </div>
-        <div>
-            <asp:Button runat="server" Text="Enter" OnClick="IssueInstallments" />
-        </div>
-        <div>
-            <asp:Label runat="server" ID="message" Visible="false"></asp:Label>
-        </div>
-    </form>
-</body>
-</html>
+    <input id="paymentID" runat="server" placeholder="Enter payment ID" required/>
+    <br />
+    <br />
+
+    <asp:Button runat="server" CssClass="btn btn-outline-primary" OnClick="IssueInstallments" Text="Enter"></asp:Button>
+    <br />
+    <br />
+
+    <asp:Label ID="message" CssClass="alert-danger" style="padding:10px; border-radius:5px; margin:10px" runat="server" Visible="false"></asp:Label>
+</asp:Content>
+
+

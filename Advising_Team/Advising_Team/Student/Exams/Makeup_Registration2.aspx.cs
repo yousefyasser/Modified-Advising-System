@@ -43,9 +43,9 @@ namespace Advising_Team.Student.Exams
                         using (SqlCommand registerProc = new SqlCommand("[Procedures_StudentRegisterSecondMakeup]", conn))
                         {
                             registerProc.CommandType = CommandType.StoredProcedure;
-                            registerProc.Parameters.Add(new SqlParameter("@StudentID", sId));
-                            registerProc.Parameters.Add(new SqlParameter("@courseID", idIn));
-                            registerProc.Parameters.Add(new SqlParameter("@studentCurr_sem", GetCurrentSemester()));
+                            registerProc.Parameters.Add(new SqlParameter("@student_id", sId));
+                            registerProc.Parameters.Add(new SqlParameter("@course_id", idIn));
+                            registerProc.Parameters.Add(new SqlParameter("@current_semester", GetCurrentSemester()));
                             registerProc.ExecuteNonQuery();
                             successMessage.Text = "You have successfully registered for a second makeup exam in this course";
                             successMessage.Visible = true;
@@ -104,8 +104,8 @@ namespace Advising_Team.Student.Exams
                 using (SqlCommand checkProc = new SqlCommand("dbo.[FN_StudentCheckSMEligibility]", conn1))
                 {
                     checkProc.CommandType= CommandType.StoredProcedure;
-                    SqlParameter sid = new SqlParameter("@StudentID", SqlDbType.Int);
-                    SqlParameter cid = new SqlParameter("@CourseID", SqlDbType.Int);
+                    SqlParameter sid = new SqlParameter("@student_id", SqlDbType.Int);
+                    SqlParameter cid = new SqlParameter("@course_id", SqlDbType.Int);
                     cid.Value = idIn;
                     sid.Value = sidIn;
                     checkProc.Parameters.Add(cid);

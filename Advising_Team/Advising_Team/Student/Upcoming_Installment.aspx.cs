@@ -30,7 +30,7 @@ namespace Advising_Team.Student
                 {
                     int studentId = (int)Session["user"];
                     upcomProc.CommandType = CommandType.StoredProcedure;
-                    upcomProc.Parameters.Add(new SqlParameter("@student_ID", studentId));
+                    upcomProc.Parameters.Add(new SqlParameter("@student_id", studentId));
 
                     SqlParameter installdeadline = new SqlParameter("@installdeadline", SqlDbType.Date);
                     installdeadline.Direction = ParameterDirection.ReturnValue;

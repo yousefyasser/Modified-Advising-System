@@ -41,8 +41,8 @@ namespace Advising_Team.Student
                     phoneProc.CommandType = CommandType.StoredProcedure;
 
                     // Add parameters
-                    phoneProc.Parameters.Add(new SqlParameter("@StudentID", studentId));
-                    phoneProc.Parameters.Add(new SqlParameter("@mobile_number", phoneIn));
+                    phoneProc.Parameters.Add(new SqlParameter("@student_id", studentId));
+                    phoneProc.Parameters.Add(new SqlParameter("@phone_number", phoneIn));
 
                     // Execute the stored procedure
                     phoneProc.ExecuteNonQuery();

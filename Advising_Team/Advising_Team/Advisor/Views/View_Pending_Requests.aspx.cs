@@ -28,7 +28,7 @@ namespace Advising_Team.Advisor.Views
                 using (SqlCommand viewPendingRequestsProc = new SqlCommand("Procedures_AdvisorViewPendingRequests", conn))
                 {
                     viewPendingRequestsProc.CommandType = CommandType.StoredProcedure;
-                    viewPendingRequestsProc.Parameters.Add(new SqlParameter("@Advisor_ID", advisorId));
+                    viewPendingRequestsProc.Parameters.Add(new SqlParameter("@advisor_id", advisorId));
 
                     SqlDataReader reader = viewPendingRequestsProc.ExecuteReader(CommandBehavior.CloseConnection);
 

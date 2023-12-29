@@ -1,38 +1,18 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="AdminDeleteCourse.aspx.cs" Inherits="Advising_Team.Admin2.AdminDeleteCourse" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" MasterPageFile="AdminNav.Master" CodeBehind="AdminDeleteCourse.aspx.cs" Inherits="Advising_Team.Admin2.AdminDeleteCourse" %>
 
-<!DOCTYPE html>
+<asp:Content ContentPlaceHolderID="MainContent" runat="server">
+    <h4>GUC Advising System - Remove course</h4>
+    <br />
+    <br />
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head runat="server">
-    <title></title>
-</head>
-<body>
-    <form id="removeCourseForm" runat="server">
+    <input id="course_id" runat="server" placeholder="Enter course ID" required/>
+    <br />
+    <br />
 
-        <div>
-            <asp:Label runat="server" Text="Remove course"></asp:Label>
-        </div>
+    <asp:Button runat="server" CssClass="btn btn-outline-primary" OnClick="RemoveCourse" Text="Enter"></asp:Button>
+    <br />
+    <br />
 
-        <br />
-        <br />
+    <asp:Label ID="msg" CssClass="alert-danger" style="padding:10px; border-radius:5px; margin:10px" runat="server" Visible="false"></asp:Label>
+</asp:Content>
 
-        <div>
-            <asp:Label runat="server" Text="Enter course ID"></asp:Label>
-        </div>
-
-        <div>
-            <asp:TextBox ID="course_id" runat="server"></asp:TextBox>
-        </div>
-
-        <div>
-            <asp:Button runat="server" OnClick="RemoveCourse" Text="Enter"></asp:Button>
-        </div>
-
-        <div>
-            <asp:Label runat="server" id= "msg" Visible="false"></asp:Label>
-        </div>
-
-    </form>
-</body>
-
-</html>

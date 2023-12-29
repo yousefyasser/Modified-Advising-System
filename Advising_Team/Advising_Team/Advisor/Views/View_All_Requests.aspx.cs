@@ -39,9 +39,9 @@ namespace Advising_Team.Advisor.Views
                 conn.Open();
 
                 // Use the function to retrieve requests for the advisor
-                using (SqlCommand getRequests = new SqlCommand("SELECT * FROM FN_Advisors_Requests(@advisorId)", conn))
+                using (SqlCommand getRequests = new SqlCommand("SELECT * FROM FN_Advisors_Requests(@advisor_id)", conn))
                 {
-                    getRequests.Parameters.AddWithValue("@advisorId", advisorId);
+                    getRequests.Parameters.AddWithValue("@advisor_id", advisorId);
 
                     using (SqlDataAdapter adapter = new SqlDataAdapter(getRequests))
                     {

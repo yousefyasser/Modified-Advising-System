@@ -12,9 +12,9 @@
         function changeImageOnHover(isHover) {
             var image = document.getElementById('<%= img.ClientID %>');
             if (isHover) {
-                image.src = '<%= ResolveUrl("~/Images/advisor.jpeg") %>';
+                image.src = '<%= ResolveUrl("~/Assets/advisor.jpeg") %>';
             } else {
-                image.src = '<%= ResolveUrl("~/Images/advisor-blackandwhite.jpeg") %>';
+                image.src = '<%= ResolveUrl("~/Assets/advisor-blackandwhite.jpeg") %>';
             }
         }
     </script>
@@ -52,7 +52,7 @@
             Already have an account?
             <asp:HyperLink ID="login" CssClass="nav-link" style="color:royalblue" href="Student_Login.aspx" runat="server">login</asp:HyperLink>
             <br />
-            <asp:ImageButton ID="img" runat="server" ImageUrl="~/Images/advisor-blackandwhite.jpeg" CssClass="img" PostBackUrl="~/Advisor/Advisor_Registration.aspx" OnMouseOver="changeImageOnHover(true);" OnMouseOut="changeImageOnHover(false);" Height="117px" Width="184px" />
+            <asp:ImageButton ID="img" runat="server" ImageUrl="~/Assets/advisor-blackandwhite.jpeg" CssClass="img" PostBackUrl="~/Advisor/Advisor_Registration.aspx" OnMouseOver="changeImageOnHover(true);" OnMouseOut="changeImageOnHover(false);" Height="117px" Width="184px" />
 
             <br />
             <asp:Label ID="successMessage" CssClass="alert-success" style="padding: 10px; border-radius:5px;" runat="server" Visible="false"></asp:Label>

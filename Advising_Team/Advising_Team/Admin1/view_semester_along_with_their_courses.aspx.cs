@@ -44,10 +44,5 @@ namespace Advising_Team.Admin1
                 form1.Controls.Add(spacer);
             }
         }
-
-        protected void Button2_Click(object sender, EventArgs e)
-        {
-            Response.Redirect("admin_page.aspx");
-        }
     }
 }

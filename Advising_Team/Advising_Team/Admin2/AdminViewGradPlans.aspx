@@ -20,8 +20,7 @@
                     <asp:BoundField DataField="expected_grad_date" HeaderText="expected_grad_date" SortExpression="expected_grad_date" />
                     <asp:BoundField DataField="advisor_id" HeaderText="advisorID" SortExpression="advisorID" />
                     <asp:BoundField DataField="student_id" HeaderText="studentID" ReadOnly="True" SortExpression="studentID" />
-                    <asp:BoundField DataField="AdvisorID" HeaderText="AdvisorID" SortExpression="AdvisorID" />
-                    <asp:BoundField DataField="advisor_name" HeaderText="advisor_name" SortExpression="advisor_name" />
+                    <asp:BoundField DataField="name" HeaderText="advisor_name" SortExpression="advisor_name" />
                 </Columns>
             </asp:GridView>
         </div>

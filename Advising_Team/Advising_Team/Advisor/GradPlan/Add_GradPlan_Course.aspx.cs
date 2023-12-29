@@ -85,7 +85,7 @@ namespace Advising_Team.Advisor.GradPlan
                     {
                         addCourseProc.CommandType = CommandType.StoredProcedure;
                         addCourseProc.Parameters.Add(new SqlParameter("@student_id", studentId));
-                        addCourseProc.Parameters.Add(new SqlParameter("@Semester_code", semesterCode));
+                        addCourseProc.Parameters.Add(new SqlParameter("@semester_code", semesterCode));
                         addCourseProc.Parameters.Add(new SqlParameter("@course_name", courseName));
 
                         addCourseProc.ExecuteNonQuery();

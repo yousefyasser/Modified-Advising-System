@@ -1,0 +1,77 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="AdminNav.Master.cs" Inherits="Advising_Team.Admin2.AdminNav" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title><%: Page.Title %></title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="../Css/mainStyle.css" rel="stylesheet"/>
+    <link href="../Css/bootstrap/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="../js/bootstrap.bundle.min.js"></script>
+    
+</head>
+<body>
+    <nav class="navbar navbar-dark bg-dark" style="justify-content:space-evenly;">
+        <div class="nav-item">
+            <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown">
+            Views
+            </button>
+            <div class="dropdown-menu" style="margin-left:50px;">
+                <a class="dropdown-item" href="../Admin2/AdminViewPayments.aspx">View Payments</a>
+                <a class="dropdown-item" href="../Admin2/AdminViewActiveStudents.aspx">View Active Students</a>
+                <a class="dropdown-item" href="../Admin2/AdminViewGradPlans.aspx">View Graduation Plans</a>
+                <a class="dropdown-item" href="../Admin2/AdminViewTranscripts.aspx">View Transcripts</a>
+                <a class="dropdown-item" href="../Admin2/AdminViewSemesters.aspx">View Semesters</a>
+
+                <a class="dropdown-item" href="../Admin1/View_all_advisors.aspx">Advisors</a>
+                <a class="dropdown-item" href="../Admin1/view_all_pending_requests.aspx">Pending requests</a>
+                <a class="dropdown-item" href="../Admin1/view_all_students_with_advisors.aspx">Students with advisors</a>
+                <a class="dropdown-item" href="../Admin1/view_all_details_of_instructors_with_courses.aspx">Instructors with courses</a>
+                <a class="dropdown-item" href="../Admin1/view_semester_along_with_their_courses.aspx">Semester with courses</a>
+            </div>
+        </div>
+
+        <div class="nav-item">
+            <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown">
+            Add
+            </button>
+            <div class="dropdown-menu" style="margin-left:200px;">
+                <a class="dropdown-item" href="../Admin2/AdminAddExam.aspx">Add Exam</a>
+                <a class="dropdown-item" href="../Admin1/add_semester.aspx">Add Semester</a>
+                <a class="dropdown-item" href="../Admin1/add_course.aspx">Add Course</a>        
+            </div>
+        </div>
+
+        <div class="nav-item">
+            <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown">
+            Link
+            </button>
+            <div class="dropdown-menu" style="margin-left:350px;">
+                <a class="dropdown-item" href="../Admin1/Link_instructor_to_course_in_certain_slot.aspx">Link instructor to course</a>
+                <a class="dropdown-item" href="../Admin1/Link_student_to_advisor.aspx">Link Student to advisor</a>
+                <a class="dropdown-item" href="../Admin1/Link_student_to_course_with_certain_instructor.aspx">Link Student to Course</a>    
+            </div>
+        </div>
+
+        <a class="nav-link text-light" href="../Admin2/AdminDeleteCourse.aspx">Delete Course</a>
+        <a class="nav-link text-light" href="../Admin2/AdminDeleteSlots.aspx">Delete Slot</a>
+        
+        <a class="nav-link text-light" href="../Admin2/AdminIssueInstallments.aspx">Issue Installment</a>
+        <a class="nav-link text-light" href="../Admin2/AdminUpdateStatus.aspx">Update Student Status</a>
+        
+        <a class="nav-link text-light" href="../Student/Student_Login.aspx">Sign Out</a>
+    </nav>
+            
+           
+        
+    <form runat="server">
+        <asp:ContentPlaceHolder ID="MainContent" runat="server">
+        </asp:ContentPlaceHolder>
+    </form>
+</body>
+</html>
+    

@@ -1,37 +1,19 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="AdminDeleteSlots.aspx.cs" Inherits="Advising_Team.Admin2.AdminDeleteSlot" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" MasterPageFile="AdminNav.Master" CodeBehind="AdminDeleteSlots.aspx.cs" Inherits="Advising_Team.Admin2.AdminDeleteSlot" %>
 
-<!DOCTYPE html>
+<asp:Content ContentPlaceHolderID="MainContent" runat="server">
+    <h4>GUC Advising System - Delete slots of unoffered courses</h4>
+    <br />
+    <br />
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head runat="server">
-    <title></title>
-</head>
-<body>
-    <form id="removeCourseForm" runat="server">
+    <input id="semester_code" runat="server" placeholder="Enter current semester code" required/>
+    <br />
+    <br />
 
-        <div>
-            <asp:Label runat="server" Text="Delete slots of unoffered courses"></asp:Label>
-        </div>
+    <asp:Button runat="server" CssClass="btn btn-outline-primary" OnClick="RemoveSlots" Text="Enter"></asp:Button>
+    <br />
+    <br />
 
-        <br />
-        <br />
+    <asp:Label ID="msg" CssClass="alert-danger" style="padding:10px; border-radius:5px; margin:10px" runat="server" Visible="false"></asp:Label>
+</asp:Content>
 
-        <div>
-            <asp:Label runat="server" Text="Enter current semester code"></asp:Label>
-        </div>
 
-        <div>
-            <asp:TextBox ID="semester_code" runat="server"></asp:TextBox>
-        </div>
-
-        <div>
-            <asp:Button runat="server" OnClick="RemoveSlots" Text="Enter"></asp:Button>
-        </div>
-
-        <div>
-            <asp:Label runat="server" id= "msg" Visible="false"></asp:Label>
-        </div>
-
-    </form>
-</body>
-</html>

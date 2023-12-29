@@ -46,7 +46,7 @@ namespace Advising_Team.Student.Courses
                         return;
                     }
 
-                    using (SqlCommand viewProc = new SqlCommand("Select * from dbo.[FN_StudentViewSlot](@CourseID, @InstructorID)", conn))
+                    using (SqlCommand viewProc = new SqlCommand("Select * from dbo.[FN_StudentViewSlot](@course_id, @instructor_id)", conn))
                     {
                         viewProc.Parameters.Add(new SqlParameter("@CourseID", idIn));
                         viewProc.Parameters.Add(new SqlParameter("@InstructorID", id2In));

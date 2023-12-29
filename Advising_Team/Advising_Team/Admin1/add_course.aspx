@@ -1,55 +1,28 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="add_course.aspx.cs" Inherits="Advising_Team.Admin1.add_course" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" MasterPageFile="~/Admin2/AdminNav.Master" CodeBehind="add_course.aspx.cs" Inherits="Advising_Team.Admin1.add_course" %>
 
-<!DOCTYPE html>
+<asp:Content ContentPlaceHolderID="MainContent" runat="server">
+    <h4>GUC Advising System - Add Course</h4>
+    <br />
+    <br />
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head runat="server">
-    <title></title>
-</head>
-<body>
-    <form id="form1" runat="server">
-        <div>
-        </div>
-        <asp:Label ID="Label1" runat="server" Text="Enter major"></asp:Label>
-        :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <asp:Label ID="Label2" runat="server" Text="Enter semester"></asp:Label>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <asp:Label ID="Label3" runat="server" Text="Enter credit hours"></asp:Label>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <asp:Label ID="Label4" runat="server" Text="enter name "></asp:Label>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        &nbsp;<p>
-            <asp:TextBox ID="t1" runat="server"></asp:TextBox>
-        &nbsp;
-            <asp:TextBox ID="t2" runat="server"></asp:TextBox>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <asp:TextBox ID="t3" runat="server"></asp:TextBox>
-        &nbsp;&nbsp;&nbsp;
-            <asp:TextBox ID="t4" runat="server" Height="16px" style="margin-top: 0px" Width="183px"></asp:TextBox>
-        &nbsp;</p>
-        <p>
-            &nbsp;</p>
-        <p>
-        <asp:Label ID="Label5" runat="server" Text="enter isoffered"></asp:Label>
-        </p>
-        <p>
-            <asp:TextBox ID="t5" runat="server" style="margin-left: 3px"></asp:TextBox>
-        </p>
-        <p>
-            <asp:Button ID="add" runat="server" Text="add the course" OnClick="Button1_Click" />
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <asp:Button ID="return" runat="server" Text="return to admin page" Width="209px" style="margin-top: 5px" OnClick="Button2_Click" />
-            </p>
-        <p>
-            &nbsp;</p>
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <p>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            </p>
-    </form>
-</body>
-</html>
+    <input id="t1" runat="server" placeholder="Enter major" required/>
+    <br />
+    <input id="t2" runat="server" placeholder="Enter semester" required/>
+    <br />
+    <input id="t3" runat="server" placeholder="Enter credit hours" required/>
+    <br />
+    <input id="t4" runat="server" placeholder="Enter name" required/>
+    <br />
+    <input id="t5" runat="server" placeholder="Enter isOffered" required/>
+    <br />
+
+    <br />
+    <br />
+
+    <asp:Button runat="server" ID="add" CssClass="btn btn-outline-primary" OnClick="Button1_Click" Text="Add"></asp:Button>
+    <br />
+    <br />
+
+    <asp:Label ID="msg" CssClass="alert-danger" style="padding:10px; border-radius:5px; margin:10px" runat="server" Visible="false"></asp:Label>
+</asp:Content>
+

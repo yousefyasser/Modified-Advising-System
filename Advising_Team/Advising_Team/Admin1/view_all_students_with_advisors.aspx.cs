@@ -27,7 +27,7 @@ namespace Advising_Team.Admin1
                 String student_f_name = rdr.GetString(rdr.GetOrdinal("f_name"));
                 String student_l_name = rdr.GetString(rdr.GetOrdinal("l_name"));
                 int advis_id = rdr.GetInt32(rdr.GetOrdinal("advisor_id"));
-                String advis_name = rdr.GetString(rdr.GetOrdinal("advisor_name"));
+                String advis_name = rdr.GetString(rdr.GetOrdinal("name"));
                 Label id = new Label();
                 id.Text = "<br >" + student_id.ToString() + "<br >";
                 Label name = new Label();

@@ -54,9 +54,9 @@ namespace Advising_Team.Student.Courses
                         using (SqlCommand chooseProc = new SqlCommand("[Procedures_Chooseinstructor]", conn))
                         {
                             chooseProc.CommandType = CommandType.StoredProcedure;
-                            chooseProc.Parameters.Add(new SqlParameter("@StudentID", sId));
-                            chooseProc.Parameters.Add(new SqlParameter("@instrucorID", id2In));
-                            chooseProc.Parameters.Add(new SqlParameter("@CourseID", idIn));
+                            chooseProc.Parameters.Add(new SqlParameter("@student_id", sId));
+                            chooseProc.Parameters.Add(new SqlParameter("@instructor_id", id2In));
+                            chooseProc.Parameters.Add(new SqlParameter("@course_id", idIn));
                             chooseProc.Parameters.Add(new SqlParameter("@current_semester_code", GetCurrentSemester()));
                             chooseProc.ExecuteNonQuery();
                             successMessage.Text = "You have changed instructor for this course";

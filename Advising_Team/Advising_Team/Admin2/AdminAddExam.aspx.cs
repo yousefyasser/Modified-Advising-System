@@ -26,7 +26,7 @@ namespace Advising_Team.Admin2
             string connStr = WebConfigurationManager.ConnectionStrings["Advising_System"].ToString();
             using (SqlConnection conn = new SqlConnection(connStr))
             {
-                if (!DateTime.TryParse(examDatetime.Text, out DateTime examDate))
+                if (!DateTime.TryParse(examDatetime.Value, out DateTime examDate))
                 {
                     msg.Text = "invalid date";
                 }
@@ -34,7 +34,7 @@ namespace Advising_Team.Admin2
                 {
                     msg.Text = "exam date must be in the future";
                 }
-                else if (!int.TryParse(courseID.Text, out int crsID))
+                else if (!int.TryParse(courseID.Value, out int crsID))
                 {
                     msg.Text = "course ID must be an integer";
                 }
@@ -74,15 +74,15 @@ namespace Advising_Team.Admin2
                             addExam.CommandType = CommandType.StoredProcedure;
                             addExam.Parameters.Add(new SqlParameter("@type", examType.Text));
                             addExam.Parameters.Add(new SqlParameter("@date", examDate));
-                            addExam.Parameters.Add(new SqlParameter("@courseID", crsID));
+                            addExam.Parameters.Add(new SqlParameter("@course_id", crsID));
 
                             addExam.ExecuteNonQuery();
 
                             msg.Text = "exam added";
-                            msg.Visible = true;
                         }
                     }
                 }
+                msg.Visible = true;
             }
         }
     }
