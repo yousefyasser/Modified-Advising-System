@@ -15,22 +15,13 @@ namespace Advising_Team.Admin2
     {
 
         /// <summary>
-        /// removeCourseForm control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlForm removeCourseForm;
-
-        /// <summary>
         /// course_id control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox course_id;
+        protected global::System.Web.UI.HtmlControls.HtmlInputText course_id;
 
         /// <summary>
         /// msg control.

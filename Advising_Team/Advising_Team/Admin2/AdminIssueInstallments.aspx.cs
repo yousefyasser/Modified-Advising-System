@@ -22,7 +22,7 @@ namespace Advising_Team.Admin2
             string connStr = WebConfigurationManager.ConnectionStrings["Advising_System"].ToString();
             using(SqlConnection conn = new SqlConnection(connStr))
             {
-                if (!int.TryParse(paymentID.Text, out int payID))
+                if (!int.TryParse(paymentID.Value, out int payID))
                     message.Text = "payment ID must be an integer";
                 else if (payID < 0)
                     message.Text = "payment ID must be positive";

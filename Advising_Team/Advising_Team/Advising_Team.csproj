@@ -69,7 +69,6 @@
   <ItemGroup>
     <Content Include="Admin1\add_course.aspx" />
     <Content Include="Admin1\add_semester.aspx" />
-    <Content Include="Admin1\admin_page.aspx" />
     <Content Include="Admin1\Link_instructor_to_course_in_certain_slot.aspx" />
     <Content Include="Admin1\Link_student_to_advisor.aspx" />
     <Content Include="Admin1\Link_student_to_course_with_certain_instructor.aspx" />
@@ -82,7 +81,7 @@
     <Content Include="Admin2\AdminDeleteCourse.aspx" />
     <Content Include="Admin2\AdminDeleteSlots.aspx" />
     <Content Include="Admin2\AdminIssueInstallments.aspx" />
-    <Content Include="Admin2\AdminNav.aspx" />
+    <None Include="Admin2\AdminNav.Master" />
     <Content Include="Admin2\AdminUpdateStatus.aspx" />
     <Content Include="Admin2\AdminViewActiveStudents.aspx" />
     <Content Include="Admin2\AdminViewGradPlans.aspx" />
@@ -153,13 +152,6 @@
     </Compile>
     <Compile Include="Admin1\add_semester.aspx.designer.cs">
       <DependentUpon>add_semester.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Admin1\admin_page.aspx.cs">
-      <DependentUpon>admin_page.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Admin1\admin_page.aspx.designer.cs">
-      <DependentUpon>admin_page.aspx</DependentUpon>
     </Compile>
     <Compile Include="Admin1\Link_instructor_to_course_in_certain_slot.aspx.cs">
       <DependentUpon>Link_instructor_to_course_in_certain_slot.aspx</DependentUpon>
@@ -245,12 +237,12 @@
     <Compile Include="Admin2\AdminIssueInstallments.aspx.designer.cs">
       <DependentUpon>AdminIssueInstallments.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Admin2\AdminNav.aspx.cs">
-      <DependentUpon>AdminNav.aspx</DependentUpon>
+    <Compile Include="Admin2\AdminNav.Master.cs">
+      <DependentUpon>AdminNav.Master</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Admin2\AdminNav.aspx.designer.cs">
-      <DependentUpon>AdminNav.aspx</DependentUpon>
+    <Compile Include="Admin2\AdminNav.Master.designer.cs">
+      <DependentUpon>AdminNav.Master</DependentUpon>
     </Compile>
     <Compile Include="Admin2\AdminUpdateStatus.aspx.cs">
       <DependentUpon>AdminUpdateStatus.aspx</DependentUpon>

@@ -1,53 +1,27 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="AdminAddExam.aspx.cs" Inherits="Advising_Team.Admin2.AdminAddExam" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" MasterPageFile="~/Admin2/AdminNav.Master" CodeBehind="AdminAddExam.aspx.cs" Inherits="Advising_Team.Admin2.AdminAddExam" %>
 
-<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head runat="server">
-    <title></title>
-</head>
-<body>
-    <form id="removeCourseForm" runat="server">
+<asp:Content ContentPlaceHolderID="MainContent" runat="server">
+    <h4>GUC Advising System - Add makeup exam</h4>
+    <br />
+    <br />
 
-        <div>
-            <asp:Label runat="server" Text="Add makeup exam"></asp:Label>
-        </div>
+    <asp:Label runat="server" Text="Choose exam type"></asp:Label>
 
-        <br />
-        <br />
+    <asp:DropDownList ID="examType" runat="server"></asp:DropDownList>
+    <br />
+    <br />
 
-        <div>
-            <asp:Label runat="server" Text="Choose exam type"></asp:Label>
-        </div>
+    <input id="examDatetime" runat="server" placeholder="Enter exam datetime" required/>
+    <br />
 
-        <div>
-            <asp:DropDownList ID="examType" runat="server"></asp:DropDownList>
-        </div>
+    <input id="courseID" runat="server" placeholder="Enter exam course ID" required/>
+    <br />
+    <br />
 
-        <div>
-           <asp:Label runat="server" Text="Enter exam datetime"></asp:Label>
-        </div>
+    <asp:Button runat="server" CssClass="btn btn-outline-primary" OnClick="AddExam" Text="Enter"></asp:Button>
+    <br />
+    <br />
 
-        <div>
-            <asp:TextBox ID="examDatetime" runat="server"></asp:TextBox>
-        </div>
-
-        <div>
-            <asp:Label runat="server" Text="Enter exam course ID"></asp:Label>
-        </div>
-
-        <div>
-            <asp:TextBox ID="courseID" runat="server"></asp:TextBox>
-        </div>
-
-        <div>
-            <asp:Button runat="server" OnClick="AddExam" Text="Enter"></asp:Button>
-        </div>
-
-        <div>
-            <asp:Label runat="server" id= "msg" Visible="false"></asp:Label>
-        </div>
-
-    </form>
-</body>
-</html>
+    <asp:Label ID="msg" CssClass="alert-danger" style="padding:10px; border-radius:5px; margin:10px" runat="server" Visible="false"></asp:Label>
+</asp:Content>

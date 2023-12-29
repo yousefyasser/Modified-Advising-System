@@ -15,15 +15,6 @@ namespace Advising_Team.Admin2
     {
 
         /// <summary>
-        /// removeCourseForm control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlForm removeCourseForm;
-
-        /// <summary>
         /// examType control.
         /// </summary>
         /// <remarks>
@@ -39,7 +30,7 @@ namespace Advising_Team.Admin2
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox examDatetime;
+        protected global::System.Web.UI.HtmlControls.HtmlInputText examDatetime;
 
         /// <summary>
         /// courseID control.
@@ -48,7 +39,7 @@ namespace Advising_Team.Admin2
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox courseID;
+        protected global::System.Web.UI.HtmlControls.HtmlInputText courseID;
 
         /// <summary>
         /// msg control.

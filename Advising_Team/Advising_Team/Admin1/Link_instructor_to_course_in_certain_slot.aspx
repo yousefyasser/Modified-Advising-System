@@ -1,29 +1,22 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Link_instructor_to_course_in_certain_slot.aspx.cs" Inherits="Advising_Team.Admin1.Link_instructor_to_course_in_certain_slot" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" MasterPageFile="~/Admin2/AdminNav.Master" CodeBehind="Link_instructor_to_course_in_certain_slot.aspx.cs" Inherits="Advising_Team.Admin1.Link_instructor_to_course_in_certain_slot" %>
 
-<!DOCTYPE html>
+<asp:Content ContentPlaceHolderID="MainContent" runat="server">
+    <h4>GUC Advising System - Link instructor to course in certain slot</h4>
+    <br />
+    <br />
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head runat="server">
-    <title></title>
-</head>
-<body>
-    <form id="form1" runat="server">
-        <div>
-            <asp:Label ID="Label1" runat="server" Text="Enter course ID :"></asp:Label>
-        </div>
-        <asp:TextBox ID="t1" runat="server"></asp:TextBox>
-        <br />
-            <asp:Label ID="Label2" runat="server" Text="Enter Instructor ID :"></asp:Label>
-        <br />
-        <asp:TextBox ID="t2" runat="server"></asp:TextBox>
-        <br />
-            <asp:Label ID="Label3" runat="server" Text="Enter Slot ID :"></asp:Label>
-        <br />
-        <asp:TextBox ID="t3" runat="server"></asp:TextBox>
-        <p>
-            <asp:Button ID="Button1" runat="server" Text="Execute" Width="181px" OnClick="Button1_Click1" />
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            </p>
-         </form>
-    </body>
-</html>
+    <input id="t1" runat="server" placeholder="Enter course ID" required/>
+    <br />
+    <input id="t2" runat="server" placeholder="Enter instructor ID" required/>
+    <br />
+    <input id="t3" runat="server" placeholder="Enter Slot ID" required/>
+    <br />
+    <br />
+
+    <asp:Button runat="server" ID="add" CssClass="btn btn-outline-primary" OnClick="Button1_Click1" Text="Save"></asp:Button>
+    <br />
+    <br />
+
+    <asp:Label ID="msg" CssClass="alert-danger" style="padding:10px; border-radius:5px; margin:10px" runat="server" Visible="false"></asp:Label>
+</asp:Content>
+

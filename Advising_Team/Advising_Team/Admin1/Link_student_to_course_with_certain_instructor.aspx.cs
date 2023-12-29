@@ -24,10 +24,10 @@ namespace Advising_Team.Admin1
                 {
                  
                     {
-                        int the_course_id = Int16.Parse(t1.Text);
-                        int the_instructor_id = Int16.Parse(t2.Text);
-                        int the_student_id = Int16.Parse(t3.Text);
-                        String the_semester_code = t4.Text;
+                        int the_course_id = Int16.Parse(t1.Value);
+                        int the_instructor_id = Int16.Parse(t2.Value);
+                        int the_student_id = Int16.Parse(t3.Value);
+                        String the_semester_code = t4.Value;
 
 
 

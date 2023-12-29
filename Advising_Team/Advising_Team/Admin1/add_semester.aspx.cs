@@ -23,16 +23,16 @@ namespace Advising_Team.Admin1
         {
             try
             {
-                if (String.IsNullOrEmpty(t1.Text) || String.IsNullOrEmpty(t2.Text)
-                       || String.IsNullOrEmpty(t3.Text))
+                if (String.IsNullOrEmpty(t1.Value) || String.IsNullOrEmpty(t2.Value)
+                       || String.IsNullOrEmpty(t3.Value))
                 {
                     Response.Write("One of the inputs is null");
                 }
                 else
                 {
-                    String thecode = t1.Text;
-                    String thestart = t2.Text;
-                    String theend = t3.Text;
+                    String thecode = t1.Value;
+                    String thestart = t2.Value;
+                    String theend = t3.Value;
 
                     string connStr = WebConfigurationManager.ConnectionStrings["Advising_System"].ToString();
                     SqlConnection conn = new SqlConnection(connStr);
@@ -52,11 +52,6 @@ namespace Advising_Team.Admin1
             }
 
             
-        }
-
-        protected void Button2_Click(object sender, EventArgs e)
-        {
-            Response.Redirect("admin_page.aspx"); // lazem t8iyar hena el web form esm 
         }
     }
 }

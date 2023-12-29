@@ -25,7 +25,7 @@ namespace Advising_Team.Admin2
 
             
 
-            if (int.TryParse(course_id.Text, out int crs_id))
+            if (int.TryParse(course_id.Value, out int crs_id))
             {
                 SqlCommand deleteCrs = new SqlCommand("Procedures_AdminDeleteCourse", conn);
                 deleteCrs.CommandType = CommandType.StoredProcedure;

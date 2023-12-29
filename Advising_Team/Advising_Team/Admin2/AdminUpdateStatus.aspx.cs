@@ -20,7 +20,7 @@ namespace Advising_Team.Admin2
         protected void btnUpdateStatus_Click(object sender, EventArgs e)
         {
             string connStr = WebConfigurationManager.ConnectionStrings["Advising_System"].ToString();
-            if (!int.TryParse(studentID.Text, out int sID))
+            if (!int.TryParse(studentID.Value, out int sID))
                 message.Text = "Student ID must be an integer";
             else if (sID < 0)
                 message.Text = "Student ID must be positive";

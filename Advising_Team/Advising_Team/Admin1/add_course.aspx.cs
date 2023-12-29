@@ -23,20 +23,20 @@ namespace Advising_Team.Admin1
         {
             try
             {
-                if (String.IsNullOrEmpty(t1.Text) || String.IsNullOrEmpty(t2.Text)
-                   || String.IsNullOrEmpty(t3.Text) || String.IsNullOrEmpty(t4.Text)
-                   || String.IsNullOrEmpty(t5.Text))
+                if (String.IsNullOrEmpty(t1.Value) || String.IsNullOrEmpty(t2.Value)
+                   || String.IsNullOrEmpty(t3.Value) || String.IsNullOrEmpty(t4.Value)
+                   || String.IsNullOrEmpty(t5.Value))
                 {
                     Response.Write("Please enter all inputs");
 
                 }
                 else
                 {
-                    String themajor = t1.Text;
-                    int thesemster = Int16.Parse(t2.Text);
-                    int thecredithours = Int16.Parse(t3.Text);
-                    String thename = t4.Text;
-                    String isoffered = t5.Text;
+                    String themajor = t1.Value;
+                    int thesemster = Int16.Parse(t2.Value);
+                    int thecredithours = Int16.Parse(t3.Value);
+                    String thename = t4.Value;
+                    String isoffered = t5.Value;
                     string connStr = WebConfigurationManager.ConnectionStrings["Advising_System"].ToString();
                     SqlConnection conn = new SqlConnection(connStr);
                     SqlCommand add_course = new SqlCommand("Procedures_AdminAddingCourse", conn);
@@ -51,15 +51,11 @@ namespace Advising_Team.Admin1
                 }
             }
             catch (Exception error) {
-                Response.Write( error.Message );
+                msg.Text = error.Message;
+                msg.Visible = true;
             }
 
 
-        }
-
-        protected void Button2_Click(object sender, EventArgs e)
-        {
-            Response.Redirect("admin_page.aspx");
         }
     }
 }

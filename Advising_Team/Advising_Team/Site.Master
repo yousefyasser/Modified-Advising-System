@@ -18,7 +18,7 @@
     <nav class="navbar navbar-dark bg-dark" style="justify-content:space-evenly;">
         
         <div class="nav-item">
-                <button type="button" class="btn btn-info dropdown-toggle" data-bs-toggle="dropdown">
+                <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown">
                 Courses
                 </button>
                 <div class="dropdown-menu" style="margin-left:50px;">
@@ -35,7 +35,7 @@
         </div>
 
         <div class="nav-item">
-            <button type="button" class="btn btn-info dropdown-toggle" data-bs-toggle="dropdown">
+            <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown">
             Makeup Registration
             </button>
             <div class="dropdown-menu" style="margin-left:250px;">
@@ -45,7 +45,7 @@
         </div>
 
         <div class="nav-item">
-            <button type="button" class="btn btn-info dropdown-toggle" data-bs-toggle="dropdown">
+            <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown">
             Requests
             </button>
             <div class="dropdown-menu" style="margin-left:500px;">

@@ -24,7 +24,7 @@ namespace Advising_Team.Admin2
 
             SqlCommand deleteSlots = new SqlCommand("Procedures_AdminDeleteSlots", conn);
             deleteSlots.CommandType = CommandType.StoredProcedure;
-            deleteSlots.Parameters.Add(new SqlParameter("@current_semester", semester_code.Text));
+            deleteSlots.Parameters.Add(new SqlParameter("@current_semester", semester_code.Value));
 
             conn.Open();
             int rowsAffected = deleteSlots.ExecuteNonQuery();
