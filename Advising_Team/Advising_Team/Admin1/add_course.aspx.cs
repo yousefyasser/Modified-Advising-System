@@ -39,13 +39,13 @@ namespace Advising_Team.Admin1
                     String isoffered = t5.Value;
                     string connStr = WebConfigurationManager.ConnectionStrings["Advising_System"].ToString();
                     SqlConnection conn = new SqlConnection(connStr);
-                    SqlCommand add_course = new SqlCommand("Procedures_AdminAddingCourse", conn);
+                    SqlCommand add_course = new SqlCommand("AdminAddingCourse", conn);
                     add_course.CommandType = CommandType.StoredProcedure;
                     add_course.Parameters.Add(new SqlParameter("@major", themajor));
                     add_course.Parameters.Add(new SqlParameter("@semester", thesemster));
-                    add_course.Parameters.Add(new SqlParameter("@credit_hours", thecredithours));
+                    add_course.Parameters.Add(new SqlParameter("@credit_hrs", thecredithours));
                     add_course.Parameters.Add(new SqlParameter("@name", thename));
-                    add_course.Parameters.Add(new SqlParameter("@is_offered", isoffered));
+                    add_course.Parameters.Add(new SqlParameter("@offered", isoffered));
                     conn.Open();
                     add_course.ExecuteNonQuery();
                 }

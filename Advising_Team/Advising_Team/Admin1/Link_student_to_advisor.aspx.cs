@@ -31,8 +31,8 @@ namespace Advising_Team.Admin1
                     SqlConnection conn = new SqlConnection(connStr);
                     SqlCommand action = new SqlCommand("Procedures_AdminLinkStudentToAdvisor", conn);
                    action.CommandType = CommandType.StoredProcedure;
-                    action .Parameters.Add(new SqlParameter("@studentID", t1.Value));
-                    action.Parameters.Add(new SqlParameter("@advisorID", t2.Value));
+                    action .Parameters.Add(new SqlParameter("@student_id", t1.Value));
+                    action.Parameters.Add(new SqlParameter("@advisor_id", t2.Value));
 
                     conn.Open();
                     action.ExecuteNonQuery();

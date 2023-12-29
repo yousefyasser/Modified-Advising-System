@@ -28,7 +28,7 @@ namespace Advising_Team.Student.Courses
                     int studentId = (int)Session["user"];
 
                     optionalCoursesProc.CommandType = CommandType.StoredProcedure;
-                    optionalCoursesProc.Parameters.Add(new SqlParameter("@StudentID", studentId));
+                    optionalCoursesProc.Parameters.Add(new SqlParameter("@student_id", studentId));
                     optionalCoursesProc.Parameters.Add(new SqlParameter("@current_semester_code", GetCurrentSemester()));
 
                     SqlDataReader reader = optionalCoursesProc.ExecuteReader(CommandBehavior.CloseConnection);

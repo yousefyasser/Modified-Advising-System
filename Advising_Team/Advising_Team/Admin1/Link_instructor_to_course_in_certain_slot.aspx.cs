@@ -24,7 +24,7 @@ namespace Advising_Team.Admin1
                     SqlConnection conn = new SqlConnection(connStr);
                     SqlCommand action = new SqlCommand("Procedures_AdminLinkInstructor", conn);
                     action.CommandType = CommandType.StoredProcedure;
-                    action.Parameters.Add(new SqlParameter("@cours_id", t1.Value));
+                    action.Parameters.Add(new SqlParameter("@course_id", t1.Value));
                         action.Parameters.Add(new SqlParameter("@instructor_id", t2.Value));
                     action.Parameters.Add(new SqlParameter("@slot_id", t3.Value));
 

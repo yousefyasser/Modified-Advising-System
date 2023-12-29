@@ -57,10 +57,10 @@ namespace Advising_Team
                         registerProc.Parameters.Add(new SqlParameter("@faculty", facultyIn));
                         registerProc.Parameters.Add(new SqlParameter("@email", emailIn));
                         registerProc.Parameters.Add(new SqlParameter("@major", majorIn));
-                        registerProc.Parameters.Add(new SqlParameter("@Semester", semesterIn));
+                        registerProc.Parameters.Add(new SqlParameter("@semester", semesterIn));
 
                         // Output parameter for student_id
-                        SqlParameter student_id = new SqlParameter("@Student_id", SqlDbType.Int);
+                        SqlParameter student_id = new SqlParameter("@student_id", SqlDbType.Int);
                         student_id.Direction = ParameterDirection.Output;
                         registerProc.Parameters.Add(student_id);
 

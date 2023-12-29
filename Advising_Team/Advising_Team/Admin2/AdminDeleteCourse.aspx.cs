@@ -29,7 +29,7 @@ namespace Advising_Team.Admin2
             {
                 SqlCommand deleteCrs = new SqlCommand("Procedures_AdminDeleteCourse", conn);
                 deleteCrs.CommandType = CommandType.StoredProcedure;
-                deleteCrs.Parameters.Add(new SqlParameter("@courseID", crs_id));
+                deleteCrs.Parameters.Add(new SqlParameter("@course_id", crs_id));
 
                 conn.Open();
                 int rowsAffected = deleteCrs.ExecuteNonQuery();

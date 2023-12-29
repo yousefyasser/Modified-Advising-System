@@ -114,7 +114,7 @@ namespace Advising_Team.Advisor.GradPlan
                     {
                         insertProc.CommandType = CommandType.StoredProcedure;
 
-                        insertProc.Parameters.Add(new SqlParameter("@Semester_code", txtSemesterCode.Text));
+                        insertProc.Parameters.Add(new SqlParameter("@semester_code", txtSemesterCode.Text));
                         insertProc.Parameters.Add(new SqlParameter("@expected_graduation_date", DateTime.Parse(txtExpectedGradDate.Text)));
                         insertProc.Parameters.Add(new SqlParameter("@sem_credit_hours", int.Parse(txtSemCreditHours.Text)));
                         insertProc.Parameters.Add(new SqlParameter("@advisor_id", advisorId));

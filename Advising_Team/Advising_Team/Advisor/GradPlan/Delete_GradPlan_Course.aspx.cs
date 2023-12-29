@@ -90,9 +90,9 @@ namespace Advising_Team.Advisor.GradPlan
                     {
                         deleteProc.CommandType = CommandType.StoredProcedure;
 
-                        deleteProc.Parameters.Add(new SqlParameter("@studentID", studentID));
-                        deleteProc.Parameters.Add(new SqlParameter("@sem_code", semesterCode));
-                        deleteProc.Parameters.Add(new SqlParameter("@courseID", courseID));
+                        deleteProc.Parameters.Add(new SqlParameter("@student_id", studentID));
+                        deleteProc.Parameters.Add(new SqlParameter("@semester_code", semesterCode));
+                        deleteProc.Parameters.Add(new SqlParameter("@course_id", courseID));
 
                         deleteProc.ExecuteNonQuery();
                     }

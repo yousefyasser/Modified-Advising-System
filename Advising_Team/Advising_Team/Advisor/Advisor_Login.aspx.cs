@@ -67,7 +67,7 @@ namespace Advising_Team.Advisor
                             Session["admin"] = false;
                         }
 
-                        loginFn.Parameters.Add(new SqlParameter("@advisor_Id", idIn));
+                        loginFn.Parameters.Add(new SqlParameter("@id", idIn));
                         loginFn.Parameters.Add(new SqlParameter("@password", passwordIn));
 
                         SqlParameter success = new SqlParameter("@success", SqlDbType.Bit);

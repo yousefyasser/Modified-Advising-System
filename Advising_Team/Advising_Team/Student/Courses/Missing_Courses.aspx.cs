@@ -26,7 +26,7 @@ namespace Advising_Team.Student.Courses
                 {
                     int studentId = (int)Session["user"];
                     missingCoursesProc.CommandType = CommandType.StoredProcedure;
-                    missingCoursesProc.Parameters.Add(new SqlParameter("@StudentID", studentId));
+                    missingCoursesProc.Parameters.Add(new SqlParameter("@student_id", studentId));
 
                     SqlDataReader reader = missingCoursesProc.ExecuteReader(CommandBehavior.CloseConnection);
                     while (reader.Read())

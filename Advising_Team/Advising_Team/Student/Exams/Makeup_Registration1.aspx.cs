@@ -43,9 +43,9 @@ namespace Advising_Team.Student.Exams
                         using (SqlCommand registerProc = new SqlCommand("[Procedures_StudentRegisterFirstMakeup]", conn))
                         {
                             registerProc.CommandType = CommandType.StoredProcedure;
-                            registerProc.Parameters.Add(new SqlParameter("@StudentID", sId));
-                            registerProc.Parameters.Add(new SqlParameter("@courseID", idIn));
-                            registerProc.Parameters.Add(new SqlParameter("@studentCurr_sem", GetCurrentSemester()));
+                            registerProc.Parameters.Add(new SqlParameter("@student_id", sId));
+                            registerProc.Parameters.Add(new SqlParameter("@course_id", idIn));
+                            registerProc.Parameters.Add(new SqlParameter("@current_semester", GetCurrentSemester()));
                             registerProc.ExecuteNonQuery(); 
                             successMessage.Text = "You have successfully registered for a first makeup exam in this course";
                             successMessage.Visible = true;

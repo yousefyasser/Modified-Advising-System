@@ -30,7 +30,7 @@ namespace Advising_Team.Advisor.Views
                 using (SqlCommand viewStudentsMajorProc = new SqlCommand("Procedures_AdvisorViewAssignedStudents", conn))
                 {
                     viewStudentsMajorProc.CommandType = CommandType.StoredProcedure;
-                    viewStudentsMajorProc.Parameters.Add(new SqlParameter("@AdvisorID", advisorId));
+                    viewStudentsMajorProc.Parameters.Add(new SqlParameter("@advisor_id", advisorId));
                     viewStudentsMajorProc.Parameters.Add(new SqlParameter("@major", major));
 
                     SqlDataReader reader = viewStudentsMajorProc.ExecuteReader(CommandBehavior.CloseConnection);

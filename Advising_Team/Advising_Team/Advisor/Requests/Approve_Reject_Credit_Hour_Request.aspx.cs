@@ -52,8 +52,8 @@ namespace Advising_Team.Advisor.Requests
                     {
                         approvalProc.CommandType = CommandType.StoredProcedure;
 
-                        approvalProc.Parameters.Add(new SqlParameter("@requestID", requestID));
-                        approvalProc.Parameters.Add(new SqlParameter("@current_sem_code", currentSemester));
+                        approvalProc.Parameters.Add(new SqlParameter("@request_id", requestID));
+                        approvalProc.Parameters.Add(new SqlParameter("@current_semester", currentSemester));
 
                         approvalProc.ExecuteNonQuery();
                     }

@@ -24,7 +24,7 @@ namespace Advising_Team.Admin1
             {
 
                 int advis_id = rdr.GetInt32(rdr.GetOrdinal("advisor_id"));
-                String advis_name = rdr.GetString(rdr.GetOrdinal("advisor_name"));
+                String advis_name = rdr.GetString(rdr.GetOrdinal("name"));
                 String advis_mail = rdr.GetString(rdr.GetOrdinal("email"));
                 String advis_office = rdr.GetString(rdr.GetOrdinal("office"));
                 String advis_password = rdr.GetString(rdr.GetOrdinal("password"));

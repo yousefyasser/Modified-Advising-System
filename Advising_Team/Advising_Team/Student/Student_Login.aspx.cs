@@ -53,7 +53,7 @@ namespace Advising_Team
                     using (SqlCommand loginFn = new SqlCommand("dbo.FN_StudentLogin", conn))
                     {
                         loginFn.CommandType = CommandType.StoredProcedure;
-                        loginFn.Parameters.Add(new SqlParameter("@Student_id", idIn));
+                        loginFn.Parameters.Add(new SqlParameter("@id", idIn));
                         loginFn.Parameters.Add(new SqlParameter("@password", passwordIn));
 
                         SqlParameter success = new SqlParameter("@success", SqlDbType.Bit);

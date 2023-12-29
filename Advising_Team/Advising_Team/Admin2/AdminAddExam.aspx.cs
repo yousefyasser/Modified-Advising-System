@@ -74,7 +74,7 @@ namespace Advising_Team.Admin2
                             addExam.CommandType = CommandType.StoredProcedure;
                             addExam.Parameters.Add(new SqlParameter("@type", examType.Text));
                             addExam.Parameters.Add(new SqlParameter("@date", examDate));
-                            addExam.Parameters.Add(new SqlParameter("@courseID", crsID));
+                            addExam.Parameters.Add(new SqlParameter("@course_id", crsID));
 
                             addExam.ExecuteNonQuery();
 

@@ -29,7 +29,7 @@ namespace Advising_Team.Student.Courses
                     int studentId = (int)Session["user"];
 
                     requiredCoursesProc.CommandType = CommandType.StoredProcedure;
-                    requiredCoursesProc.Parameters.Add(new SqlParameter("@StudentID", studentId));
+                    requiredCoursesProc.Parameters.Add(new SqlParameter("@student_id", studentId));
                     requiredCoursesProc.Parameters.Add(new SqlParameter("@current_semester_code", GetCurrentSemester()));
 
                     SqlDataReader reader = requiredCoursesProc.ExecuteReader(CommandBehavior.CloseConnection);

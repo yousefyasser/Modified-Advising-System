@@ -63,7 +63,7 @@ namespace Advising_Team.Advisor.GradPlan
                     {
                         updateProc.CommandType = CommandType.StoredProcedure;
 
-                        updateProc.Parameters.Add(new SqlParameter("@expected_grad_date", expectedGradDate));
+                        updateProc.Parameters.Add(new SqlParameter("@expected_grad_semster", expectedGradDate));
                         updateProc.Parameters.Add(new SqlParameter("@studentID", studentID));
 
                         updateProc.ExecuteNonQuery();

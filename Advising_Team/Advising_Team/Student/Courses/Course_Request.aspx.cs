@@ -37,8 +37,8 @@ namespace Advising_Team.Student.Courses
                 using(SqlCommand courseRequestProc = new SqlCommand("Procedures_StudentSendingCourseRequest", conn))
                 {
                     courseRequestProc.CommandType = CommandType.StoredProcedure;
-                    courseRequestProc.Parameters.Add(new SqlParameter("@courseID", course));
-                    courseRequestProc.Parameters.Add(new SqlParameter("@StudentID", studentId));
+                    courseRequestProc.Parameters.Add(new SqlParameter("@course_id", course));
+                    courseRequestProc.Parameters.Add(new SqlParameter("@student_id", studentId));
                     courseRequestProc.Parameters.Add(new SqlParameter("@type", "course"));
                     courseRequestProc.Parameters.Add(new SqlParameter("@comment", commentIn));
 
