@@ -36,11 +36,11 @@ git clone https://github.com/yousefyasser/Modified-Advising-System.git
 
 ### Credentials
 
-| Role    | Username | Password |
-| ------- | :------: | -------- |
-| Student |    1     | pass     |
-| Admin   |   666    | admin    |
-| Advisor |    1     | pass     |
+| Role    | Username | Password    |
+| :-----: | :------: | :---------: |
+| Student |    1     | password123 |
+| Advisor |    1     | password1   |
+| Admin   |   666    | admin       |
 
 ## Usage
 
