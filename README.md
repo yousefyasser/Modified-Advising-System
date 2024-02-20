@@ -56,23 +56,23 @@ Admin System
 
 ![Student component](Advising_Team/Advising_Team/Assets/Admin.gif)
 
-## Contributions
+## Contributors
 
-### Yousef Yasser (Student Component 1)
+### [Yousef Yasser](https://github.com/yousefyasser) (Student Component 1)
 
 - Student's registration / login
 - Student's courses details (available / missing / required / optional)
 - Student sending request (course / credit hour) to his/her advisor
 - Student / admin frontend
 
-### Mostafa Hisham (Student Component 2)
+### [Mostafa Hamdy](https://github.com/mostafahisham03) (Student Component 2)
 
 - Student's makeup registration
 - Student's upcoming unpaid installments
 - Student's courses prerequisites and exams
 - Slot's details
 
-### Seifeldin Khaled (Advisor Component)
+### [Seifeldin Khaled](https://github.com/SeifAbbas) (Advisor Component)
 
 - Advisor's registration / login
 - View assigned students
@@ -80,13 +80,13 @@ Admin System
 - Approve / reject requests (course / credit hour)
 - Handle students graduation plans
 
-### Mohamed Hefny (Admin Component 1)
+### [Mohamed Hefny](https://github.com/MohmaedHefny0) (Admin Component 1)
 
 - Add semester / course
 - List advisors with their students
 - Link student to advisor / course
 
-### Rasheed Atia (Admin Component 2)
+### [Rasheed Atia](https://github.com/RasheedAtia) (Admin Component 2)
 
 - Delete course / slot
 - Display payments / installments / transcript for each student
